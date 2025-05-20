@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,8 +25,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> PromesaCodeExceptionHandler(PromesaCodeException e, HttpServletRequest request) {
         BaseErrorCode code = e.getErrorCode();
         ErrorReason errorReason = code.getErrorReason();
-        ErrorResponse errorResponse = new ErrorResponse(errorReason, request.getRequestURL().toString());
-        return ResponseEntity.status(HttpStatusCode.valueOf(errorReason.getStatus()))
+        ErrorResponse errorResponse = ErrorResponse.from(errorReason, request.getRequestURL().toString());
+        return ResponseEntity.status(HttpStatus.valueOf(errorReason.getStatus()))
                 .body(errorResponse);
     }
 
@@ -36,7 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             throws IOException {
         log.error("INTERNAL SERVER ERROR", e);
         GlobalErrorCode internalServerError = GlobalErrorCode.INTERNAL_SERVER_ERROR;
-        ErrorResponse errorResponse = new ErrorResponse(
+        ErrorResponse errorResponse = ErrorResponse.of(
                 internalServerError.getStatus(),
                 internalServerError.getCode(),
                 internalServerError.getReason(),

@@ -1,31 +1,33 @@
 package com.promesa.promesa.common.dto;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ErrorResponse {
     private final boolean success = false;
-    private final int status;   // 기본형 : 항상 값이 존재하는 필드
-    private final String code;
-    private final String reason;
-    private final LocalDateTime timeStamp;
-    private final String path;
+    private int status;   // 기본형 : 항상 값이 존재한느 필드
+    private String code;
+    private  String reason;
+    private final LocalDateTime timeStamp = LocalDateTime.now();
+    private String path;
 
-    public ErrorResponse(ErrorReason errorReason, String path) {
-        this.status = errorReason.getStatus();
-        this.code = errorReason.getCode();
-        this.reason = errorReason.getReason();
-        this.timeStamp = LocalDateTime.now();
-        this.path = path;
+    public static ErrorResponse of(int status, String code, String reason, String path) {
+        return new ErrorResponse(status, code, reason, path);
     }
 
-    public ErrorResponse(int status, String code, String reason, String path) {
-        this.status = status;
-        this.code = code;
-        this.reason = reason;
-        this.timeStamp = LocalDateTime.now();
-        this.path = path;
+    public static ErrorResponse from(ErrorReason errorReason, String path) {
+        return new ErrorResponse(
+                errorReason.getStatus(),
+                errorReason.getCode(),
+                errorReason.getReason(),
+                path
+        );
     }
 }
