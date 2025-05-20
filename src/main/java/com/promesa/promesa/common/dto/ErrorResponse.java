@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Getter
 public class ErrorResponse {
     private final boolean success = false;
-    private final int status;   // 기본형 : 항상 값이 존재한느 필드
+    private final int status;   // 기본형 : 항상 값이 존재하는 필드
     private final String code;
     private final String reason;
     private final LocalDateTime timeStamp;
