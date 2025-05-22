@@ -5,7 +5,8 @@ public record BrandInfoResponse(
         String brandStory
 ) {
     public static final BrandInfoResponse INFO = new BrandInfoResponse(
-            "static/brand-image.jpg",
-            "도예과 학생들의 작품을 세상에 소개하는 플랫폼입니다."
+            "https://ceos-promesa.s3.ap-northeast-2.amazonaws.com/brand-info/home-image.png",
+            "절제된 선과 형태 속에 담긴 작가의 시선.\n" +
+                    "공간에 울림을 더하는 모던 도자 컬렉션을 만나보세요."
     );
 }
