@@ -40,7 +40,6 @@ secrets.yml
 .gradletasknamecache
 .sts4-cache
 
-.idea
+.env
 
-# QueryDSL Q classes
-build/generated/
+.idea
