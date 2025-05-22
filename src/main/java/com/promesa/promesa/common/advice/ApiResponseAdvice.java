@@ -14,7 +14,7 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-@RestControllerAdvice(basePackages = "promesa.promesa")
+@RestControllerAdvice(basePackages = "com.promesa.promesa")
 public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
