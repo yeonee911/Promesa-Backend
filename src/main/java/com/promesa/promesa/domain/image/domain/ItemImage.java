@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ItemImage {
     @Id @GeneratedValue
-    @Column(name = "item_image")
+    @Column(name = "item_image_id")
     private Long id;
 
     @NotBlank
@@ -24,6 +24,6 @@ public class ItemImage {
     private boolean isThumbnail;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item")
+    @JoinColumn(name = "item_id")
     private Item item;
 }
