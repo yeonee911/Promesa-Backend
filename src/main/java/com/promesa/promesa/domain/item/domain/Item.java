@@ -1,11 +1,46 @@
 package com.promesa.promesa.domain.item.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.promesa.promesa.common.domain.BaseTimeEntity;
+import com.promesa.promesa.domain.artist.domain.Artist;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Item {
+public class Item extends BaseTimeEntity {
     @Id @GeneratedValue
+    @Column(name = "item_id")
     private Long id;
+
+    @NotBlank
+    private String name;
+
+    @NotBlank
+    private String description;
+
+    private int price;
+    private int stock;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sale_status")
+    private SaleStatus saleStatus;
+
+    @NotNull
+    @Column(name = "wish_count")
+    private int wishCount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "artist_id")
+    private Artist artist;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<ExhibitionItem> exhibitionItems = new ArrayList<>();
 }
