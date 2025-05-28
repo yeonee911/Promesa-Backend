@@ -22,7 +22,7 @@ public class ItemService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
 
-    public Page<ItemPreviewResponse> findCategoryItems(Long memberId, Long categoryId, Pageable pageable) {
+    public Page<ItemPreviewResponse> findCategoryItem(Long memberId, Long categoryId, Pageable pageable) {
         // 카테고리 존재 여부 검증
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> CategoryNotFoundException.EXCEPTION);
