@@ -14,6 +14,7 @@ public enum OAuthAttributes {
         return MemberProfile.builder()
                 .name((String) properties.get("nickname"))
                 .provider("kakao")
+                .providerId(attribute.get("id").toString())
                 .build();
     });
 

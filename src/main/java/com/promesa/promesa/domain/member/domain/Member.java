@@ -25,6 +25,7 @@ public class Member {
 
     private String provider;    // 사용자가 로그인한 서비스 (ex.google, kakao, naver)
 
+    private String providerId;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Wish> wishes;
@@ -33,7 +34,7 @@ public class Member {
     private Artist artist;
 
 
-    // 사용자의 이름이나 이메일을 업데이트하는 메소드
+    // 사용자의 이름 업데이트하는 메소드
     public Member updateMember(String name){
         this.name = name;
         return this;

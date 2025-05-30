@@ -58,16 +58,18 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         customAttribute.put(userNameAttributeName, attributes.get(userNameAttributeName));
         customAttribute.put("provider", registrationId);
         customAttribute.put("name", userProfile.getName());
+        customAttribute.put("providerId", userProfile.getProviderId());
 
         return customAttribute;
     }
 
     public Member updateOrSaveUser(MemberProfile memberProfile) {
         Member member = memberRepository
-                .findMemberByNameAndProvider(memberProfile.getName(), memberProfile.getProvider())
+                .findByProviderAndProviderId(memberProfile.getProvider(), memberProfile.getProviderId())
                 .map(value -> value.updateMember(memberProfile.getName()))
                 .orElse(memberProfile.toEntity());
 
         return memberRepository.save(member);
     }
+
 }
