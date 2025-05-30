@@ -33,7 +33,7 @@ public class SecurityConfig {
                 )
 
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/oauth/loginInfo", true)
+                        .defaultSuccessUrl("http://localhost:3000/home", true)
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2Service)
                         )

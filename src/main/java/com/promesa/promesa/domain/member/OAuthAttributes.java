@@ -11,10 +11,10 @@ public enum OAuthAttributes {
     KAKAO("kakao", (attribute) -> {
         Map<String, Object> properties = (Map<String, Object>) attribute.get("properties");
 
-        MemberProfile memberProfile = new MemberProfile();
-        memberProfile.setUserName((String) properties.get("nickname"));
-
-        return memberProfile;
+        return MemberProfile.builder()
+                .name((String) properties.get("nickname"))
+                .provider("kakao")
+                .build();
     });
 
 

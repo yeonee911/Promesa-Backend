@@ -37,7 +37,6 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
                 .getUserNameAttributeName(); // PK가 되는 정보
         Map<String, Object> attributes = oAuth2User.getAttributes(); // 사용자가 가지고 있는 정보
         MemberProfile userProfile = OAuthAttributes.extract(registrationId, attributes);
-        userProfile.setProvider(registrationId);
 
         updateOrSaveUser(userProfile);
 
