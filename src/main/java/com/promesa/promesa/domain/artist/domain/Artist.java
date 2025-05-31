@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.artist.domain;
 
+import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.member.domain.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Artist {
+public class Artist extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "artist_id")
     private Long id;
