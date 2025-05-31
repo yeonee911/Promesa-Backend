@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.promesa.promesa.common.dto.SuccessResponse;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,8 +15,11 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+@RequiredArgsConstructor
 @RestControllerAdvice(basePackages = "com.promesa.promesa")
 public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
+
+    private final ObjectMapper objectMapper; // JacksonConfig의 Bean 주입
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
@@ -42,7 +46,6 @@ public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
 
         if (body instanceof String) {
             try {
-                ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.writeValueAsString(SuccessResponse.success(status, body));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("JSON 변환 실패", e);
