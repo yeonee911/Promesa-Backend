@@ -55,7 +55,6 @@ dependencies {
 	// LocalDateTime 직렬화/역직렬화용
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
-	implementation 'mysql:mysql-connector-java:8.1.0'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
