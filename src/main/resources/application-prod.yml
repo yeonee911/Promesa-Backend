@@ -1,0 +1,27 @@
+spring:
+  # 프로덕션 프로필에서 활성화
+  profiles: prod
+
+  datasource:
+    # RDS 엔드포인트(호스트+포트), DB 이름을 환경변수 RDS_URL로 전달
+    url: ${RDS_URL}
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    # 운영환경에서는 스키마 자동생성(off) → validate 혹은 none 사용
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: false
+
+  data:
+    redis:
+      url: redis://${REDIS_HOST}:${REDIS_PORT:6379}
+
+logging:
+  level:
+    # 운영에서는 SQL 로그는 꺼 둠
+    org.hibernate.SQL: WARN
