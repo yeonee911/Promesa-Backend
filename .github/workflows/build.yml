@@ -30,7 +30,7 @@ jobs: # defining jobs, executed in this workflows
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-# 프로젝트 세팅에 맞게 수정할 것 !
+    # 프로젝트 세팅에 맞게 수정할 것 !
     - name: Set up JDK 17
       uses: actions/setup-java@v3 # set up the required java version
       with:
