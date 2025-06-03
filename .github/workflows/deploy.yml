@@ -1,9 +1,11 @@
 name: deploy
 
+# dev 브랜치에 push될 때마다 배포가 실행됩니다.
 on:
   push:
     branches: ["dev"]
 
+# 워크플로우가 S3 업로드/CodeDeploy 호출 정도만 하기 때문에 contents 읽기 권한만 있으면 충분합니다.
 permissions:
   contents: read
 
@@ -12,10 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1) 코드 체크아웃
       - name: Checkout repository
-        uses: actions/checkout@v3  # clone repository
+        uses: actions/checkout@v3
 
-      # Caching Gradle
+      # 2) Gradle 캐시
       - name: Cache Gradle
         uses: actions/cache@v3
         with:
@@ -26,23 +29,34 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      # 3) JDK 17 설치
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Gradle Authorization
-        run: chmod +x gradlew
-
+      # 4) Gradle 빌드 (테스트는 건너뜁니다)
       - name: Gradle Build Run
         run: ./gradlew build -x test
 
-      # $GITHUB_SHA는 GitHub가 자동으로 제공하는 커밋 해시 환경변수입니다.
-      # 이를 이용해 ZIP 파일 이름을 고유하게 지정합니다.
-      - name: Create Zip files
-        run: zip -r "./${GITHUB_SHA}.zip" .
+      # 5) GitHub Secrets로부터 .env 파일 생성
+      #    이 단계에서 RDS_URL, RDS_USERNAME, RDS_PASSWORD, REDIS_HOST, REDIS_PORT를 .env 파일에 한 줄씩 저장합니다.
+      - name: Create .env file
+        run: |
+          echo "RDS_URL=${{ secrets.RDS_URL }}"         >> .env
+          echo "RDS_USERNAME=${{ secrets.RDS_USERNAME }}" >> .env
+          echo "RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> .env
+          echo "REDIS_HOST=${{ secrets.REDIS_HOST }}"     >> .env
+          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}"     >> .env
 
+      # 6) 생성된 .env와 빌드된 JAR을 함께 ZIP 파일로 묶습니다.
+      #    $GITHUB_SHA를 파일명으로 사용해 커밋 해시별로 고유한 ZIP을 만듭니다.
+      - name: Create Zip files
+        run: |
+          zip -r "${GITHUB_SHA}.zip" .env build/libs/*.jar
+
+      # 7) AWS 자격증명 설정
       - name: Connecting to AWS
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -50,12 +64,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      # 8) ZIP 파일을 S3 버킷에 업로드
       - name: Upload File to S3
         run: |
           aws s3 cp \
             --region ap-northeast-2 \
-            "./${GITHUB_SHA}.zip" s3://ceos-promesa
+            "${GITHUB_SHA}.zip" s3://ceos-promesa
 
+      # 9) CodeDeploy에 배포 요청 보내기
+      #    application-name, deployment-group-name 등은 본인 환경에 맞게 수정하세요.
       - name: Request to CodeDeploy
         run: |
           aws deploy create-deployment \
