@@ -1,16 +1,14 @@
 name: deploy
 
-# dev 브랜치에 push될 때마다 배포가 실행됩니다.
 on:
   push:
     branches: ["dev"]
 
-# 워크플로우가 S3 업로드/CodeDeploy 호출 정도만 하기 때문에 contents 읽기 권한만 있으면 충분합니다.
 permissions:
   contents: read
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,27 +34,26 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 4) Gradle 빌드 (테스트는 건너뜁니다)
+      # 4) Gradle 빌드 (테스트 제외)
       - name: Gradle Build Run
         run: ./gradlew build -x test
 
-      # 5) GitHub Secrets로부터 .env 파일 생성
-      #    이 단계에서 RDS_URL, RDS_USERNAME, RDS_PASSWORD, REDIS_HOST, REDIS_PORT를 .env 파일에 한 줄씩 저장합니다.
-      - name: Create .env file
-        run: |
-          echo "RDS_URL=${{ secrets.RDS_URL }}"         >> .env
-          echo "RDS_USERNAME=${{ secrets.RDS_USERNAME }}" >> .env
-          echo "RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> .env
-          echo "REDIS_HOST=${{ secrets.REDIS_HOST }}"     >> .env
-          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}"     >> .env
+      # 5) Docker 이미지 빌드
+      - name: Build Docker image
+        run: docker build -t yourdockerhub/promesa:${{ github.sha }} .
 
-      # 6) 생성된 .env와 빌드된 JAR을 함께 ZIP 파일로 묶습니다.
-      #    $GITHUB_SHA를 파일명으로 사용해 커밋 해시별로 고유한 ZIP을 만듭니다.
-      - name: Create Zip files
-        run: |
-          zip -r "${GITHUB_SHA}.zip" .env build/libs/*.jar
+      # 6) DockerHub 로그인
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      # 7) AWS 자격증명 설정
+      # 7) Docker 이미지 push
+      - name: Push Docker image
+        run: |
+          docker tag yourdockerhub/promesa:${{ github.sha }} yourdockerhub/promesa:latest
+          docker push yourdockerhub/promesa:${{ github.sha }}
+          docker push yourdockerhub/promesa:latest
+
+      # 8) AWS 자격 증명 설정
       - name: Connecting to AWS
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -64,19 +61,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 8) ZIP 파일을 S3 버킷에 업로드
-      - name: Upload File to S3
-        run: |
-          aws s3 cp \
-            --region ap-northeast-2 \
-            "${GITHUB_SHA}.zip" s3://ceos-promesa
-
-      # 9) CodeDeploy에 배포 요청 보내기
-      #    application-name, deployment-group-name 등은 본인 환경에 맞게 수정하세요.
+      # 9) CodeDeploy 배포 요청
       - name: Request to CodeDeploy
         run: |
           aws deploy create-deployment \
             --application-name test-application \
             --deployment-config-name CodeDeployDefault.AllAtOnce \
             --deployment-group-name Promesa-BlueGreen-DeploymentGroup \
-            --s3-location bucket=ceos-promesa,bundleType=zip,key=${GITHUB_SHA}.zip
+            --s3-location bucket=ceos-promesa,bundleType=zip,key=latest.zip
