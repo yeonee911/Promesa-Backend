@@ -8,14 +8,13 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3  # clone repository
+        uses: actions/checkout@v3
 
-      # Caching Gradle
       - name: Cache Gradle
         uses: actions/cache@v3
         with:
@@ -32,16 +31,20 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Gradle Authorization
-        run: chmod +x gradlew
-
       - name: Gradle Build Run
         run: ./gradlew build -x test
 
-      # $GITHUB_SHA는 GitHub가 자동으로 제공하는 커밋 해시 환경변수입니다.
-      # 이를 이용해 ZIP 파일 이름을 고유하게 지정합니다.
-      - name: Create Zip files
-        run: zip -r "./${GITHUB_SHA}.zip" .
+      - name: Build Docker image
+        run: docker build -t yourdockerhub/promesa:${{ github.sha }} .
+
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Push Docker image
+        run: |
+          docker tag yourdockerhub/promesa:${{ github.sha }} yourdockerhub/promesa:latest
+          docker push yourdockerhub/promesa:${{ github.sha }}
+          docker push yourdockerhub/promesa:latest
 
       - name: Connecting to AWS
         uses: aws-actions/configure-aws-credentials@v1
@@ -50,11 +53,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Upload File to S3
+      - name: Zip for CodeDeploy
+        run: |
+          zip -r latest.zip appspec.yml scripts/
+
+      - name: Upload to S3
         run: |
           aws s3 cp \
-            --region ap-northeast-2 \
-            "./${GITHUB_SHA}.zip" s3://ceos-promesa
+            latest.zip s3://ceos-promesa/latest.zip
 
       - name: Request to CodeDeploy
         run: |
@@ -62,4 +68,4 @@ jobs:
             --application-name test-application \
             --deployment-config-name CodeDeployDefault.AllAtOnce \
             --deployment-group-name Promesa-BlueGreen-DeploymentGroup \
-            --s3-location bucket=ceos-promesa,bundleType=zip,key=${GITHUB_SHA}.zip
+            --s3-location bucket=ceos-promesa,bundleType=zip,key=latest.zip
