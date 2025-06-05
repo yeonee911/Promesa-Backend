@@ -3,7 +3,7 @@ name: deploy
 on:
   workflow_dispatch:     # 수동 실행 버튼 활성화
   push:
-    branches: ["dev"]
+    branches: ["dev"]    # dev 브랜치에 푸시되면 자동 실행
 
 permissions:
   contents: read
@@ -11,68 +11,72 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      AWS_REGION: ap-northeast-2
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      ECR_REPOSITORY: promesa-repo
 
-      RDS_URL:       ${{ secrets.RDS_URL }}
-      RDS_USERNAME:  ${{ secrets.RDS_USERNAME }}
-      RDS_PASSWORD:  ${{ secrets.RDS_PASSWORD }}
-      REDIS_HOST:    ${{ secrets.REDIS_HOST }}
-      REDIS_PORT:    ${{ secrets.REDIS_PORT }}
-    
+    # GitHub Secrets에서 값을 가져와서 env로 미리 매핑
+    env:
+      AWS_REGION:      ap-northeast-2
+      AWS_ACCOUNT_ID:  ${{ secrets.AWS_ACCOUNT_ID }}
+      ECR_REPOSITORY:  promesa-repo
+
+      RDS_URL:         ${{ secrets.RDS_URL }}
+      RDS_USERNAME:    ${{ secrets.RDS_USERNAME }}
+      RDS_PASSWORD:    ${{ secrets.RDS_PASSWORD }}
+      REDIS_HOST:      ${{ secrets.REDIS_HOST }}
+      REDIS_PORT:      ${{ secrets.REDIS_PORT }}
+
     steps:
       # 1) 코드 체크아웃
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2) gradlew에 실행 권한 부여
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      # 2) AWS 자격증명 설정
+      # 3) AWS 자격증명 설정
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-      
-      # 3) JDK 17 설치 & Gradle 빌드
+          aws-region:            ${{ env.AWS_REGION }}
+
+      # 4) JDK 17 설치 & Gradle 빌드 (테스트 제외)
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version:  '17'
           distribution: 'temurin'
 
       - name: Gradle Build Run (skip tests)
         run: ./gradlew build -x test
 
-      # 빌드 결과물 확인하기
+      # 5) 빌드 결과물 확인하기
       - name: Show build/libs contents
         run: |
           echo "🔎 build/libs 디렉터리 내부:"
           ls -al build/libs
 
-      # 4) Docker 이미지 빌드
+      # 6) Docker 이미지 빌드
       - name: Build Docker image
         run: |
           IMAGE_TAG=${{ github.sha }}
-          # Dockerfile이 있는 디렉터리(프로젝트 최상위)에 따라 경로를 지정
+          # Dockerfile이 있는 프로젝트 루트에서 빌드
           docker build -t promesa:${IMAGE_TAG} .
           docker tag promesa:${IMAGE_TAG} promesa:latest
-          
-      # 5) ECR 로그인 (Docker CLI용 토큰)
+
+      # 7) ECR 로그인 (Docker CLI용 토큰)
       - name: ECR Login
         uses: aws-actions/amazon-ecr-login@v1
         with:
           region: ${{ env.AWS_REGION }}
 
-      # 6) Docker 이미지 Tag & Push to ECR
+      # 8) Docker 이미지 Tag & Push to ECR
       - name: Tag and Push to ECR
         run: |
           IMAGE_TAG=${{ github.sha }}
           ECR_REGISTRY=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+
           # 1) SHA 태그로 tag & push
           docker tag promesa:${IMAGE_TAG} ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}
           docker push ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}
@@ -80,35 +84,37 @@ jobs:
           # 2) latest 태그로도 tag & push
           docker tag promesa:latest ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
           docker push ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
-          
-      # 7) start_app.sh 안의 플레이스홀더를 실제 Secret 값으로 치환
+
+      # 9) start_app.sh 안의 플레이스홀더를 실제 Secret 값으로 치환
       - name: Replace placeholders in start_app.sh
         run: |
-          # 실제로 start_app.sh 파일 내부에 <<RDS_URL>>, <<RDS_USERNAME>> 등으로 작성해 두어야 합니다.
+          # ※ 반드시 scripts/start_app.sh 내부에 <<RDS_URL>>, <<RDS_USERNAME>> 등 플레이스홀더가 있어야 합니다.
           sed -i "s|<<RDS_URL>>|${{ env.RDS_URL }}|g" scripts/start_app.sh
           sed -i "s|<<RDS_USERNAME>>|${{ env.RDS_USERNAME }}|g" scripts/start_app.sh
           sed -i "s|<<RDS_PASSWORD>>|${{ env.RDS_PASSWORD }}|g" scripts/start_app.sh
           sed -i "s|<<REDIS_HOST>>|${{ env.REDIS_HOST }}|g" scripts/start_app.sh
           sed -i "s|<<REDIS_PORT>>|${{ env.REDIS_PORT }}|g" scripts/start_app.sh
-      
-      # 8) 앱팩(AppSpec) 및 스크립트(예: scripts/)를 ZIP으로 묶기
+
+      # 10) AppSpec, JAR, 스크립트 폴더를 ZIP으로 묶기
       - name: Zip for CodeDeploy
         run: |
-          zip -r latest.zip appspec.yml build/libs/promesa-0.0.1-SNAPSHOT.jar scripts/
+          zip -r latest.zip \
+            appspec.yml \
+            build/libs/promesa-0.0.1-SNAPSHOT.jar \
+            scripts/
 
-      # 8.1) (디버그) ZIP 내부 확인하기
+      # 11) (디버그) ZIP 내부 확인하기
       - name: List contents of latest.zip
         run: |
           echo "🔍 ZIP 내부 파일 목록:"
           unzip -l latest.zip
 
-      # 9) S3로 ZIP 업로드
+      # 12) S3로 ZIP 업로드
       - name: Upload to S3
         run: |
-          aws s3 cp \
-            latest.zip s3://ceos-promesa/latest.zip
+          aws s3 cp latest.zip s3://ceos-promesa/latest.zip
 
-      # 10) CodeDeploy 배포 요청
+      # 13) CodeDeploy 배포 요청
       - name: Request to CodeDeploy
         run: |
           aws deploy create-deployment \
