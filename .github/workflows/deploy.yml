@@ -74,6 +74,12 @@ jobs:
         run: |
           zip -r latest.zip appspec.yml scripts/
 
+      # 7.1) (디버그) ZIP 내부 확인하기
+      - name: List contents of latest.zip
+        run: |
+          echo "🔍 ZIP 내부 파일 목록:"
+          unzip -l latest.zip
+
       # 8) S3로 ZIP 업로드
       - name: Upload to S3
         run: |
