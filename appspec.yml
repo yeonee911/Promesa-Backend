@@ -1,6 +1,13 @@
 version: 0.0
 os: linux
 
+files:
+  - source: scripts/
+    destination: /home/ubuntu/app/scripts/
+
+  - source: build/libs/app.jar
+    destination: /home/ubuntu/app/app.jar
+
 hooks:
   BeforeInstall:
     - location: scripts/before_install.sh
