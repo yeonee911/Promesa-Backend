@@ -13,7 +13,12 @@ aws ecr get-login-password --region ${AWS_REGION} | \
 
 docker pull ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
 
-# 3) Docker 컨테이너 실행 (Green 환경: 호스트 8082 → 컨테이너 8080)
+# 3) 기존에 같은 이름의 컨테이너가 있으면 삭제
+if docker ps -a --format '{{.Names}}' | grep -q '^promesa-container$'; then
+  docker rm -f promesa-container
+fi
+
+# 4) 새 컨테이너 실행 (Green:8082)
 docker run -d \
   --name promesa-container \
   -p 8082:8080 \
@@ -35,5 +40,5 @@ for i in {1..6}; do
   sleep 5
 done
 
-# 5) nginx 포트 전환 (Blue 8081 → Green 8082)
+# 6) switch.sh 호출
 bash /home/ubuntu/app/scripts/switch.sh
