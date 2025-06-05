@@ -1,6 +1,7 @@
 spring:
-  # 프로덕션 프로필에서 활성화
-  profiles: prod
+  config:
+    activate:
+      on-profile: prod
 
   datasource:
     # RDS 엔드포인트(호스트+포트), DB 이름을 환경변수 RDS_URL로 전달
