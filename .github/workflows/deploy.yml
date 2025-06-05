@@ -72,7 +72,7 @@ jobs:
       # 7) 앱팩(AppSpec) 및 스크립트(예: scripts/)를 ZIP으로 묶기
       - name: Zip for CodeDeploy
         run: |
-          zip -r latest.zip appspec.yml scripts/
+          zip -r latest.zip appspec.yml build/libs/app.jar scripts/
 
       # 7.1) (디버그) ZIP 내부 확인하기
       - name: List contents of latest.zip
