@@ -9,7 +9,7 @@ files:
     destination: /home/ubuntu/app/promesa-0.0.1-SNAPSHOT.jar
 
   - source: .env
-    destination: /home/ubuntu/app/
+    destination: /home/ubuntu/app/.env
 
 hooks:
   BeforeInstall:
