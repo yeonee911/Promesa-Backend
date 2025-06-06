@@ -3,6 +3,8 @@
 
 CONTAINER_NAME=promesa-container
 
+rm -rf /home/ubuntu/app/.env
+
 # 기존에 실행 중인 "promesa-container"가 있으면 중지 후 제거
 EXISTS=$(docker ps -q --filter "name=${CONTAINER_NAME}")
 if [ -n "$EXISTS" ]; then
