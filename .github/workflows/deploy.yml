@@ -85,17 +85,7 @@ jobs:
           docker tag promesa:latest ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
           docker push ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
 
-      # 9) start_app.sh 안의 플레이스홀더를 실제 Secret 값으로 치환
-      - name: Replace placeholders in start_app.sh
-        run: |
-          # ※ 반드시 scripts/start_app.sh 내부에 <<RDS_URL>>, <<RDS_USERNAME>> 등 플레이스홀더가 있어야 합니다.
-          sed -i "s|<<RDS_URL>>|${{ env.RDS_URL }}|g" scripts/start_app.sh
-          sed -i "s|<<RDS_USERNAME>>|${{ env.RDS_USERNAME }}|g" scripts/start_app.sh
-          sed -i "s|<<RDS_PASSWORD>>|${{ env.RDS_PASSWORD }}|g" scripts/start_app.sh
-          sed -i "s|<<REDIS_HOST>>|${{ env.REDIS_HOST }}|g" scripts/start_app.sh
-          sed -i "s|<<REDIS_PORT>>|${{ env.REDIS_PORT }}|g" scripts/start_app.sh
-
-      # 10) AppSpec, JAR, 스크립트 폴더를 ZIP으로 묶기
+      # 9) AppSpec, JAR, 스크립트 폴더를 ZIP으로 묶기
       - name: Zip for CodeDeploy
         run: |
           zip -r latest.zip \
@@ -103,18 +93,18 @@ jobs:
             build/libs/promesa-0.0.1-SNAPSHOT.jar \
             scripts/
 
-      # 11) (디버그) ZIP 내부 확인하기
+      # 10) (디버그) ZIP 내부 확인하기
       - name: List contents of latest.zip
         run: |
           echo "🔍 ZIP 내부 파일 목록:"
           unzip -l latest.zip
 
-      # 12) S3로 ZIP 업로드
+      # 11) S3로 ZIP 업로드
       - name: Upload to S3
         run: |
           aws s3 cp latest.zip s3://ceos-promesa/latest.zip
 
-      # 13) CodeDeploy 배포 요청
+      # 12) CodeDeploy 배포 요청
       - name: Request to CodeDeploy
         run: |
           aws deploy create-deployment \
