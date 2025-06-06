@@ -21,7 +21,7 @@ fi
 # 4) 새 컨테이너 실행 (Green:8082)
 docker run -d \
   --name promesa-container \
-  -p 8082:8080 \
+  --network host \
   -e SPRING_PROFILES_ACTIVE=prod \
   -e SPRING_DATASOURCE_URL="jdbc:mysql://${RDS_URL}/promesa_db" \
   -e SPRING_DATASOURCE_USERNAME="${RDS_USERNAME}" \
