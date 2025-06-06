@@ -19,6 +19,9 @@ if docker ps -a --format '{{.Names}}' | grep -q '^promesa-container$'; then
 fi
 
 # 4) 새 컨테이너 실행 (Green:8082)
+
+echo ">> About to run Docker with SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE, RDS_URL=$RDS_URL"
+
 docker run -d \
   --name promesa-container \
   --network host \
