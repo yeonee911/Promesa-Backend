@@ -23,7 +23,7 @@ docker run -d \
   --name promesa-container \
   -p 8082:8080 \
   -e SPRING_PROFILES_ACTIVE=prod \
-  -e SPRING_DATASOURCE_URL="jdbc:mysql://<<RDS_URL>>/promesa" \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://<<RDS_URL>>/promesa_db" \
   -e SPRING_DATASOURCE_USERNAME="<<RDS_USERNAME>>" \
   -e SPRING_DATASOURCE_PASSWORD="<<RDS_PASSWORD>>" \
   -e SPRING_REDIS_HOST="<<REDIS_HOST>>" \

@@ -28,4 +28,4 @@ logging:
     org.springframework.http.converter: DEBUG
 
 server:
-  port: 8085
+  port: 8081
