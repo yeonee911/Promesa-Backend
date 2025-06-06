@@ -87,13 +87,22 @@ jobs:
           docker tag promesa:latest ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
           docker push ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
 
+      # .env 파일 생성
+      - name: Create .env file
+        run: |
+          echo "RDS_USERNAME=${{ secrets.RDS_USERNAME }}" >> .env
+          echo "RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> .env
+          echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
+
       # 9) AppSpec, JAR, 스크립트 폴더를 ZIP으로 묶기
       - name: Zip for CodeDeploy
         run: |
           zip -r latest.zip \
             appspec.yml \
             build/libs/promesa-0.0.1-SNAPSHOT.jar \
-            scripts/
+            scripts/ \
+            .env
 
       # 10) (디버그) ZIP 내부 확인하기
       - name: List contents of latest.zip
