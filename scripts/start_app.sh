@@ -23,11 +23,11 @@ docker run -d \
   --name promesa-container \
   -p 8082:8080 \
   -e SPRING_PROFILES_ACTIVE=prod \
-  -e SPRING_DATASOURCE_URL="jdbc:mysql://<<RDS_URL>>/promesa_db" \
-  -e SPRING_DATASOURCE_USERNAME="<<RDS_USERNAME>>" \
-  -e SPRING_DATASOURCE_PASSWORD="<<RDS_PASSWORD>>" \
-  -e SPRING_REDIS_HOST="<<REDIS_HOST>>" \
-  -e SPRING_REDIS_PORT="<<REDIS_PORT>>" \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://${RDS_URL}/promesa_db" \
+  -e SPRING_DATASOURCE_USERNAME="${RDS_USERNAME}" \
+  -e SPRING_DATASOURCE_PASSWORD="${RDS_PASSWORD}" \
+  -e SPRING_REDIS_HOST="${REDIS_HOST}" \
+  -e SPRING_REDIS_PORT="${REDIS_PORT}" \
   ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
 
 # 4) 헬스 체크 (Green:8082가 200을 줄 때까지 최대 30초 대기)
