@@ -1,11 +1,18 @@
 #!/bin/bash
 # scripts/start_app.sh
 
+# .env 파일 로드
+source /home/ubuntu/app/.env
+
 # 1) 환경 변수 설정
 AWS_REGION=ap-northeast-2
 AWS_ACCOUNT_ID=966821290601
 ECR_REPOSITORY=promesa-repo
 ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+
+DB_ENDPOINT="promesa-rds.cdse0qo4km1e.ap-northeast-2.rds.amazonaws.com"
+DB_PORT=3306
+DB_NAME="promesa_db"
 
 # 2) ECR에서 'latest' 이미지를 pull
 aws ecr get-login-password --region ${AWS_REGION} | \
@@ -19,14 +26,11 @@ if docker ps -a --format '{{.Names}}' | grep -q '^promesa-container$'; then
 fi
 
 # 4) 새 컨테이너 실행 (Green:8082)
-
-echo ">> About to run Docker with SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE, RDS_URL=$RDS_URL"
-
 docker run -d \
   --name promesa-container \
   --network host \
   -e SPRING_PROFILES_ACTIVE=prod \
-  -e RDS_URL="jdbc:mysql://${RDS_URL}/promesa_db" \
+  -e RDS_URL="jdbc:mysql://${DB_ENDPOINT}:${DB_PORT}/${DB_NAME}?characterEncoding=UTF-8&serverTimezone=Asia/Seoul" \
   -e RDS_USERNAME="${RDS_USERNAME}" \
   -e RDS_PASSWORD="${RDS_PASSWORD}" \
   -e REDIS_HOST="${REDIS_HOST}" \
