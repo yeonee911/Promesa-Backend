@@ -41,5 +41,5 @@ secrets.yml
 .sts4-cache
 
 .env.properties
-
+.env
 .idea
