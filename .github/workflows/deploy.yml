@@ -91,8 +91,8 @@ jobs:
         run: |
            if [ -d .env ]; then
            echo "'.env' 디렉토리가 존재하여 삭제합니다."
-          rm -rf .env
-          fi
+           rm -rf .env
+           fi
 
       # 10) .env 파일 생성
       - name: Create .env file
