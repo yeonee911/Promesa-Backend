@@ -70,12 +70,21 @@ jobs:
           docker tag promesa:latest ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
           docker push ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
 
-      - name: Clean existing .env and zip
+      - name: Clean .env and latest.zip
         run: |
           echo "[🧹] .env 및 latest.zip 제거 시작"
-          [ -d .env ] && rm -rf .env
-          [ -f .env ] && rm -f .env
-          [ -f latest.zip ] && rm -f latest.zip
+          if [ -d .env ]; then
+            echo ".env 디렉토리를 삭제합니다"
+            rm -rf .env
+          elif [ -f .env ]; then
+            echo ".env 파일을 삭제합니다"
+            rm -f .env
+          fi
+
+          if [ -f latest.zip ]; then
+            echo "latest.zip 파일을 삭제합니다"
+            rm -f latest.zip
+          fi
 
       - name: Create .env file
         run: |
