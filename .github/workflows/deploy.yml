@@ -104,7 +104,7 @@ jobs:
             appspec.yml \
             build/libs/promesa-0.0.1-SNAPSHOT.jar \
             scripts/ \
-            .env
+          zip latest.zip .env
 
       # 10) (디버그) ZIP 내부 확인하기
       - name: List contents of latest.zip
