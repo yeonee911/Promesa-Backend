@@ -1,9 +1,9 @@
 name: deploy
 
 on:
-  workflow_dispatch:     # 수동 실행 버튼 활성화
+  workflow_dispatch:
   push:
-    branches: ["dev"]    # dev 브랜치에 푸시되면 자동 실행
+    branches: ["dev"]
 
 permissions:
   contents: read
@@ -12,89 +12,71 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    # GitHub Secrets에서 값을 가져와서 env로 미리 매핑
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION:      ap-northeast-2
-      AWS_ACCOUNT_ID:  ${{ secrets.AWS_ACCOUNT_ID }}
-      ECR_REPOSITORY:  promesa-repo
-
-      RDS_URL:         ${{ secrets.RDS_URL }}
-      RDS_USERNAME:    ${{ secrets.RDS_USERNAME }}
-      RDS_PASSWORD:    ${{ secrets.RDS_PASSWORD }}
-      REDIS_HOST:      ${{ secrets.REDIS_HOST }}
-      REDIS_PORT:      ${{ secrets.REDIS_PORT }}
+      AWS_REGION: ap-northeast-2
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      ECR_REPOSITORY: promesa-repo
+      RDS_URL: ${{ secrets.RDS_URL }}
+      RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+      RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
 
     steps:
-      # 1) 코드 체크아웃
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2) gradlew에 실행 권한 부여
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      # 3) AWS 자격증명 설정
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region:            ap-northeast-2
+          aws-region: ap-northeast-2
 
-      # 4) JDK 17 설치 & Gradle 빌드 (테스트 제외)
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version:  '17'
+          java-version: '17'
           distribution: 'temurin'
 
       - name: Gradle Build Run (skip tests)
         run: ./gradlew build -x test
 
-      # 5) 빌드 결과물 확인하기
       - name: Show build/libs contents
-        run: |
-          echo "🔎 build/libs 디렉터리 내부:"
-          ls -al build/libs
+        run: ls -al build/libs
 
-      # 6) Docker 이미지 빌드
       - name: Build Docker image
         run: |
           IMAGE_TAG=${{ github.sha }}
           docker build -t promesa:${IMAGE_TAG} .
           docker tag promesa:${IMAGE_TAG} promesa:latest
 
-      # 7) ECR 로그인 (Docker CLI용 토큰)
       - name: ECR Login
         uses: aws-actions/amazon-ecr-login@v1
         with:
           region: ${{ env.AWS_REGION }}
 
-      # 8) Docker 이미지 Tag & Push to ECR
       - name: Tag and Push to ECR
         run: |
           IMAGE_TAG=${{ github.sha }}
           ECR_REGISTRY=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
-
-          # 1) SHA 태그로 tag & push
           docker tag promesa:${IMAGE_TAG} ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}
           docker push ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}
-
-          # 2) latest 태그로도 tag & push
           docker tag promesa:latest ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
           docker push ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
 
-      # 9) .env 디렉토리 존재시 삭제
-      - name: Clean existing .env
+      - name: Clean existing .env and zip
         run: |
-           if [ -d .env ]; then
-            echo "'.env' 디렉토리가 존재하여 삭제합니다."
-            rm -rf .env
-           fi
+          echo "[🧹] .env 및 latest.zip 제거 시작"
+          [ -d .env ] && rm -rf .env
+          [ -f .env ] && rm -f .env
+          [ -f latest.zip ] && rm -f latest.zip
 
-      # 10) .env 파일 생성
       - name: Create .env file
         run: |
           echo "RDS_URL=${{ secrets.RDS_URL }}"         >> .env
@@ -104,7 +86,6 @@ jobs:
           echo "REDIS_PORT=${{ secrets.REDIS_PORT }}"     >> .env
           echo "AWS_REGION=ap-northeast-2"                >> .env
 
-      # 11) AppSpec, JAR, 스크립트 폴더를 ZIP으로 묶기
       - name: Zip for CodeDeploy
         run: |
           zip -r latest.zip \
@@ -113,12 +94,12 @@ jobs:
             scripts/
           zip -g latest.zip .env
 
-      # 12) S3로 ZIP 업로드
-      - name: Upload to S3
-        run: |
-          aws s3 cp latest.zip s3://ceos-promesa/latest.zip
+      - name: Check contents of latest.zip
+        run: unzip -l latest.zip
 
-      # 13) CodeDeploy 배포 요청
+      - name: Upload to S3
+        run: aws s3 cp latest.zip s3://ceos-promesa/latest.zip
+
       - name: Request to CodeDeploy
         run: |
           aws deploy create-deployment \
