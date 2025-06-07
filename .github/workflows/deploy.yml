@@ -18,11 +18,6 @@ jobs:
       AWS_REGION: ap-northeast-2
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       ECR_REPOSITORY: promesa-repo
-      RDS_URL: ${{ secrets.RDS_URL }}
-      RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
-      RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
-      REDIS_HOST: ${{ secrets.REDIS_HOST }}
-      REDIS_PORT: ${{ secrets.REDIS_PORT }}
 
     steps:
       - name: Checkout repository
@@ -70,38 +65,12 @@ jobs:
           docker tag promesa:latest ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
           docker push ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
 
-      - name: Clean .env and latest.zip
-        run: |
-          echo "[🧹] .env 및 latest.zip 제거 시작"
-          if [ -d .env ]; then
-            echo ".env 디렉토리를 삭제합니다"
-            rm -rf .env
-          elif [ -f .env ]; then
-            echo ".env 파일을 삭제합니다"
-            rm -f .env
-          fi
-
-          if [ -f latest.zip ]; then
-            echo "latest.zip 파일을 삭제합니다"
-            rm -f latest.zip
-          fi
-
-      - name: Create .env file
-        run: |
-          echo "RDS_URL=${{ secrets.RDS_URL }}"         >> .env
-          echo "RDS_USERNAME=${{ secrets.RDS_USERNAME }}" >> .env
-          echo "RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}" >> .env
-          echo "REDIS_HOST=${{ secrets.REDIS_HOST }}"     >> .env
-          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}"     >> .env
-          echo "AWS_REGION=ap-northeast-2"                >> .env
-
       - name: Zip for CodeDeploy
         run: |
           zip -r latest.zip \
             appspec.yml \
             build/libs/promesa-0.0.1-SNAPSHOT.jar \
             scripts/
-          zip -g latest.zip .env
 
       - name: Check contents of latest.zip
         run: unzip -l latest.zip

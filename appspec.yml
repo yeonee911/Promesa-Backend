@@ -8,15 +8,8 @@ files:
   - source: build/libs/promesa-0.0.1-SNAPSHOT.jar
     destination: /home/ubuntu/app/promesa-0.0.1-SNAPSHOT.jar
 
-  - source: .env
-    destination: /home/ubuntu/app/.env
-
 hooks:
   BeforeInstall:
-    - location: scripts/clean_env.sh
-      timeout: 300
-      runas: root
-
     - location: scripts/before_install.sh
       timeout: 300
       runas: root
