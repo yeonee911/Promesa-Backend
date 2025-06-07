@@ -63,7 +63,6 @@ jobs:
       - name: Build Docker image
         run: |
           IMAGE_TAG=${{ github.sha }}
-          # Dockerfile이 있는 프로젝트 루트에서 빌드
           docker build -t promesa:${IMAGE_TAG} .
           docker tag promesa:${IMAGE_TAG} promesa:latest
 
@@ -87,7 +86,15 @@ jobs:
           docker tag promesa:latest ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
           docker push ${ECR_REGISTRY}/${{ env.ECR_REPOSITORY }}:latest
 
-      # .env 파일 생성
+      # 9) .env 디렉토리 존재시 삭제
+      - name: Clean existing .env
+        run: |
+           if [ -d .env ]; then
+           echo "'.env' 디렉토리가 존재하여 삭제합니다."
+          rm -rf .env
+          fi
+
+      # 10) .env 파일 생성
       - name: Create .env file
         run: |
           echo "RDS_URL=${{ secrets.RDS_URL }}"         >> .env
@@ -97,27 +104,21 @@ jobs:
           echo "REDIS_PORT=${{ secrets.REDIS_PORT }}"     >> .env
           echo "AWS_REGION=ap-northeast-2"                >> .env
 
-      # 9) AppSpec, JAR, 스크립트 폴더를 ZIP으로 묶기
+      # 11) AppSpec, JAR, 스크립트 폴더를 ZIP으로 묶기
       - name: Zip for CodeDeploy
         run: |
           zip -r latest.zip \
             appspec.yml \
             build/libs/promesa-0.0.1-SNAPSHOT.jar \
-            scripts/ \
-          zip latest.zip .env
+            scripts/
+          zip -g latest.zip .env
 
-      # 10) (디버그) ZIP 내부 확인하기
-      - name: List contents of latest.zip
-        run: |
-          echo "🔍 ZIP 내부 파일 목록:"
-          unzip -l latest.zip
-
-      # 11) S3로 ZIP 업로드
+      # 12) S3로 ZIP 업로드
       - name: Upload to S3
         run: |
           aws s3 cp latest.zip s3://ceos-promesa/latest.zip
 
-      # 12) CodeDeploy 배포 요청
+      # 13) CodeDeploy 배포 요청
       - name: Request to CodeDeploy
         run: |
           aws deploy create-deployment \
