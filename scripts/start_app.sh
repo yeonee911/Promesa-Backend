@@ -30,7 +30,7 @@ fi
 # 4) 새 컨테이너 실행 (포트 분리)
 docker run -d \
   --name promesa-container \
-  -p ${TARGET_PORT}:8080 \
+  -p ${TARGET_PORT}:8081 \
   -e SPRING_PROFILES_ACTIVE=prod \
   -e RDS_URL="jdbc:mysql://${DB_ENDPOINT}:${DB_PORT}/${DB_NAME}?characterEncoding=UTF-8&serverTimezone=Asia/Seoul" \
   -e RDS_USERNAME="${RDS_USERNAME}" \
@@ -41,7 +41,7 @@ docker run -d \
 
 # 4) 헬스 체크 (Green:8082가 200을 줄 때까지 최대 30초 대기)
 for i in {1..6}; do
-  STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8082/actuator/health)
+  STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:${TARGET_PORT}/actuator/health)
   if [ "$STATUS" == "200" ]; then
     echo "Green(8082) is healthy."
     break
