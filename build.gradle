@@ -56,6 +56,7 @@ dependencies {
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 // gradle clean 시에 QClass 디렉토리 삭제
