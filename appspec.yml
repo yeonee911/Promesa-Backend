@@ -6,6 +6,8 @@ files:
     destination: /home/ubuntu/app/scripts/
 
 hooks:
+  ApplicationStop: []
+
   BeforeInstall:
     - location: scripts/before_install.sh
       timeout: 300
@@ -18,10 +20,5 @@ hooks:
 
   ApplicationStart:
     - location: scripts/switch.sh
-      timeout: 300
-      runas: root
-
-  ApplicationStop:
-    - location: scripts/stop_app.sh
       timeout: 300
       runas: root
