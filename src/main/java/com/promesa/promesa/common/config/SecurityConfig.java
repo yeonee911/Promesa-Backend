@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/actuator/**",
                                 "/", "/login", "/signup",
                                 "/index.html", "/static/**", "/favicon.ico",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**"
