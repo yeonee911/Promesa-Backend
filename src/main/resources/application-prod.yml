@@ -25,3 +25,12 @@ logging:
   level:
     # 운영에서는 SQL 로그는 꺼 둠
     org.hibernate.SQL: WARN
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
