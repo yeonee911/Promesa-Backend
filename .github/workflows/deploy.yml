@@ -69,7 +69,6 @@ jobs:
         run: |
           zip -r latest.zip \
             appspec.yml \
-            build/libs/promesa-0.0.1-SNAPSHOT.jar \
             scripts/
 
       - name: Check contents of latest.zip

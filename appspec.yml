@@ -5,9 +5,6 @@ files:
   - source: scripts/
     destination: /home/ubuntu/app/scripts/
 
-  - source: build/libs/promesa-0.0.1-SNAPSHOT.jar
-    destination: /home/ubuntu/app/promesa-0.0.1-SNAPSHOT.jar
-
 hooks:
   BeforeInstall:
     - location: scripts/before_install.sh
@@ -20,7 +17,7 @@ hooks:
       runas: root
 
   ApplicationStart:
-    - location: scripts/start_app.sh
+    - location: scripts/switch.sh
       timeout: 300
       runas: root
 

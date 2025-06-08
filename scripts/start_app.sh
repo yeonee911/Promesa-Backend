@@ -1,6 +1,9 @@
 #!/bin/bash
 # scripts/start_app.sh
 
+# 전달된 포트 인자 받기
+TARGET_PORT=${1:-8082}
+
 # .env 파일 로드
 source /home/ubuntu/app/.env
 
@@ -17,18 +20,17 @@ DB_NAME="promesa_db"
 # 2) ECR에서 'latest' 이미지를 pull
 aws ecr get-login-password --region ${AWS_REGION} | \
   docker login --username AWS --password-stdin ${ECR_REGISTRY}
-
 docker pull ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
 
-# 3) 기존에 같은 이름의 컨테이너가 있으면 삭제
+# 3) 기존에 컨테이너 중지 및 삭제
 if docker ps -a --format '{{.Names}}' | grep -q '^promesa-container$'; then
   docker rm -f promesa-container
 fi
 
-# 4) 새 컨테이너 실행 (Green:8082)
+# 4) 새 컨테이너 실행 (포트 분리)
 docker run -d \
   --name promesa-container \
-  --network host \
+  -p ${TARGET_PORT}:8080 \
   -e SPRING_PROFILES_ACTIVE=prod \
   -e RDS_URL="jdbc:mysql://${DB_ENDPOINT}:${DB_PORT}/${DB_NAME}?characterEncoding=UTF-8&serverTimezone=Asia/Seoul" \
   -e RDS_USERNAME="${RDS_USERNAME}" \
@@ -47,6 +49,3 @@ for i in {1..6}; do
   echo "Waiting for Green(8082) to become healthy..."
   sleep 5
 done
-
-# 6) switch.sh 호출
-bash /home/ubuntu/app/scripts/switch.sh
