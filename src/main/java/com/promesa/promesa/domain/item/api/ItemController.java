@@ -2,6 +2,7 @@ package com.promesa.promesa.domain.item.api;
 
 import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
 import com.promesa.promesa.domain.item.application.ItemService;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class ItemController {
     public ResponseEntity<Page<ItemPreviewResponse>> findCategoryItem(
             @PathVariable Long categoryId,
             @RequestParam Long memberId,
-            Pageable pageable)
+            @ParameterObject Pageable pageable)
     {
         Page<ItemPreviewResponse> response = itemService.findCategoryItem(memberId, categoryId, pageable);
         return ResponseEntity.ok(response);
