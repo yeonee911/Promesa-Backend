@@ -50,5 +50,9 @@ else
 	OLD_PORT=8082
 fi
 
-docker rm -f promesa-${OLD_PORT}
-echo "[INFO] 이전 서버 promesa-${OLD_PORT} 중지 및 삭제 완료"
+if docker ps -a --format '{{.Names}}' | grep -q "^promesa-${OLD_PORT}$"; then
+	docker rm -f promesa-${OLD_PORT}
+	echo "[INFO] 이전 서버 promesa-${OLD_PORT} 중지 및 삭제 완료"
+else
+	echo "[WARN] 이전 서버 promesa-${OLD_PORT} 컨테이너가 존재하지 않음. 삭제 생략."
+fi
