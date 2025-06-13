@@ -6,11 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -54,4 +58,30 @@ public class S3Service {
         }
     }
 
+    public String createPresignedPutUrl(String bucketName, String keyName, Map<String, String> metadata) {
+        try {
+
+            PutObjectRequest objectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(keyName)
+                    .metadata(metadata)
+                    .build();
+
+            PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(expireMinutes))  // The URL expires in 10 minutes.
+                    .putObjectRequest(objectRequest)
+                    .build();
+
+            PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
+            String myURL = presignedRequest.url().toString();
+            log.info("Presigned URL to upload a file to: [{}]", myURL);
+            log.info("HTTP method: [{}]", presignedRequest.httpRequest().method());
+
+            return presignedRequest.url().toExternalForm();
+        }
+        catch (Exception e){
+            log.error("Presigned URL 생성 실패: {}/{}", bucketName, keyName, e);
+            throw InternalServerError.EXCEPTION;
+        }
+    }
 }
