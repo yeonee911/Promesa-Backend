@@ -14,6 +14,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequ
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -58,29 +59,34 @@ public class S3Service {
         }
     }
 
-    public String createPresignedPutUrl(String bucketName, String keyName, Map<String, String> metadata) {
+    public List<String> createPresignedPutUrl(String bucketName, List<String> keyNames, Map<String, String> metadata) {
         try {
+            return keyNames.stream()
+                    .map(key -> {
+                        try {
+                            PutObjectRequest objectRequest = PutObjectRequest.builder()
+                                    .bucket(bucketName)
+                                    .key(key)
+                                    .metadata(metadata)
+                                    .build();
 
-            PutObjectRequest objectRequest = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(keyName)
-                    .metadata(metadata)
-                    .build();
+                            PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
+                                    .signatureDuration(Duration.ofMinutes(expireMinutes))
+                                    .putObjectRequest(objectRequest)
+                                    .build();
 
-            PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
-                    .signatureDuration(Duration.ofMinutes(expireMinutes))  // The URL expires in 10 minutes.
-                    .putObjectRequest(objectRequest)
-                    .build();
+                            PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
 
-            PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
-            String myURL = presignedRequest.url().toString();
-            log.info("Presigned URL to upload a file to: [{}]", myURL);
-            log.info("HTTP method: [{}]", presignedRequest.httpRequest().method());
-
-            return presignedRequest.url().toExternalForm();
-        }
-        catch (Exception e){
-            log.error("Presigned URL 생성 실패: {}/{}", bucketName, keyName, e);
+                            log.info("Presigned URL 생성: {}", presignedRequest.url());
+                            return presignedRequest.url().toExternalForm();
+                        } catch (Exception e) {
+                            log.error("Presigned URL 생성 실패", e);
+                            throw InternalServerError.EXCEPTION;
+                        }
+                    })
+                    .toList();
+        } catch (Exception e) {
+            log.error("Presigned URL 생성 실패", e);
             throw InternalServerError.EXCEPTION;
         }
     }
