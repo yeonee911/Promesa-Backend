@@ -1,6 +1,5 @@
 package com.promesa.promesa.domain.home.api;
 
-import com.promesa.promesa.common.config.S3.ImageUrlDto;
 import com.promesa.promesa.domain.home.application.HomeService;
 import com.promesa.promesa.domain.home.dto.BrandInfoResponse;
 import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
@@ -21,7 +20,7 @@ public class HomeController {
 
     @GetMapping("/brand-info")
     public ResponseEntity<BrandInfoResponse> getBrandInfo() {
-        return ResponseEntity.ok(BrandInfoResponse.INFO);
+        return ResponseEntity.ok(homeService.getBrandInfo());
     }
 
     @GetMapping("/exhibitions/{exhibitionId}/items")
