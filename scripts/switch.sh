@@ -41,7 +41,7 @@ if sudo nginx -t; then
 else
   echo "ERROR: nginx 설정 문법 오류. reload 취소합니다."
   exit 1
-fi
+fi  
 
 # 이전 포트 컨테이너 정리
 if [ "$CURRENT" == "8081" ]; then
