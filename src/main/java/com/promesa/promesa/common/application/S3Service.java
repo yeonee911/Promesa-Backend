@@ -16,6 +16,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -26,6 +27,10 @@ public class S3Service {
 
     @Value("${aws.s3.presigned.expire-minutes}")
     private long expireMinutes;
+
+    private String generateKey(String originalFileName) {
+        return UUID.randomUUID() + "-" + originalFileName;
+    }
 
     /**
      * PresignedUrl 생성
@@ -64,9 +69,11 @@ public class S3Service {
             return keyNames.stream()
                     .map(key -> {
                         try {
+                            String uniqueKey = generateKey(key);
+
                             PutObjectRequest objectRequest = PutObjectRequest.builder()
                                     .bucket(bucketName)
-                                    .key(key)
+                                    .key(uniqueKey)
                                     .metadata(metadata)
                                     .build();
 
@@ -76,8 +83,8 @@ public class S3Service {
                                     .build();
 
                             PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
-
                             log.info("Presigned URL 생성: {}", presignedRequest.url());
+
                             return presignedRequest.url().toExternalForm();
                         } catch (Exception e) {
                             log.error("Presigned URL 생성 실패", e);
