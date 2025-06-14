@@ -1,6 +1,7 @@
 package com.promesa.promesa.common.application;
 
 import com.promesa.promesa.common.consts.ImageType;
+import com.promesa.promesa.common.dto.s3.PresignedUrlResponse;
 import com.promesa.promesa.common.exception.InternalServerError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +62,13 @@ public class S3Service {
         }
     }
 
-    public List<String> createPresignedPutUrl(String bucketName, ImageType imageType, Long referenceId, List<String> fileNames, Map<String, String> metadata) {
+    public List<PresignedUrlResponse> createPresignedPutUrl(
+            String bucketName,
+            ImageType imageType,
+            Long referenceId,
+            List<String> fileNames,
+            Map<String, String> metadata
+    ) {
         try {
             return fileNames.stream()
                     .map(originalFileName -> {
@@ -82,7 +89,7 @@ public class S3Service {
                             PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
                             log.info("Presigned URL 생성: {}", presignedRequest.url());
 
-                            return presignedRequest.url().toExternalForm();
+                            return new PresignedUrlResponse(key, presignedRequest.url().toExternalForm());
                         } catch (Exception e) {
                             log.error("Presigned URL 생성 실패", e);
                             throw InternalServerError.EXCEPTION;
