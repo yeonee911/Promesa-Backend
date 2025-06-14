@@ -23,4 +23,8 @@ public class ReviewService {
                 request.metadata()
         );
     }
+
+    public void deleteReviewImage(String key) {
+        s3Service.deleteObject(BUCKET, key);
+    }
 }
