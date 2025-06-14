@@ -1,8 +1,6 @@
 spring:
   config:
     import: optional:file:.env[.properties]
-  profiles:
-    active: local
 
   security:
     oauth2:
@@ -31,3 +29,8 @@ logging:
 
 server:
   port: 8081
+
+aws:
+  s3:
+    presigned:
+      expire-minutes: 15
