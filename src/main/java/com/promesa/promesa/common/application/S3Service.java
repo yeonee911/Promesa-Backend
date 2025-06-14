@@ -1,5 +1,6 @@
 package com.promesa.promesa.common.application;
 
+import com.promesa.promesa.common.consts.ImageType;
 import com.promesa.promesa.common.exception.InternalServerError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +28,6 @@ public class S3Service {
 
     @Value("${aws.s3.presigned.expire-minutes}")
     private long expireMinutes;
-
-    private String generateKey(String originalFileName) {
-        return UUID.randomUUID() + "-" + originalFileName;
-    }
 
     /**
      * PresignedUrl 생성
@@ -64,16 +61,16 @@ public class S3Service {
         }
     }
 
-    public List<String> createPresignedPutUrl(String bucketName, List<String> keyNames, Map<String, String> metadata) {
+    public List<String> createPresignedPutUrl(String bucketName, ImageType imageType, Long referenceId, List<String> fileNames, Map<String, String> metadata) {
         try {
-            return keyNames.stream()
-                    .map(key -> {
+            return fileNames.stream()
+                    .map(originalFileName -> {
                         try {
-                            String uniqueKey = generateKey(key);
+                            String key = generateKey(imageType,  referenceId, originalFileName);
 
                             PutObjectRequest objectRequest = PutObjectRequest.builder()
                                     .bucket(bucketName)
-                                    .key(uniqueKey)
+                                    .key(key)
                                     .metadata(metadata)
                                     .build();
 
@@ -96,5 +93,15 @@ public class S3Service {
             log.error("Presigned URL 생성 실패", e);
             throw InternalServerError.EXCEPTION;
         }
+    }
+
+    private String generateKey(ImageType imageType, Long referenceId, String originalFileName) {
+        String uuid = UUID.randomUUID().toString();
+
+        return switch (imageType) {
+            case REVIEW -> "reviews/" + referenceId + "/" + uuid + "-" + originalFileName;
+            case PROFILE -> "profiles/" + referenceId + "/" + uuid + "-" + originalFileName;
+            case ITEM -> "items/" + referenceId + "/" + uuid + "-" + originalFileName;
+        };
     }
 }
