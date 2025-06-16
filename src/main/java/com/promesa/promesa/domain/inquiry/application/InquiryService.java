@@ -1,4 +1,9 @@
 package com.promesa.promesa.domain.inquiry.application;
+import com.promesa.promesa.domain.artist.dao.ArtistRepository;
+import com.promesa.promesa.domain.artist.domain.Artist;
+import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
+import com.promesa.promesa.domain.category.domain.Category;
+import com.promesa.promesa.domain.category.exception.CategoryNotFoundException;
 import com.promesa.promesa.domain.inquiry.dao.InquiryRepository;
 import com.promesa.promesa.domain.inquiry.dto.InquiryResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,14 +17,16 @@ import java.util.List;
 public class InquiryService {
 
     private final InquiryRepository inquiryRepository;
+    private final ArtistRepository artistRepository;
 
     @Transactional(readOnly = true)
     public List<InquiryResponse> getInquiriesByArtist(Long artistId) {
+        // 작가 존재 여부 검증
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+
         return inquiryRepository.findAllByArtistId(artistId).stream()
-                .map(inquiry -> new InquiryResponse(
-                        inquiry.getInquiryId(),
-                        inquiry.getQuestion(),
-                        inquiry.getAnswer()))
+                .map(InquiryResponse::of)
                 .toList();
     }
 }
