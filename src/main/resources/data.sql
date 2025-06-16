@@ -89,3 +89,7 @@ VALUES
     (8, 1, 8),
     (9, 1, 9),
     (10, 1, 10);
+
+INSERT INTO inquiry (inquiry_id, question, answer, artist_id)
+VALUES (1, '배송은 얼마나 걸리나요?', '약 3~5일 소요됩니다.', 1),
+       (2, '포장 상태는 어떤가요?', NULL, 1);
