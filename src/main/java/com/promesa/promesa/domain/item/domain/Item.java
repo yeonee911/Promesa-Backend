@@ -4,7 +4,7 @@ import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.image.domain.ItemImage;
 import com.promesa.promesa.domain.itemCategory.domain.ItemCategory;
-import com.promesa.promesa.domain.review.domain.Reivew;
+import com.promesa.promesa.domain.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -54,5 +54,5 @@ public class Item extends BaseTimeEntity {
     private List<ItemCategory> itemCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private List<Reivew> reivews = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 }

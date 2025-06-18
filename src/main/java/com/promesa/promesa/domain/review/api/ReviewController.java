@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.annotation.Repeatable;
 import java.util.List;
 
 @RestController
@@ -30,5 +31,9 @@ public class ReviewController {
         return ResponseEntity.ok(null);
     }
 
+    @PostMapping("/reviews")
+    public ResponseEntity<> createReview() {
+
+    }
 
 }

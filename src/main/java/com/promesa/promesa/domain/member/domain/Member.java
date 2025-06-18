@@ -1,7 +1,7 @@
 package com.promesa.promesa.domain.member.domain;
 
 import com.promesa.promesa.domain.artist.domain.Artist;
-import com.promesa.promesa.domain.review.domain.Reivew;
+import com.promesa.promesa.domain.review.domain.Review;
 import com.promesa.promesa.domain.wish.domain.Wish;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -36,7 +36,7 @@ public class Member {
     private Artist artist;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Reivew> reivews = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 
     // 사용자의 이름 업데이트하는 메소드
     public Member updateMember(String name){
