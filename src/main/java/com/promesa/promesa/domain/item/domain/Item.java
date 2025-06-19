@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Item extends BaseTimeEntity {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long id;
 
@@ -38,7 +38,13 @@ public class Item extends BaseTimeEntity {
 
     @NotNull
     @Column(name = "wish_count")
-    private int wishCount;
+    private int wishCount = 0;
+
+    @Column(name = "average_rating")
+    private Double averageRating;   // 리뷰가 없을 경우 null 가능
+
+    @Column(name = "review_count")
+    private int reviewCount = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id")
@@ -55,4 +61,23 @@ public class Item extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
+
+    public void increaseReviewCount() {
+        this.reviewCount++;
+    }
+
+    public void decreaseReviewCount() {
+        this.reviewCount--;
+    }
+
+    public void calculateAverageRating(int newRating) {
+        if (this.averageRating == null) {   // 첫 리뷰 등록일 경우 0으로 초기화
+            this.averageRating = 0.0;
+        }
+
+        double totalRating = this.averageRating * this.reviewCount; // 기존 총 평점 합
+        totalRating += newRating;   // 신규 평점 추가
+        increaseReviewCount();  // 리뷰 개수 증가
+        this.averageRating = totalRating / this.reviewCount;    // 새로운 평균 평점 계산
+    }
 }
