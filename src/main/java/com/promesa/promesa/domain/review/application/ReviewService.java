@@ -12,6 +12,7 @@ import com.promesa.promesa.domain.review.domain.Review;
 import com.promesa.promesa.domain.review.domain.ReviewImage;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
+import com.promesa.promesa.domain.review.exception.ReviewDuplicateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,11 @@ public class ReviewService {
                 .orElseThrow(()-> ItemNotFoundException.EXCEPTION);
 
         // 실제 주문 내역이 있는지 검증
+
+        // 리뷰 중복 등록 검증
+        if (reviewRepository.existsByItemIdAndMemberId(itemId, member.getId())) {
+            throw ReviewDuplicateException.EXCEPTION;
+        }
 
         // 리뷰 생성
         Review review = Review.builder()
