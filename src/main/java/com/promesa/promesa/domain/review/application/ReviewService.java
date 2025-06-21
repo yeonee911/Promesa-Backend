@@ -62,8 +62,8 @@ public class ReviewService {
 
         // 리뷰 생성
         Review review = Review.builder()
-                .content(request.content())
-                .rating(request.rating())
+                .content(request.getContent())
+                .rating(request.getRating())
                 .item(item)
                 .member(member)
                 .build();
@@ -72,8 +72,8 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
 
         // 리뷰 이미지 추가
-        if (request.imageKeys() != null) {
-            for (String key : request.imageKeys()) {
+        if (request.getImageKeys() != null) {
+            for (String key : request.getImageKeys()) {
                 ReviewImage reviewImage =  ReviewImage.builder()
                         .key(key)
                         .build();
@@ -82,7 +82,7 @@ public class ReviewService {
         }
 
         // 상품 평점 업데이트 및 상품의 리뷰 개수 추가
-        item.addReview(request.rating());
+        item.addReview(request.getRating());
 
         return ReviewResponse.from(savedReview, s3Service, BUCKET);
     }

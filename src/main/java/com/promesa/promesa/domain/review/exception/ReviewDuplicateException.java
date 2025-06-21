@@ -1,4 +1,4 @@
-﻿package com.promesa.promesa.domain.review.exception;
+package com.promesa.promesa.domain.review.exception;
 
 import com.promesa.promesa.common.exception.PromesaCodeException;
 

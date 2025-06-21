@@ -37,10 +37,10 @@ public class ReviewController {
         return ResponseEntity.ok(null);
     }
 
-    @PostMapping("/reviews")
+    @PostMapping("/items/{itemId}/reviews")
     public ResponseEntity<ReviewResponse> createReview(
             @RequestBody @Valid AddReviewRequest request,
-            @RequestParam Long itemId,
+            @PathVariable Long itemId,
             @AuthenticationPrincipal OAuth2User user
     )
     {
