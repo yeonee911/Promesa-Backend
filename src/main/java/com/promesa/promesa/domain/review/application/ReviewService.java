@@ -76,7 +76,7 @@ public class ReviewService {
         }
 
         // 상품 평점 업데이트 및 상품의 리뷰 개수 추가
-        item.calculateAverageRating(request.rating());
+        item.addReview(request.rating());
 
         return ReviewResponse.from(savedReview, s3Service, BUCKET);
     }

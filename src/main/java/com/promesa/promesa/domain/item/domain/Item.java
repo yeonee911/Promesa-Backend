@@ -46,6 +46,9 @@ public class Item extends BaseTimeEntity {
     @Column(name = "review_count")
     private int reviewCount = 0;
 
+    @Column(name = "total_rating")
+    private double totalRating = 0.0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id")
     private Artist artist;
@@ -70,14 +73,32 @@ public class Item extends BaseTimeEntity {
         this.reviewCount--;
     }
 
-    public void calculateAverageRating(int newRating) {
-        if (this.averageRating == null) {   // 첫 리뷰 등록일 경우 0으로 초기화
+    public void increaseTotalRating(int newRating) {
+        this.totalRating += newRating;
+    }
+
+    public void decreaseTotalRating(int newRating) {
+        this.totalRating -= newRating;
+    }
+
+    public void addReview(int newRating) {
+        increaseReviewCount();
+        increaseTotalRating(newRating);
+        updateAverageRating();
+    }
+
+    public void removeReview(int newRating) {
+        decreaseReviewCount();
+        decreaseTotalRating(newRating);
+        updateAverageRating();
+    }
+
+    public void updateAverageRating() {
+        if (this.reviewCount == 0) {
             this.averageRating = 0.0;
         }
-
-        double totalRating = this.averageRating * this.reviewCount; // 기존 총 평점 합
-        totalRating += newRating;   // 신규 평점 추가
-        increaseReviewCount();  // 리뷰 개수 증가
-        this.averageRating = totalRating / this.reviewCount;    // 새로운 평균 평점 계산
+        else {
+            this.averageRating = this.totalRating / this.reviewCount;
+        }
     }
 }
