@@ -39,8 +39,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Gradle Build Run (skip tests)
-        run: ./gradlew build -x test
+      - name: Gradle Clean and Build (skip tests)
+        run: ./gradlew clean build -x test
 
       - name: Show build/libs contents
         run: ls -al build/libs
