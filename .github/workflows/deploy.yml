@@ -67,10 +67,10 @@ jobs:
 
       - name: Zip for CodeDeploy
         run: |
-          cp build/libs/*.jar scripts/
           zip -r latest.zip \
             appspec.yml \
-            scripts/
+            scripts/ \
+            build/libs/*.jar
 
       - name: Check contents of latest.zip
         run: unzip -l latest.zip
