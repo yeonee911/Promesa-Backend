@@ -67,10 +67,10 @@ jobs:
 
       - name: Zip for CodeDeploy
         run: |
+          cp build/libs/promesa-0.0.1-SNAPSHOT.jar scripts/app.jar
           zip -r latest.zip \
-            appspec.yml \
-            scripts/ \
-            build/libs/*.jar
+          appspec.yml \
+          scripts/
 
       - name: Check contents of latest.zip
         run: unzip -l latest.zip
