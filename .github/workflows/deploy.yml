@@ -67,6 +67,7 @@ jobs:
 
       - name: Zip for CodeDeploy
         run: |
+          cp build/libs/*.jar scripts/
           zip -r latest.zip \
             appspec.yml \
             scripts/
