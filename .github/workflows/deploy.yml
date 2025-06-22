@@ -48,7 +48,7 @@ jobs:
       - name: Build Docker image
         run: |
           IMAGE_TAG=${{ github.sha }}
-          docker build -t promesa:${IMAGE_TAG} .
+          docker build --no-cache -t promesa:${IMAGE_TAG} .
           docker tag promesa:${IMAGE_TAG} promesa:latest
 
       - name: ECR Login
