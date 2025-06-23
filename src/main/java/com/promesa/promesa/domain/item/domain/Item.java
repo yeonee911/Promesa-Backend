@@ -77,8 +77,8 @@ public class Item extends BaseTimeEntity {
         this.totalRating += newRating;
     }
 
-    public void decreaseTotalRating(int newRating) {
-        this.totalRating -= newRating;
+    public void decreaseTotalRating(int rating) {
+        this.totalRating -= rating;
     }
 
     public void addReview(int newRating) {
@@ -87,9 +87,9 @@ public class Item extends BaseTimeEntity {
         updateAverageRating();
     }
 
-    public void removeReview(int newRating) {
+    public void removeReview(int rating) {
         decreaseReviewCount();
-        decreaseTotalRating(newRating);
+        decreaseTotalRating(rating);
         updateAverageRating();
     }
 

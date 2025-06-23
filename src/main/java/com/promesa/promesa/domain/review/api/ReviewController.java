@@ -1,6 +1,5 @@
 package com.promesa.promesa.domain.review.api;
 
-import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.common.dto.s3.PresignedUrlRequest;
 import com.promesa.promesa.common.dto.s3.PresignedUrlResponse;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
@@ -54,4 +53,20 @@ public class ReviewController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/items/{itemId}/reviews/{reviewId}")
+    public ResponseEntity<String> removeReview(
+            @PathVariable Long itemId,
+            @PathVariable Long reviewId,
+            @AuthenticationPrincipal OAuth2User user
+    )
+    {
+        // 임시 유저 객체 찾기
+        String provider = (String) user.getAttribute("provider");
+        String providerId = (String) user.getAttribute("providerId");
+        Member member = memberRepository.findByProviderAndProviderId(provider, providerId)
+                .orElseThrow(() -> new RuntimeException("회원 정보 없음"));
+
+        reviewService.deleteReview(itemId, reviewId, member);
+        return ResponseEntity.ok(null);
+    }
 }

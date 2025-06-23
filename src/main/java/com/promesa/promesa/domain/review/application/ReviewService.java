@@ -12,7 +12,10 @@ import com.promesa.promesa.domain.review.domain.Review;
 import com.promesa.promesa.domain.review.domain.ReviewImage;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
+import com.promesa.promesa.domain.review.exception.ReviewAccessDeniedException;
 import com.promesa.promesa.domain.review.exception.ReviewDuplicateException;
+import com.promesa.promesa.domain.review.exception.ReviewItemMismatchException;
+import com.promesa.promesa.domain.review.exception.ReviewNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +41,7 @@ public class ReviewService {
         );
     }
 
+    @Transactional
     public void deleteReviewImage(String key) {
         s3Service.deleteObject(BUCKET, key);
     }
@@ -85,5 +89,35 @@ public class ReviewService {
         item.addReview(request.getRating());
 
         return ReviewResponse.from(savedReview, s3Service, BUCKET);
+    }
+
+    /**
+     * 리뷰 삭제
+     *
+     * @param itemId
+     * @param reviewId
+     */
+    @Transactional
+    public void deleteReview(Long itemId, Long reviewId, Member member) {
+        Review target = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
+
+        if (!target.getItem().getId().equals(itemId)) {
+            throw ReviewItemMismatchException.EXCEPTION;
+        }
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(()-> ItemNotFoundException.EXCEPTION);
+
+        if (!target.getMember().getId().equals(member.getId())) {
+            throw ReviewAccessDeniedException.EXCEPTION;
+        }
+
+        for (ReviewImage reviewImage : target.getReviewImages()) {  // 리뷰 이미지 삭제
+            deleteReviewImage(reviewImage.getKey());
+        }
+
+        item.removeReview(target.getRating());  // 평점 삭제
+        reviewRepository.delete(target);
     }
 }
