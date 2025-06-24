@@ -25,6 +25,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ReviewService {
     private final S3Service s3Service;
     private final ItemRepository itemRepository;
@@ -42,7 +43,6 @@ public class ReviewService {
         );
     }
 
-    @Transactional
     public void deleteReviewImage(String key) {
         s3Service.deleteObject(BUCKET, key);
     }
@@ -95,25 +95,13 @@ public class ReviewService {
 
     /**
      * 리뷰 삭제
-     *
      * @param itemId
      * @param reviewId
      */
     @Transactional
     public void deleteReview(Long itemId, Long reviewId, Member member) {
-        Review target = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
-
-        if (!target.getItem().getId().equals(itemId)) {
-            throw ReviewItemMismatchException.EXCEPTION;
-        }
-
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(()-> ItemNotFoundException.EXCEPTION);
-
-        if (!target.getMember().getId().equals(member.getId())) {
-            throw ReviewAccessDeniedException.EXCEPTION;
-        }
+        Review target = getVerifiedReview(itemId, reviewId, member);
+        Item item = target.getItem();
 
         for (ReviewImage reviewImage : target.getReviewImages()) {  // 리뷰 이미지 삭제
             deleteReviewImage(reviewImage.getKey());
@@ -130,20 +118,10 @@ public class ReviewService {
      * @param member
      * @return
      */
+    @Transactional
     public ReviewResponse updateReview(UpdateReviewRequest request, Long itemId, Long reviewId, Member member) {
-        Review target = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
-
-        if (!target.getItem().getId().equals(itemId)) {
-            throw ReviewItemMismatchException.EXCEPTION;
-        }
-
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(()-> ItemNotFoundException.EXCEPTION);
-
-        if (!target.getMember().getId().equals(member.getId())) {
-            throw ReviewAccessDeniedException.EXCEPTION;
-        }
+        Review target = getVerifiedReview(itemId, reviewId, member);
+        Item item = target.getItem();
 
         if (request.getContent() != null) {
             target.setContent(request.getContent());
@@ -166,5 +144,20 @@ public class ReviewService {
         }
 
         return ReviewResponse.from(target, s3Service, BUCKET);
+    }
+
+    public Review getVerifiedReview(Long itemId, Long reviewId, Member member) {
+        Review target = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
+
+        if (!target.getItem().getId().equals(itemId)) {
+            throw ReviewItemMismatchException.EXCEPTION;
+        }
+
+        if (!target.getMember().getId().equals(member.getId())) {
+            throw ReviewAccessDeniedException.EXCEPTION;
+        }
+
+        return target;
     }
 }
