@@ -18,6 +18,7 @@ import com.promesa.promesa.domain.review.exception.ReviewDuplicateException;
 import com.promesa.promesa.domain.review.exception.ReviewItemMismatchException;
 import com.promesa.promesa.domain.review.exception.ReviewNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +32,12 @@ public class ReviewService {
     private final ItemRepository itemRepository;
     private final ReviewRepository reviewRepository;
 
-    private static final String BUCKET = "ceos-promesa";
+    @Value("${aws.s3.bucket}")
+    private String bucketName;
 
     public List<PresignedUrlResponse> getPresignedPutUrls(PresignedUrlRequest request) {
         return s3Service.createPresignedPutUrl(
-                BUCKET,
+                bucketName,
                 request.imageType(),
                 request.referenceId(),
                 request.fileNames(),
@@ -44,7 +46,7 @@ public class ReviewService {
     }
 
     public void deleteReviewImage(String key) {
-        s3Service.deleteObject(BUCKET, key);
+        s3Service.deleteObject(bucketName, key);
     }
 
     /**
@@ -90,7 +92,7 @@ public class ReviewService {
         // 상품 평점 업데이트 및 상품의 리뷰 개수 추가
         item.addReview(request.getRating());
 
-        return ReviewResponse.from(savedReview, s3Service, BUCKET);
+        return ReviewResponse.from(savedReview, s3Service, bucketName);
     }
 
     /**
@@ -143,7 +145,7 @@ public class ReviewService {
             target.setReviewImages(images);
         }
 
-        return ReviewResponse.from(target, s3Service, BUCKET);
+        return ReviewResponse.from(target, s3Service, bucketName);
     }
 
     public Review getVerifiedReview(Long itemId, Long reviewId, Member member) {
