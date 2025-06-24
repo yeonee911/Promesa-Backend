@@ -6,6 +6,7 @@ import com.promesa.promesa.domain.artist.dto.ArtistResponse;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.member.exception.MemberNotFoundException;
 import com.promesa.promesa.domain.wish.dao.WishRepository;
 import com.promesa.promesa.domain.wish.domain.TargetType;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class ArtistService {
             String providerId = (String) user.getAttribute("providerId");
 
             Member member = memberRepository.findByProviderAndProviderId(provider, providerId)
-                    .orElseThrow(() -> new RuntimeException("회원 정보 없음"));
+                    .orElseThrow(() -> MemberNotFoundException.EXCEPTION);
 
             isWishlisted = wishRepository.existsByMemberAndTargetTypeAndTargetId(
                     member, TargetType.ARTIST, artist.getId()
