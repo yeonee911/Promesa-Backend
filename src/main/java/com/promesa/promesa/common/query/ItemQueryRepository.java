@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.promesa.promesa.domain.artist.domain.QArtist.artist;
-import static com.promesa.promesa.domain.image.domain.QItemImage.itemImage;
 import static com.promesa.promesa.domain.item.domain.QExhibitionItem.exhibitionItem;
 import static com.promesa.promesa.domain.item.domain.QItem.item;
+import static com.promesa.promesa.domain.item.domain.QItemImage.itemImage;
 import static com.promesa.promesa.domain.itemCategory.domain.QItemCategory.itemCategory;
 import static com.promesa.promesa.domain.wish.domain.QWish.wish;
 
@@ -38,14 +38,14 @@ public class ItemQueryRepository {
      */
     public List<ItemPreviewResponse> findExhibitionItem(Long memberId, Long exhibitionId) {
         return queryFactory
-                .select(Projections.constructor(ItemPreviewResponse.class,
-                        item.id,
-                        item.name,
-                        item.description,
+                .select(Projections.fields(ItemPreviewResponse.class,
+                        item.id.as("itemId"),
+                        item.name.as("itemName"),
+                        item.description.as("itemDescription"),
                         item.price,
-                        itemImage.imageUrl,
-                        artist.name,
-                        wish.id.isNotNull()
+                        itemImage.imageKey,
+                        artist.name.as("artistName"),
+                        wish.id.isNotNull().as("isWished")
                 ))
                 .from(exhibitionItem)
                 .join(exhibitionItem.item, item)
@@ -70,14 +70,14 @@ public class ItemQueryRepository {
      */
     public Page<ItemPreviewResponse> findCategoryItem(Long memberId, Long categoryId, Pageable pageable) {
         List<ItemPreviewResponse> content = queryFactory
-                .select(Projections.constructor(ItemPreviewResponse.class,
-                        item.id,
-                        item.name,
-                        item.description,
+                .select(Projections.fields(ItemPreviewResponse.class,
+                        item.id.as("itemId"),
+                        item.name.as("itemName"),
+                        item.description.as("itemDescription"),
                         item.price,
-                        itemImage.imageUrl,
-                        artist.name,
-                        wish.id.isNotNull()
+                        itemImage.imageKey,
+                        artist.name.as("artistName"),
+                        wish.id.isNotNull().as("isWished")
                 ))
                 .from(itemCategory)
                 .join(itemCategory.item, item)

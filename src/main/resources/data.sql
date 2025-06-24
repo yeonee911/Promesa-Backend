@@ -37,18 +37,18 @@ VALUES
     (9, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '투톤 머그', '모던 머그', 11000, 'ON_SALE', 6, 0, 3),
     (10, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '라인 컵', '라인 컵', 12500, 'ON_SALE', 4, 0, 1);
 
-INSERT INTO ITEM_IMAGE (ITEM_IMAGE_ID, IMAGE_URL, IS_THUMBNAIL, ITEM_ID)
+INSERT INTO ITEM_IMAGE (ITEM_IMAGE_ID, ITEM_IMAGE_KEY, IS_THUMBNAIL, ITEM_ID)
 VALUES
-    (1, 'https://example.com/image1.jpg', TRUE, 1),
-    (2, 'https://example.com/image2.jpg', TRUE, 2),
-    (3, 'https://example.com/image3.jpg', TRUE, 3),
-    (4, 'https://example.com/image4.jpg', TRUE, 4),
-    (5, 'https://example.com/image5.jpg', TRUE, 5),
-    (6, 'https://example.com/image6.jpg', TRUE, 6),
-    (7, 'https://example.com/image7.jpg', TRUE, 7),
-    (8, 'https://example.com/image8.jpg', TRUE, 8),
-    (9, 'https://example.com/image9.jpg', TRUE, 9),
-    (10, 'https://example.com/image10.jpg', TRUE, 10);
+    (1, 'image1.jpg', TRUE, 1),
+    (2, 'image2.jpg', TRUE, 2),
+    (3, 'image3.jpg', TRUE, 3),
+    (4, 'image4.jpg', TRUE, 4),
+    (5, 'image5.jpg', TRUE, 5),
+    (6, 'image6.jpg', TRUE, 6),
+    (7, 'image7.jpg', TRUE, 7),
+    (8, 'image8.jpg', TRUE, 8),
+    (9, 'image9.jpg', TRUE, 9),
+    (10, 'image10.jpg', TRUE, 10);
 
 INSERT INTO WISH (WISH_ID, TARGET_ID, TARGET_TYPE, MEMBER_ID)
 VALUES

@@ -1,6 +1,5 @@
-package com.promesa.promesa.domain.image.domain;
+package com.promesa.promesa.domain.item.domain;
 
-import com.promesa.promesa.domain.item.domain.Item;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,8 +16,8 @@ public class ItemImage {
     private Long id;
 
     @NotBlank
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "item_image_key")
+    private String imageKey;
 
     @NotNull
     private boolean isThumbnail;
