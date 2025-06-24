@@ -26,7 +26,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/actuator/**",
                                 "/", "/login", "/signup",
-                                "/brand-info", "/categories/**", "exhibitions/**","/review-images/**","/inquiries/**",
+                                "/brand-info", "/categories/**", "exhibitions/**","/review-images/**","/inquiries/**","/artists/**",
                                 "/index.html", "/static/**", "/favicon.ico",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**"
                         ).permitAll()                        // 위 경로는 인증 없이 접근 허용
@@ -35,7 +35,7 @@ public class SecurityConfig {
                 )
 
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("http://13.209.202.120:3000/home", true)
+                        .defaultSuccessUrl("http://localhost:3000/home", true)
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2Service)
                         )
