@@ -7,15 +7,17 @@ public record ArtistResponse(
         String profileImageUrl,
         String bio,
         String instagramUrl,
-        int wishCount
+        int wishCount,
+        boolean isWishlisted
 ){
-    public static ArtistResponse from(Artist artist) {
+    public static ArtistResponse from(Artist artist,boolean isWishlisted) {
         return new ArtistResponse(
                 artist.getName(),
                 artist.getProfileImageUrl(),
                 artist.getDescription(),
                 "https://instagram.com/" + artist.getInsta(),
-                artist.getWishCount()
+                artist.getWishCount(),
+                isWishlisted
         );
     }
 }

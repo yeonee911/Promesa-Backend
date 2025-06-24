@@ -1,6 +1,9 @@
 INSERT INTO MEMBER (MEMBER_ID)
 VALUES (1), (2), (3), (4), (5);
 
+INSERT INTO MEMBER (MEMBER_ID, NAME, PROVIDER, PROVIDER_ID)
+VALUES (6, '김회원', 'kakao', '1234');
+
 INSERT INTO ARTIST (ARTIST_ID, DESCRIPTION, INSTA, NAME, PROFILE_IMAGE_URL, WISH_COUNT, MEMBER_ID)
 VALUES
     (1, '임시 작가입니다', 'good_artist', '김작가', 'https://example.com/profile.jpg', 0, 1),
@@ -58,7 +61,10 @@ VALUES
     (7, 5, 'ITEM', 3),
     (8, 5, 'ITEM', 4),
     (9, 6, 'ITEM', 2),
-    (10, 8, 'ITEM', 2);
+    (10, 8, 'ITEM', 2),
+    (11, 1, 'ARTIST', 6),
+    (12, 1, 'ARTIST', 5);
+
 
 INSERT INTO ITEM_CATEGORY (ITEM_CATEGORY_ID, CATEGORY_ID, ITEM_ID)
 VALUES
