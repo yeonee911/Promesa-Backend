@@ -69,38 +69,38 @@ VALUES
     (11, 1, 'ARTIST', 1),
     (12, 1, 'ARTIST', 2);
 
--- ✅ ITEM_CATEGORY (복합키 → ID 필요 없음)
-INSERT INTO ITEM_CATEGORY (CATEGORY_ID, ITEM_ID)
+-- ✅ ITEM_CATEGORY
+INSERT INTO ITEM_CATEGORY (ITEM_CATEGORY_ID, CATEGORY_ID, ITEM_ID)
 VALUES
-    (1, 1),
-    (2, 2),
-    (3, 3),
-    (1, 4),
-    (1, 5),
-    (1, 6),
-    (2, 7),
-    (3, 8),
-    (1, 9),
-    (1, 10);
+    (1, 1, 1),
+    (2, 2, 2),
+    (3, 3, 3),
+    (4, 1, 4),
+    (5, 1, 5),
+    (6, 1, 6),
+    (7, 2, 7),
+    (8, 3, 8),
+    (9, 1, 9),
+    (10, 1, 10);
 
 -- ✅ EXHIBITION
 INSERT INTO EXHIBITION (EXHIBITION_ID, DESCRIPTION, TITLE, CREATED_AT, UPDATED_AT)
 VALUES
     (1, '따뜻한 봄 작품들', '봄 기획전', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
--- ✅ EXHIBITION_ITEM (복합키 → ID 필요 없음)
-INSERT INTO EXHIBITION_ITEM (EXHIBITION_ID, ITEM_ID)
+-- ✅ EXHIBITION_ITEM
+INSERT INTO EXHIBITION_ITEM (EXHIBITION_ITEM_ID, EXHIBITION_ID, ITEM_ID)
 VALUES
-    (1, 1),
-    (1, 2),
-    (1, 3),
-    (1, 4),
-    (1, 5),
-    (1, 6),
-    (1, 7),
-    (1, 8),
-    (1, 9),
-    (1, 10);
+    (1, 1, 1),
+    (2, 1, 2),
+    (3, 1, 3),
+    (4, 1, 4),
+    (5, 1, 5),
+    (6, 1, 6),
+    (7, 1, 7),
+    (8, 1, 8),
+    (9, 1, 9),
+    (10, 1, 10);
 
 -- ✅ INQUIRY
 INSERT INTO INQUIRY (INQUIRY_ID, QUESTION, ANSWER, ARTIST_ID)
