@@ -10,10 +10,10 @@ public record ArtistResponse(
         int wishCount,
         boolean isWishlisted
 ){
-    public static ArtistResponse from(Artist artist,boolean isWishlisted) {
+    public static ArtistResponse from(Artist artist,String presignedUrl,boolean isWishlisted) {
         return new ArtistResponse(
                 artist.getName(),
-                artist.getProfileImageUrl(),
+                presignedUrl,
                 artist.getDescription(),
                 "https://instagram.com/" + artist.getInsta(),
                 artist.getWishCount(),

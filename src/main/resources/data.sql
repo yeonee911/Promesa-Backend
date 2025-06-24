@@ -4,11 +4,11 @@ VALUES (1), (2), (3), (4), (5);
 INSERT INTO MEMBER (MEMBER_ID, NAME, PROVIDER, PROVIDER_ID)
 VALUES (6, '김회원', 'kakao', '1234');
 
-INSERT INTO ARTIST (ARTIST_ID, DESCRIPTION, INSTA, NAME, PROFILE_IMAGE_URL, WISH_COUNT, MEMBER_ID)
+INSERT INTO ARTIST (ARTIST_ID, DESCRIPTION, INSTA, NAME, PROFILE_IMAGE_KEY, WISH_COUNT, MEMBER_ID)
 VALUES
-    (1, '임시 작가입니다', 'good_artist', '김작가', 'https://example.com/profile.jpg', 0, 1),
-    (2, '유명 도예가', 'pottery_queen', '박작가', 'https://example.com/profile2.jpg', 0, 3),
-    (3, '신예 작가', 'fresh_pottery', '신작가', 'https://example.com/profile3.jpg', 0, 4);
+    (1, '임시 작가입니다', 'good_artist', '김작가', '/profile.jpg', 0, 1),
+    (2, '유명 도예가', 'pottery_queen', '박작가', 'artist/꿀꺽이.jpg', 0, 3),
+    (3, '신예 작가', 'fresh_pottery', '신작가', '/profile3.jpg', 0, 4);
 
 INSERT INTO CATEGORY (CATEGORY_ID, CATEGORY_NAME, PARENT_CATEGORY_ID)
 VALUES

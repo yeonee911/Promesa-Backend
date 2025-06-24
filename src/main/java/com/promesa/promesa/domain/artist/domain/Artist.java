@@ -19,8 +19,8 @@ public class Artist extends BaseTimeEntity {
     @NotBlank
     private String name;
 
-    @Column(name = "profileImage_url")
-    private String profileImageUrl;
+    @Column(name = "profileImage_key")
+    private String profileImageKey;
 
     @NotBlank
     private String description;

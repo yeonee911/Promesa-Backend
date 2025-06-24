@@ -34,3 +34,4 @@ aws:
   s3:
     presigned:
       expire-minutes: 15
+    bucket: ceos-promesa

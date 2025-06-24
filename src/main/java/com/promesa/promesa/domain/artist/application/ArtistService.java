@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.artist.application;
 
+import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.dto.ArtistResponse;
@@ -11,6 +12,7 @@ import com.promesa.promesa.domain.wish.dao.WishRepository;
 import com.promesa.promesa.domain.wish.domain.TargetType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -21,20 +23,17 @@ public class ArtistService {
     private final ArtistRepository artistRepository;
     private final MemberRepository memberRepository;
     private final WishRepository wishRepository;
-    /*
-    public ArtistResponse getArtistProfile(Long artistId){
-        // 작가 존재 여부 검증
-        Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(()->ArtistNotFoundException.EXCEPTION);
+    private final S3Service s3Service;
 
-        return ArtistResponse.from(artist);
-    }
-     */
+    @Value("${aws.s3.bucket}")
+    private String bucketName;
 
     public ArtistResponse getArtistProfile(Long artistId, OAuth2User user){
         log.info("OAuth2User: {}", user);
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+
+        String presignedUrl = s3Service.createPresignedGetUrl(bucketName, artist.getProfileImageKey());
 
         boolean isWishlisted = false;
 
@@ -50,6 +49,6 @@ public class ArtistService {
             );
         }
 
-        return ArtistResponse.from(artist,isWishlisted);
+        return ArtistResponse.from(artist,presignedUrl,isWishlisted);
     }
 }
