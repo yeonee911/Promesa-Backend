@@ -22,6 +22,9 @@ CONTAINER_NAME=promesa-${TARGET_PORT}
 # ECR에서 'latest' 이미지를 pull
 aws ecr get-login-password --region ${AWS_REGION} | \
   docker login --username AWS --password-stdin ${ECR_REGISTRY}
+
+# 기존 latest image 삭제 → 강제 최신 pull 가능
+docker rmi -f ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest || true
 docker pull ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
 
 # 기존 동일 포트 컨테이너가 있다면 삭제

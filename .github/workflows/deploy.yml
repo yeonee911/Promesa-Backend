@@ -39,8 +39,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Gradle Build Run (skip tests)
-        run: ./gradlew build -x test
+      - name: Gradle Clean and Build (skip tests)
+        run: ./gradlew clean build -x test
 
       - name: Show build/libs contents
         run: ls -al build/libs
@@ -48,7 +48,7 @@ jobs:
       - name: Build Docker image
         run: |
           IMAGE_TAG=${{ github.sha }}
-          docker build -t promesa:${IMAGE_TAG} .
+          docker build --no-cache -t promesa:${IMAGE_TAG} .
           docker tag promesa:${IMAGE_TAG} promesa:latest
 
       - name: ECR Login
@@ -68,8 +68,8 @@ jobs:
       - name: Zip for CodeDeploy
         run: |
           zip -r latest.zip \
-            appspec.yml \
-            scripts/
+          appspec.yml \
+          scripts/
 
       - name: Check contents of latest.zip
         run: unzip -l latest.zip
