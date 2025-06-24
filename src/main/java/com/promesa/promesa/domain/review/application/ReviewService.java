@@ -11,6 +11,7 @@ import com.promesa.promesa.domain.review.dao.ReviewRepository;
 import com.promesa.promesa.domain.review.domain.Review;
 import com.promesa.promesa.domain.review.domain.ReviewImage;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
+import com.promesa.promesa.domain.review.dto.request.UpdateReviewRequest;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
 import com.promesa.promesa.domain.review.exception.ReviewAccessDeniedException;
 import com.promesa.promesa.domain.review.exception.ReviewDuplicateException;
@@ -77,12 +78,13 @@ public class ReviewService {
 
         // 리뷰 이미지 추가
         if (request.getImageKeys() != null) {
-            for (String key : request.getImageKeys()) {
-                ReviewImage reviewImage =  ReviewImage.builder()
-                        .key(key)
-                        .build();
-                review.addReviewImage(reviewImage);
-            }
+            List<ReviewImage> images = request.getImageKeys().stream()
+                    .map(key -> ReviewImage.builder()
+                            .key(key)
+                            .build())
+                    .toList();
+
+            review.setReviewImages(images);
         }
 
         // 상품 평점 업데이트 및 상품의 리뷰 개수 추가
@@ -119,5 +121,50 @@ public class ReviewService {
 
         item.removeReview(target.getRating());  // 평점 삭제
         reviewRepository.delete(target);
+    }
+
+    /**
+     * 리뷰 업데이트
+     * @param itemId
+     * @param reviewId
+     * @param member
+     * @return
+     */
+    public ReviewResponse updateReview(UpdateReviewRequest request, Long itemId, Long reviewId, Member member) {
+        Review target = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
+
+        if (!target.getItem().getId().equals(itemId)) {
+            throw ReviewItemMismatchException.EXCEPTION;
+        }
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(()-> ItemNotFoundException.EXCEPTION);
+
+        if (!target.getMember().getId().equals(member.getId())) {
+            throw ReviewAccessDeniedException.EXCEPTION;
+        }
+
+        if (request.getContent() != null) {
+            target.setContent(request.getContent());
+        }
+
+        if (request.getRating() != null) {
+            item.removeReview(target.getRating());
+            target.setRating(request.getRating());
+            item.addReview(target.getRating());
+        }
+
+        if (request.getImageKeys() != null) {
+            List<ReviewImage> images = request.getImageKeys().stream()
+                    .map(key -> ReviewImage.builder()
+                            .key(key)
+                            .build())
+                    .toList();
+
+            target.setReviewImages(images);
+        }
+
+        return ReviewResponse.from(target, s3Service, BUCKET);
     }
 }

@@ -6,6 +6,7 @@ import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.review.application.ReviewService;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
+import com.promesa.promesa.domain.review.dto.request.UpdateReviewRequest;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/items/{itemId}/reviews/{reviewId}")
-    public ResponseEntity<String> removeReview(
+    public ResponseEntity<String> updateReview(
             @PathVariable Long itemId,
             @PathVariable Long reviewId,
             @AuthenticationPrincipal OAuth2User user
@@ -68,5 +69,23 @@ public class ReviewController {
 
         reviewService.deleteReview(itemId, reviewId, member);
         return ResponseEntity.ok(null);
+    }
+
+    @PatchMapping("/items/{itemId}/reviews/{reviewId}")
+    public ResponseEntity<ReviewResponse> removeReview(
+            @RequestBody @Valid UpdateReviewRequest request,
+            @PathVariable Long itemId,
+            @PathVariable Long reviewId,
+            @AuthenticationPrincipal OAuth2User user
+    )
+    {
+        // 임시 유저 객체 찾기
+        String provider = (String) user.getAttribute("provider");
+        String providerId = (String) user.getAttribute("providerId");
+        Member member = memberRepository.findByProviderAndProviderId(provider, providerId)
+                .orElseThrow(() -> new RuntimeException("회원 정보 없음"));
+
+        ReviewResponse response = reviewService.updateReview(request, itemId, reviewId, member);
+        return ResponseEntity.ok(response);
     }
 }

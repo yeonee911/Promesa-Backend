@@ -29,13 +29,29 @@ public class Review {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewImage> reviewImages = new ArrayList<>();
 
     public void addReviewImage(ReviewImage image) {
-        reviewImages.add(image);
+        this.reviewImages.add(image);
         image.setReview(this);
     }
+
+    public void setReviewImages(List<ReviewImage> reviewImages) {
+        this.reviewImages.clear();  // 기존 리뷰 이미지 초기화
+        for (ReviewImage reviewImage : reviewImages) {
+            addReviewImage(reviewImage);
+        }
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
 
     @Builder
     private Review(String content, int rating, Item item, Member member) {
