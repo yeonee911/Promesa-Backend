@@ -81,9 +81,9 @@ VALUES
 
 INSERT INTO EXHIBITION (EXHIBITION_ID, CREATED_AT, UPDATED_AT, DESCRIPTION, TITLE, IMAGE_KEY, EXHIBITION_STATUS)
 VALUES
-    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전', 'spring', 'ENDED'),
-    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전', 'winter', 'ONGOING'),
-    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아', '토마토 기획전', 'tomato', 'ONGOING');
+    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전', 'exhibition/1/thumnail/spring.jpg', 'ENDED'),
+    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전', 'exhibition/2/thumnail/summer.jpg', 'ONGOING'),
+    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아', '토마토 기획전', 'exhibition/3/thumnail/tomato.jpg', 'ONGOING');
 
 INSERT INTO EXHIBITION_ITEM (EXHIBITION_ITEM_ID, EXHIBITION_ID, ITEM_ID)
 VALUES
