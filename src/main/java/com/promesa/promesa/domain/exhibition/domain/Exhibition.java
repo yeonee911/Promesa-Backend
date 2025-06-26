@@ -1,4 +1,4 @@
-package com.promesa.promesa.domain.item.domain;
+package com.promesa.promesa.domain.exhibition.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -23,6 +23,15 @@ public class Exhibition extends BaseTimeEntity {
 
     @NotBlank
     private String description;
+
+    @NotBlank
+    @Column(name = "image_key")
+    private String imageKey;
+
+    @NotBlank
+    @Enumerated(EnumType.STRING)
+    @Column(name = "exhibition_status")
+    private ExhibitionStatus status;
 
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
     private List<ExhibitionItem> exhibitionItems = new ArrayList<>();

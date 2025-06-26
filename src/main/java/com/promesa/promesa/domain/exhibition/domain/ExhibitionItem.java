@@ -1,5 +1,6 @@
-package com.promesa.promesa.domain.item.domain;
+package com.promesa.promesa.domain.exhibition.domain;
 
+import com.promesa.promesa.domain.item.domain.Item;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
