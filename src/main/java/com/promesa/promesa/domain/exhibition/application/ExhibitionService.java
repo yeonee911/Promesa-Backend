@@ -4,6 +4,8 @@ import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.common.query.ItemQueryRepository;
 import com.promesa.promesa.domain.exhibition.dao.ExhibitionRepository;
 import com.promesa.promesa.domain.exhibition.domain.Exhibition;
+import com.promesa.promesa.domain.exhibition.domain.ExhibitionStatus;
+import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
 import com.promesa.promesa.domain.exhibition.exception.ExhibitionNotFoundException;
 import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,5 +49,20 @@ public class ExhibitionService {
             }
         });
         return responses;
+    }
+
+    /**
+     * 현재 진행 중인 기획전 조회 : 이미지는 presignedUrl로 반환
+     * @return
+     */
+    public List<ExhibitionResponse> getOngoingExhibitions() {
+        List<Exhibition> ongoing = exhibitionRepository.findAllByStatus(ExhibitionStatus.ONGOING);
+
+        return ongoing.stream()
+                .map(exhibition -> {
+                    String imageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getImageKey());
+                    return ExhibitionResponse.of(exhibition, imageUrl);
+                })
+                .toList();
     }
 }
