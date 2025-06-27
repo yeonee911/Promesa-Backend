@@ -19,18 +19,20 @@ public class Exhibition extends BaseTimeEntity {
     private Long id;
 
     @NotBlank
+    @Column(nullable = false)
     private String title;
 
     @NotBlank
+    @Column(nullable = false)
     private String description;
 
     @NotBlank
-    @Column(name = "image_key")
+    @Column(name = "image_key", nullable = false)
     private String imageKey;
 
     @NotBlank
     @Enumerated(EnumType.STRING)
-    @Column(name = "exhibition_status")
+    @Column(name = "exhibition_status", nullable = false)
     private ExhibitionStatus status;
 
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)

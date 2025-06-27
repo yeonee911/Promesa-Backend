@@ -21,12 +21,14 @@ public class Artist extends BaseTimeEntity {
     private Long id;
 
     @NotBlank
+    @Column(nullable = false)
     private String name;
 
     @Column(name = "profileImage_key")
     private String profileImageKey;
 
     @NotBlank
+    @Column(nullable = false)
     private String description;
 
     private String insta;
@@ -35,7 +37,7 @@ public class Artist extends BaseTimeEntity {
     private int wishCount;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL)

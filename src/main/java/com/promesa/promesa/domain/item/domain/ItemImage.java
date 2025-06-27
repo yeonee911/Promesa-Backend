@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.item.domain;
 
+import com.promesa.promesa.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ItemImage {
+public class ItemImage extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "item_image_id")
     private Long id;
