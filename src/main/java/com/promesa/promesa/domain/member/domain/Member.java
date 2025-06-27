@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class Member {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
@@ -32,7 +32,6 @@ public class Member {
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Artist artist;
-
 
     // 사용자의 이름 업데이트하는 메소드
     public Member updateMember(String name){

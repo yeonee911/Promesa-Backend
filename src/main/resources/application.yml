@@ -9,7 +9,7 @@ spring:
           kakao:
             client-id: 7643970cb5bdb570ac7c688d2c6ea85e
             client-secret: ""
-            redirect-uri: https://promesa.co.kr/login/oauth2/code/kakao
+            redirect-uri: http://localhost:8081/login/oauth2/code/kakao
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
             scope: profile_nickname, profile_image
@@ -22,6 +22,11 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
+jwt:
+  secret: "ys9MvUeP6s3qYZ1x8eEg23uPfQyNB61zYvPt9IuD38KuVhr0AqzX5qFJYxkVL1kjPQJf4AVBEXAMPLE"
+  access-token-expiration: 3600000 # 1시간
+  header: Authorization
+
 logging:
   level:
     org.springframework.web: DEBUG
@@ -29,6 +34,11 @@ logging:
 
 server:
   port: 8081
+  error:
+    whitelabel:
+      enabled: false
+      include-message: always
+      include-binding-errors: always
 
 aws:
   s3:
