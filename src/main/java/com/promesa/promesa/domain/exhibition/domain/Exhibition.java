@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Exhibition extends BaseTimeEntity {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "exhibition_id")
     private Long id;
 
@@ -35,4 +35,7 @@ public class Exhibition extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
     private List<ExhibitionItem> exhibitionItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
+    private List<ExhibitionArtist> exhibitionArtists = new ArrayList<>();
 }
