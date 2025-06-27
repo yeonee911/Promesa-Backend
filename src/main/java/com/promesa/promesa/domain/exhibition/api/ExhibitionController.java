@@ -28,7 +28,7 @@ public class ExhibitionController {
 
     @GetMapping
     @Operation(summary = "진행 중인 전시 목록 조회")
-    public ResponseEntity<List<ExhibitionResponse>> getExhibitionItems() {
+    public ResponseEntity<List<ExhibitionResponse>> getOngoingExhibition() {
         List<ExhibitionResponse> response = exhibitionService.getOngoingExhibitions();
         return ResponseEntity.ok(response);
     }

@@ -1,4 +1,4 @@
-package com.promesa.promesa.common.query;
+package com.promesa.promesa.domain.item.query;
 
 import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
 import com.promesa.promesa.domain.item.domain.Item;

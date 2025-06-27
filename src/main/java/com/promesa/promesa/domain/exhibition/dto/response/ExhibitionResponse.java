@@ -7,9 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.time.LocalDateTime;
+
 public record ExhibitionResponse(
         Long id,
         ExhibitionStatus status,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
         String title,
         String description,
         String imageKey,
@@ -20,6 +24,8 @@ public record ExhibitionResponse(
         return new ExhibitionResponse(
                 exhibition.getId(),
                 exhibition.getStatus(),
+                exhibition.getCreatedAt(),
+                exhibition.getUpdatedAt(),
                 exhibition.getTitle(),
                 exhibition.getDescription(),
                 exhibition.getImageKey(),

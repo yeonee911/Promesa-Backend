@@ -1,7 +1,8 @@
 package com.promesa.promesa.domain.exhibition.application;
 
 import com.promesa.promesa.common.application.S3Service;
-import com.promesa.promesa.common.query.ItemQueryRepository;
+import com.promesa.promesa.domain.exhibition.query.ExhibitionQueryRepository;
+import com.promesa.promesa.domain.item.query.ItemQueryRepository;
 import com.promesa.promesa.domain.exhibition.dao.ExhibitionRepository;
 import com.promesa.promesa.domain.exhibition.domain.Exhibition;
 import com.promesa.promesa.domain.exhibition.domain.ExhibitionStatus;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,6 +27,7 @@ public class ExhibitionService {
     private final MemberRepository memberRepository;
     private final ItemQueryRepository itemQueryRepository;
     private final S3Service s3Service;
+    private final ExhibitionQueryRepository exhibitionQueryRepository;
 
     @Value("${aws.s3.bucket}")  // application.yml 에 정의 필요
     private String bucketName;
@@ -59,6 +60,22 @@ public class ExhibitionService {
         List<Exhibition> ongoing = exhibitionRepository.findAllByStatus(ExhibitionStatus.ONGOING);
 
         return ongoing.stream()
+                .map(exhibition -> {
+                    String imageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getImageKey());
+                    return ExhibitionResponse.of(exhibition, imageUrl);
+                })
+                .toList();
+    }
+
+    /**
+     * 작가가 참여한 기획전을 조회
+     * @param artistId
+     * @return
+     */
+    public List<ExhibitionResponse> getExhibitionsByArtist(Long artistId) {
+        List<Exhibition> exhibitions = exhibitionQueryRepository.findByArtistId(artistId);
+
+        return exhibitions.stream()
                 .map(exhibition -> {
                     String imageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getImageKey());
                     return ExhibitionResponse.of(exhibition, imageUrl);

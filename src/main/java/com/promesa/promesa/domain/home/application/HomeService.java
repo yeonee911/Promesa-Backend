@@ -1,15 +1,7 @@
 package com.promesa.promesa.domain.home.application;
 
 import com.promesa.promesa.common.application.S3Service;
-import com.promesa.promesa.common.query.ItemQueryRepository;
-import com.promesa.promesa.domain.exhibition.dao.ExhibitionRepository;
 import com.promesa.promesa.domain.home.dto.BrandInfoResponse;
-import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
-import com.promesa.promesa.domain.exhibition.exception.ExhibitionNotFoundException;
-import com.promesa.promesa.domain.exhibition.domain.Exhibition;
-import com.promesa.promesa.domain.member.dao.MemberRepository;
-import com.promesa.promesa.domain.member.domain.Member;
-import com.promesa.promesa.domain.member.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
