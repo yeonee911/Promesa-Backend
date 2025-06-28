@@ -1,6 +1,9 @@
 package com.promesa.promesa.domain.exhibition.application;
 
 import com.promesa.promesa.common.application.S3Service;
+import com.promesa.promesa.domain.artist.dao.ArtistRepository;
+import com.promesa.promesa.domain.artist.domain.Artist;
+import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.exhibition.query.ExhibitionQueryRepository;
 import com.promesa.promesa.domain.item.query.ItemQueryRepository;
 import com.promesa.promesa.domain.exhibition.dao.ExhibitionRepository;
@@ -28,6 +31,7 @@ public class ExhibitionService {
     private final ItemQueryRepository itemQueryRepository;
     private final S3Service s3Service;
     private final ExhibitionQueryRepository exhibitionQueryRepository;
+    private final ArtistRepository artistRepository;
 
     @Value("${aws.s3.bucket}")  // application.yml 에 정의 필요
     private String bucketName;
@@ -73,6 +77,9 @@ public class ExhibitionService {
      * @return
      */
     public List<ExhibitionResponse> getExhibitionsByArtist(Long artistId) {
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+
         List<Exhibition> exhibitions = exhibitionQueryRepository.findByArtistId(artistId);
 
         return exhibitions.stream()
