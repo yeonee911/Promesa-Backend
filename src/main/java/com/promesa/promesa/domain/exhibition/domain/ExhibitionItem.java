@@ -1,10 +1,8 @@
-package com.promesa.promesa.domain.itemCategory.domain;
+package com.promesa.promesa.domain.exhibition.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
-import com.promesa.promesa.domain.category.domain.Category;
 import com.promesa.promesa.domain.item.domain.Item;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,17 +10,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ItemCategory extends BaseTimeEntity {
-    @Id @GeneratedValue
-    @Column(name = "item_category_id")
+public class ExhibitionItem extends BaseTimeEntity {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "exhibition_item_id")
     private Long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @JoinColumn(name = "exhibition_id", nullable = false)
+    private Exhibition exhibition;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
