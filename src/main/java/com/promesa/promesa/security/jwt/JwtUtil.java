@@ -21,6 +21,7 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
+        System.out.println("🔥 JWT Secret: " + jwtProperties.getSecret());
         byte[] keyBytes = jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8);
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
