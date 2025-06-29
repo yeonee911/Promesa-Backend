@@ -22,32 +22,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReviewService {
-    private final S3Service s3Service;
     private final ItemRepository itemRepository;
     private final ReviewRepository reviewRepository;
-
-    @Value("${aws.s3.bucket}")
-    private String bucketName;
-
-    public List<PresignedUrlResponse> getPresignedPutUrls(PresignedUrlRequest request) {
-        return s3Service.createPresignedPutUrl(
-                bucketName,
-                request.imageType(),
-                request.referenceId(),
-                request.fileNames(),
-                request.metadata()
-        );
-    }
-
-    public void deleteReviewImage(String key) {
-        s3Service.deleteObject(bucketName, key);
-    }
+    private final ReviewImageService reviewImageService;
+    private final S3Service s3Service;
 
     /**
      * 리뷰 작성하기
@@ -92,7 +78,7 @@ public class ReviewService {
         // 상품 평점 업데이트 및 상품의 리뷰 개수 추가
         item.addReview(request.getRating());
 
-        return ReviewResponse.from(savedReview, s3Service, bucketName);
+        return ReviewResponse.from(savedReview, extractImageKeys(savedReview));
     }
 
     /**
@@ -106,7 +92,7 @@ public class ReviewService {
         Item item = target.getItem();
 
         for (ReviewImage reviewImage : target.getReviewImages()) {  // 리뷰 이미지 삭제
-            deleteReviewImage(reviewImage.getKey());
+            reviewImageService.deleteReviewImage(reviewImage.getKey());
         }
 
         item.removeReview(target.getRating());  // 평점 삭제
@@ -145,7 +131,7 @@ public class ReviewService {
             target.setReviewImages(images);
         }
 
-        return ReviewResponse.from(target, s3Service, bucketName);
+        return ReviewResponse.from(target, extractImageKeys(target));
     }
 
     public Review getVerifiedReview(Long itemId, Long reviewId, Member member) {
@@ -161,5 +147,13 @@ public class ReviewService {
         }
 
         return target;
+    }
+
+    private List<String> extractImageKeys(Review review) {
+        return Optional.ofNullable(review.getReviewImages())
+                .orElse(List.of())
+                .stream()
+                .map(ReviewImage::getKey)
+                .toList();
     }
 }

@@ -4,10 +4,12 @@ import com.promesa.promesa.common.dto.s3.PresignedUrlRequest;
 import com.promesa.promesa.common.dto.s3.PresignedUrlResponse;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.review.application.ReviewImageService;
 import com.promesa.promesa.domain.review.application.ReviewService;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
 import com.promesa.promesa.domain.review.dto.request.UpdateReviewRequest;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,22 +24,26 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ReviewImageService reviewImageService;
     private final MemberRepository memberRepository;
 
     @PostMapping("/review-images/presigned-url")
+    @Operation(summary = "이미지 업로드용 url 발급")
     public ResponseEntity<List<PresignedUrlResponse>> getPresignedPutUrls(@RequestBody PresignedUrlRequest request) {
-        return ResponseEntity.ok(reviewService.getPresignedPutUrls(request));
+        return ResponseEntity.ok(reviewImageService.getPresignedPutUrls(request));
     }
 
     @DeleteMapping("/review-images")
+    @Operation(summary = "이미지 삭제")
     public ResponseEntity<Void> deleteReviewImage(
             @RequestParam String key
     ){
-        reviewService.deleteReviewImage(key);
+        reviewImageService.deleteReviewImage(key);
         return ResponseEntity.ok(null);
     }
 
     @PostMapping("/items/{itemId}/reviews")
+    @Operation(summary = "리뷰 등록")
     public ResponseEntity<ReviewResponse> createReview(
             @RequestBody @Valid AddReviewRequest request,
             @PathVariable Long itemId,
@@ -55,6 +61,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/items/{itemId}/reviews/{reviewId}")
+    @Operation(summary = "리뷰 삭제")
     public ResponseEntity<String> updateReview(
             @PathVariable Long itemId,
             @PathVariable Long reviewId,
@@ -72,6 +79,7 @@ public class ReviewController {
     }
 
     @PatchMapping("/items/{itemId}/reviews/{reviewId}")
+    @Operation(summary = "리뷰 수정")
     public ResponseEntity<ReviewResponse> removeReview(
             @RequestBody @Valid UpdateReviewRequest request,
             @PathVariable Long itemId,
