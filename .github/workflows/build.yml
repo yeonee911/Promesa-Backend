@@ -71,3 +71,9 @@ jobs:
           name: gradle-problems-report
           path: build/reports/problems
 
+      - name: Upload Gradle test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-test-report
+          path: build/reports/tests/test
