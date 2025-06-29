@@ -2,7 +2,7 @@ package com.promesa.promesa.domain.item.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.artist.domain.Artist;
-import com.promesa.promesa.domain.image.domain.ItemImage;
+import com.promesa.promesa.domain.exhibition.domain.ExhibitionItem;
 import com.promesa.promesa.domain.itemCategory.domain.ItemCategory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

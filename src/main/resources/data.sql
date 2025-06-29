@@ -39,18 +39,18 @@ VALUES
     (9, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '투톤 머그', '모던 머그', 11000, 'ON_SALE', 6, 0, 3),
     (10, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '라인 컵', '라인 컵', 12500, 'ON_SALE', 4, 0, 1);
 
-INSERT INTO ITEM_IMAGE (ITEM_IMAGE_ID, IMAGE_URL, IS_THUMBNAIL, ITEM_ID)
+INSERT INTO ITEM_IMAGE (ITEM_IMAGE_ID, ITEM_IMAGE_KEY, IS_THUMBNAIL, ITEM_ID)
 VALUES
-    (1, 'https://example.com/image1.jpg', TRUE, 1),
-    (2, 'https://example.com/image2.jpg', TRUE, 2),
-    (3, 'https://example.com/image3.jpg', TRUE, 3),
-    (4, 'https://example.com/image4.jpg', TRUE, 4),
-    (5, 'https://example.com/image5.jpg', TRUE, 5),
-    (6, 'https://example.com/image6.jpg', TRUE, 6),
-    (7, 'https://example.com/image7.jpg', TRUE, 7),
-    (8, 'https://example.com/image8.jpg', TRUE, 8),
-    (9, 'https://example.com/image9.jpg', TRUE, 9),
-    (10, 'https://example.com/image10.jpg', TRUE, 10);
+    (1, 'image1.jpg', TRUE, 1),
+    (2, 'image2.jpg', TRUE, 2),
+    (3, 'image3.jpg', TRUE, 3),
+    (4, 'image4.jpg', TRUE, 4),
+    (5, 'image5.jpg', TRUE, 5),
+    (6, 'image6.jpg', TRUE, 6),
+    (7, 'image7.jpg', TRUE, 7),
+    (8, 'image8.jpg', TRUE, 8),
+    (9, 'image9.jpg', TRUE, 9),
+    (10, 'image10.jpg', TRUE, 10);
 
 INSERT INTO WISH (WISH_ID, TARGET_ID, TARGET_TYPE, MEMBER_ID)
 VALUES
@@ -81,9 +81,11 @@ VALUES
     (9, 1, 9),
     (10, 1, 10);
 
-INSERT INTO EXHIBITION (EXHIBITION_ID, CREATED_AT, UPDATED_AT, DESCRIPTION, TITLE)
+INSERT INTO EXHIBITION (EXHIBITION_ID, CREATED_AT, UPDATED_AT, DESCRIPTION, TITLE, IMAGE_KEY, EXHIBITION_STATUS)
 VALUES
-    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전');
+    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전', 'exhibition/1/thumnail/spring.jpg', 'ENDED'),
+    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전', 'exhibition/2/thumnail/summer.jpg', 'ONGOING'),
+    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아', '토마토 기획전', 'exhibition/3/thumnail/tomato.jpg', 'ONGOING');
 
 INSERT INTO EXHIBITION_ITEM (EXHIBITION_ITEM_ID, EXHIBITION_ID, ITEM_ID)
 VALUES
@@ -97,6 +99,15 @@ VALUES
     (8, 1, 8),
     (9, 1, 9),
     (10, 1, 10);
+
+INSERT INTO EXHIBITION_ARTIST (EXHIBITION_ARTIST_ID, ARTIST_ID, EXHIBITION_ID, CREATED_AT, UPDATED_AT)
+VALUES
+    (1, 1, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (2, 2, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (3, 2, 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (4, 2, 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (5, 3, 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (6, 3, 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
 INSERT INTO INQUIRY (INQUIRY_ID, QUESTION, ANSWER, ARTIST_ID)
 VALUES (1, '배송은 얼마나 걸리나요?', '약 3~5일 소요됩니다.', 1),

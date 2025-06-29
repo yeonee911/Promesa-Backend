@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.member.domain;
 
+import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.wish.domain.Wish;
 import jakarta.persistence.*;
@@ -16,7 +17,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-public class Member {
+
+public class Member extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
