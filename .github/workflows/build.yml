@@ -45,11 +45,10 @@ jobs:
 
       # Gradle run (application-test.yml 환경설정으로 빌드하기 위해 -Dspring.profiles.active 옵션 추가)
       - name: Gradle Build Run
-        run: ./gradlew -Dspring.profiles.active=test build
+        run: ./gradlew -Dspring.profiles.active=test -DJWT_SECRET="${{ secrets.JWT_SECRET }}" build
 
-      # Gradle test
       - name: Test with Gradle
-        run: ./gradlew -Dspring.profiles.active=test --info test
+        run: ./gradlew -Dspring.profiles.active=test -DJWT_SECRET="${{ secrets.JWT_SECRET }}" --info test
 
       # Publish Unit Test Results
       - name: Publish Unit Test Results
