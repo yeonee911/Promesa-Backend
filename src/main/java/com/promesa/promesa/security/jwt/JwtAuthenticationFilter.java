@@ -1,0 +1,83 @@
+package com.promesa.promesa.security.jwt;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.promesa.promesa.common.dto.ErrorResponse;
+import com.promesa.promesa.security.jwt.exception.JwtErrorCode;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+@Slf4j
+@RequiredArgsConstructor
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService userDetailsService;
+    private final ObjectMapper objectMapper;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+
+        String header = request.getHeader("Authorization");
+
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            try {
+                if (!jwtUtil.validateToken(token)) {
+                    sendErrorResponse(response, JwtErrorCode.INVALID_TOKEN, request.getRequestURI());
+                    return;
+                }
+
+                String username = jwtUtil.getSubject(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            } catch (io.jsonwebtoken.ExpiredJwtException e) {
+                sendErrorResponse(response, JwtErrorCode.EXPIRED_TOKEN, request.getRequestURI());
+                return;
+            } catch (io.jsonwebtoken.MalformedJwtException |
+                     io.jsonwebtoken.UnsupportedJwtException |
+                     IllegalArgumentException e) {
+                sendErrorResponse(response, JwtErrorCode.INVALID_TOKEN_FORMAT, request.getRequestURI());
+                return;
+            } catch (io.jsonwebtoken.JwtException e) {
+                sendErrorResponse(response, JwtErrorCode.INVALID_TOKEN, request.getRequestURI());
+                return;
+            }
+        }
+
+        // 인증이 필요 없는 요청은 계속 진행
+        filterChain.doFilter(request, response);
+    }
+
+    private void sendErrorResponse(HttpServletResponse response, JwtErrorCode errorCode, String path) throws IOException {
+        ErrorResponse errorResponse = ErrorResponse.from(errorCode.getErrorReason(), path);
+
+        response.setStatus(errorResponse.getStatus());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+        response.flushBuffer();
+
+    }
+}

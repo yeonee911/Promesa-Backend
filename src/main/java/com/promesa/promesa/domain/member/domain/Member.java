@@ -17,8 +17,9 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
+
 public class Member extends BaseTimeEntity {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
@@ -33,7 +34,6 @@ public class Member extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Artist artist;
-
 
     // 사용자의 이름 업데이트하는 메소드
     public Member updateMember(String name){

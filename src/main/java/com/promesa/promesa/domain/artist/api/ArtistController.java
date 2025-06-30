@@ -3,6 +3,7 @@ package com.promesa.promesa.domain.artist.api;
 import com.promesa.promesa.domain.artist.application.ArtistService;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.dto.ArtistResponse;
+import com.promesa.promesa.security.jwt.CustomUserDetails;
 import com.promesa.promesa.domain.exhibition.application.ExhibitionService;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,8 +26,11 @@ public class ArtistController {
     private final ExhibitionService exhibitionService;
 
     @GetMapping("/{artistId}")
-    public ResponseEntity<ArtistResponse> getArtistProfile(@PathVariable Long artistId,@AuthenticationPrincipal OAuth2User user) {
-        return ResponseEntity.ok(artistService.getArtistProfile(artistId,user));
+    public ResponseEntity<ArtistResponse> getArtistProfile(
+            @PathVariable Long artistId,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        return ResponseEntity.ok(artistService.getArtistProfile(artistId, user.getMember()));
     }
 
     @GetMapping("/{artistId}/exhibitions")
