@@ -15,6 +15,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3 # clone repository
@@ -39,17 +42,6 @@ jobs:
 
       - name: Gradle Authorization
         run: chmod +x gradlew
-
-      # Create .env.properties from secrets
-      - name: Create .env.properties
-        working-directory: ./  # 루트 디렉토리 명시
-        run: |
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > .env.properties
-          cat .env.properties
-
-      # 빌드 명령 전 .env.properties가 루트에 있는지 확인
-      - name: Check file exists
-        run: ls -al
 
       # Gradle run (application-test.yml 환경설정으로 빌드하기 위해 -Dspring.profiles.active 옵션 추가)
       - name: Gradle Build Run
