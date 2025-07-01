@@ -60,10 +60,10 @@ public class ReviewController {
     public ResponseEntity<String> removeReview(
             @PathVariable Long itemId,
             @PathVariable Long reviewId,
-            @AuthenticationPrincipal Member member
+            @AuthenticationPrincipal CustomUserDetails user
     )
     {
-        // Member member = (user != null) ? user.getMember() : null;
+        Member member = (user != null) ? user.getMember() : null;
         reviewService.deleteReview(itemId, reviewId, member);
         return ResponseEntity.ok(null);
     }
