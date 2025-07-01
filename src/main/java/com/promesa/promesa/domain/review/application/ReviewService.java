@@ -13,10 +13,7 @@ import com.promesa.promesa.domain.review.domain.ReviewImage;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
 import com.promesa.promesa.domain.review.dto.request.UpdateReviewRequest;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
-import com.promesa.promesa.domain.review.exception.ReviewAccessDeniedException;
-import com.promesa.promesa.domain.review.exception.ReviewDuplicateException;
-import com.promesa.promesa.domain.review.exception.ReviewItemMismatchException;
-import com.promesa.promesa.domain.review.exception.ReviewNotFoundException;
+import com.promesa.promesa.domain.review.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,6 +39,10 @@ public class ReviewService {
      */
     @Transactional
     public ReviewResponse addReview(AddReviewRequest request, Long itemId, Member member) {
+        if (member == null) {
+            throw ReviewUnauthorizedException.EXCEPTION;
+        }
+
         // 상품 조회
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(()-> ItemNotFoundException.EXCEPTION);
@@ -88,6 +89,10 @@ public class ReviewService {
      */
     @Transactional
     public void deleteReview(Long itemId, Long reviewId, Member member) {
+        if (member == null) {
+            throw ReviewUnauthorizedException.EXCEPTION;
+        }
+
         Review target = getVerifiedReview(itemId, reviewId, member);
         Item item = target.getItem();
 
@@ -108,6 +113,10 @@ public class ReviewService {
      */
     @Transactional
     public ReviewResponse updateReview(UpdateReviewRequest request, Long itemId, Long reviewId, Member member) {
+        if (member == null) {
+            throw ReviewUnauthorizedException.EXCEPTION;
+        }
+
         Review target = getVerifiedReview(itemId, reviewId, member);
         Item item = target.getItem();
 

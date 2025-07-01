@@ -9,12 +9,12 @@ import com.promesa.promesa.domain.review.application.ReviewService;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
 import com.promesa.promesa.domain.review.dto.request.UpdateReviewRequest;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
+import com.promesa.promesa.security.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,52 +47,37 @@ public class ReviewController {
     public ResponseEntity<ReviewResponse> createReview(
             @RequestBody @Valid AddReviewRequest request,
             @PathVariable Long itemId,
-            @AuthenticationPrincipal OAuth2User user
+            @AuthenticationPrincipal CustomUserDetails user
     )
     {
-        // 임시 유저 객체 찾기
-        String provider = (String) user.getAttribute("provider");
-        String providerId = (String) user.getAttribute("providerId");
-        Member member = memberRepository.findByProviderAndProviderId(provider, providerId)
-                .orElseThrow(() -> new RuntimeException("회원 정보 없음"));
-
+        Member member = (user != null) ? user.getMember() : null;
         ReviewResponse response = reviewService.addReview(request, itemId, member);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/items/{itemId}/reviews/{reviewId}")
     @Operation(summary = "리뷰 삭제")
-    public ResponseEntity<String> updateReview(
+    public ResponseEntity<String> removeReview(
             @PathVariable Long itemId,
             @PathVariable Long reviewId,
-            @AuthenticationPrincipal OAuth2User user
+            @AuthenticationPrincipal Member member
     )
     {
-        // 임시 유저 객체 찾기
-        String provider = (String) user.getAttribute("provider");
-        String providerId = (String) user.getAttribute("providerId");
-        Member member = memberRepository.findByProviderAndProviderId(provider, providerId)
-                .orElseThrow(() -> new RuntimeException("회원 정보 없음"));
-
+        // Member member = (user != null) ? user.getMember() : null;
         reviewService.deleteReview(itemId, reviewId, member);
         return ResponseEntity.ok(null);
     }
 
     @PatchMapping("/items/{itemId}/reviews/{reviewId}")
     @Operation(summary = "리뷰 수정")
-    public ResponseEntity<ReviewResponse> removeReview(
+    public ResponseEntity<ReviewResponse> updateReview(
             @RequestBody @Valid UpdateReviewRequest request,
             @PathVariable Long itemId,
             @PathVariable Long reviewId,
-            @AuthenticationPrincipal OAuth2User user
+            @AuthenticationPrincipal CustomUserDetails user
     )
     {
-        // 임시 유저 객체 찾기
-        String provider = (String) user.getAttribute("provider");
-        String providerId = (String) user.getAttribute("providerId");
-        Member member = memberRepository.findByProviderAndProviderId(provider, providerId)
-                .orElseThrow(() -> new RuntimeException("회원 정보 없음"));
-
+        Member member = (user != null) ? user.getMember() : null;
         ReviewResponse response = reviewService.updateReview(request, itemId, reviewId, member);
         return ResponseEntity.ok(response);
     }

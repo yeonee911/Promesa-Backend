@@ -11,6 +11,7 @@ import com.promesa.promesa.security.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -37,10 +38,12 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/reviews/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/review-images/**").permitAll()
                         .requestMatchers(
                                 "/actuator/**",
                                 "/", "/login", "/signup",
-                                "/brand-info", "/categories/**", "exhibitions/**","/review-images/**","/inquiries/**","/artists/**",
+                                "/brand-info", "/categories/**", "exhibitions/**","/inquiries/**","/artists/**",
                                 "/index.html", "/static/**", "/favicon.ico",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**"
                         ).permitAll()                        // 위 경로는 인증 없이 접근 허용
