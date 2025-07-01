@@ -30,7 +30,7 @@ public class ArtistController {
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Member member = (user != null) ? user.getMember() : null; // 로그인하지 않았을 경우, member = null로 전달
-        return ResponseEntity.ok(artistService.getArtistProfile(artistId, user.getMember()));
+        return ResponseEntity.ok(artistService.getArtistProfile(artistId, member));
     }
 
     @GetMapping("/{artistId}/exhibitions")
