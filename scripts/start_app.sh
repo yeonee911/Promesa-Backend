@@ -42,4 +42,5 @@ docker run -d \
   -e RDS_PASSWORD="${RDS_PASSWORD}" \
   -e REDIS_HOST="${REDIS_HOST}" \
   -e REDIS_PORT="${REDIS_PORT}" \
+  -e JWT_SECRET="${JWT_SECRET}" \
   ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest

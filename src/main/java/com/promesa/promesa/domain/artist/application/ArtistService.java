@@ -28,27 +28,20 @@ public class ArtistService {
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
-    public ArtistResponse getArtistProfile(Long artistId, OAuth2User user){
-        log.info("OAuth2User: {}", user);
+    public ArtistResponse getArtistProfile(Long artistId, Member member) {
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
 
         String presignedUrl = s3Service.createPresignedGetUrl(bucketName, artist.getProfileImageKey());
 
         boolean isWishlisted = false;
-
-        if (user != null) {
-            String provider = (String) user.getAttribute("provider");
-            String providerId = (String) user.getAttribute("providerId");
-
-            Member member = memberRepository.findByProviderAndProviderId(provider, providerId)
-                    .orElseThrow(() -> MemberNotFoundException.EXCEPTION);
-
+        if (member != null) {
             isWishlisted = wishRepository.existsByMemberAndTargetTypeAndTargetId(
                     member, TargetType.ARTIST, artist.getId()
             );
         }
 
-        return ArtistResponse.from(artist,presignedUrl,isWishlisted);
+        return ArtistResponse.from(artist, presignedUrl, isWishlisted);
     }
+
 }

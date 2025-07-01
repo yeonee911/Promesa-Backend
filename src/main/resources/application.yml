@@ -22,6 +22,11 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: 3600000 # 1시간
+  header: Authorization
+
 logging:
   level:
     org.springframework.web: DEBUG
@@ -29,6 +34,11 @@ logging:
 
 server:
   port: 8081
+  error:
+    whitelabel:
+      enabled: false
+      include-message: always
+      include-binding-errors: always
 
 aws:
   s3:
