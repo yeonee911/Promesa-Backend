@@ -1,8 +1,11 @@
 package com.promesa.promesa.security.oauth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.promesa.promesa.security.jwt.JwtTokenProvider;
+import com.promesa.promesa.security.jwt.JwtProperties;
+import com.promesa.promesa.security.jwt.JwtUtil;
+import com.promesa.promesa.security.jwt.refresh.RefreshRepository;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +25,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
+    private final RefreshRepository refreshRepository;
     private final ObjectMapper objectMapper;
+    private final JwtProperties jwtProperties;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -36,24 +41,39 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String provider = oauthToken.getAuthorizedClientRegistrationId(); // ex. "kakao"
         String providerId = extractProviderId(provider, oAuth2User.getAttributes());
 
-        String subject = provider + ":" + providerId;
-        String token = jwtTokenProvider.generateAccessToken(subject);
+        // subject = "kakao:12345"
+        String nickname = provider + ":" + providerId;
+        String role = "USER";
 
-        // JSON 응답 반환
-        Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("accessToken", token);
+        // 1. Access Token + Refresh Token 생성
+        String accessToken = jwtUtil.createAccessToken(nickname, role);
+        String refreshToken = jwtUtil.createRefreshToken(nickname, role);
+
+        // 2. Refresh Token Redis 저장
+        refreshRepository.save(refreshToken, nickname, jwtProperties.getRefreshTokenExpiration());
+
+        // 3. Refresh Token 쿠키에 저장 (HttpOnly)
+        Cookie refreshCookie = new Cookie("refresh", refreshToken);
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setSecure(true); // 로컬 개발 시 false
+        refreshCookie.setPath("/");
+        refreshCookie.setMaxAge((int)(jwtProperties.getRefreshTokenExpiration() / 1000));
+        response.addCookie(refreshCookie);
+
+        // 4. 응답 전송 (accessToken은 헤더 + JSON 바디)
+        response.setHeader("Authorization", "Bearer " + accessToken);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(responseBody));
+
+        Map<String, String> body = new HashMap<>();
+        body.put("accessToken", accessToken);
+        response.getWriter().write(objectMapper.writeValueAsString(body));
     }
 
     private String extractProviderId(String provider, Map<String, Object> attributes) {
         if ("kakao".equals(provider)) {
-            // kakao의 고유 ID는 최상위 "id" 필드에 있음
             return String.valueOf(attributes.get("id"));
         }
-
-        // TODO: 추후 구글, 네이버 등 추가
         throw new IllegalArgumentException("Unsupported provider: " + provider);
     }
 }
