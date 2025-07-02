@@ -48,11 +48,11 @@ public class ExhibitionService {
         Exhibition exhibition = exhibitionRepository.findById(exhibitionId)
                 .orElseThrow(() -> ExhibitionNotFoundException.EXCEPTION);
 
-        List<ItemPreviewResponse> responses = itemQueryRepository.findExhibitionItem(member.getId(), exhibitionId);
+        List<ItemPreviewResponse> responses = itemQueryRepository.findExhibitionItem(member, exhibitionId);
 
         return responses.stream()
                 .map(r -> {
-                    String imageUrl = s3Service.createPresignedGetUrl(bucketName, r.imageUrl());
+                    String imageUrl = s3Service.createPresignedGetUrl(bucketName, r.getImageUrl());
                     return ItemPreviewResponse.of(r, imageUrl);
                 })
                 .toList();

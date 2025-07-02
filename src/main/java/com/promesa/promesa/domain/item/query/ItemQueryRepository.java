@@ -2,6 +2,7 @@ package com.promesa.promesa.domain.item.query;
 
 import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
 import com.promesa.promesa.domain.item.domain.Item;
+import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.wish.domain.TargetType;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -33,68 +34,76 @@ public class ItemQueryRepository {
 
     /**
      * 기획전 상품을 위시리스트 여부와 함께 반환
-     * @param memberId
+     * @param member
      * @return
      */
-    public List<ItemPreviewResponse> findExhibitionItem(Long memberId, Long exhibitionId) {
-        BooleanExpression wishCondition = wishJoinCondition(memberId);
-        Expression<Boolean> isWished = isWishedExpression(memberId);
+    public List<ItemPreviewResponse> findExhibitionItem(Member member, Long exhibitionId) {
+        Expression<Boolean> isWished = isWishedExpression(member);
 
-        return queryFactory
-                .select(Projections.constructor(ItemPreviewResponse.class,
+        JPAQuery<ItemPreviewResponse> query = queryFactory
+                .select(Projections.fields(ItemPreviewResponse.class,
                         item.id.as("itemId"),
                         item.name.as("itemName"),
                         item.description.as("itemDescription"),
                         item.price,
-                        itemImage.imageKey,
+                        itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
                         ExpressionUtils.as(isWished, "isWished")
                 ))
                 .from(exhibitionItem)
                 .join(exhibitionItem.item, item)
                 .join(item.artist, artist)
-                .leftJoin(item.itemImages, itemImage)
-                    .on(itemImage.isThumbnail.isTrue())
-                .leftJoin(wish).on(wishCondition)
-                .where(exhibitionItem.exhibition.id.eq(exhibitionId))
-                .fetch();
+                .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue())
+                .where(exhibitionItem.exhibition.id.eq(exhibitionId));
+
+        if (member != null) {
+            query.leftJoin(wish).on(
+                    wish.member.id.eq(member.getId())
+                            .and(wish.targetType.eq(TargetType.ITEM))
+                            .and(wish.targetId.eq(item.id))
+            );
+        }
+        return query.fetch();
     }
 
     /**
      * 카테고리 작품 조회
-     * @param memberId
+     * @param member
      * @param categoryId
      * @return
      */
-    public Page<ItemPreviewResponse> findCategoryItem(Long memberId, Long categoryId, Pageable pageable) {
-        List<ItemPreviewResponse> content = queryFactory
-                .select(Projections.constructor(ItemPreviewResponse.class,
+    public Page<ItemPreviewResponse> findCategoryItem(Member member, Long categoryId, Pageable pageable) {
+        Expression<Boolean> isWished = isWishedExpression(member);
+
+        JPAQuery<ItemPreviewResponse> query = queryFactory
+                .select(Projections.fields(ItemPreviewResponse.class,
                         item.id.as("itemId"),
                         item.name.as("itemName"),
                         item.description.as("itemDescription"),
                         item.price,
-                        itemImage.imageKey,
+                        itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
-                        wish.id.isNotNull().as("isWished")
+                        ExpressionUtils.as(isWished, "isWished")
                 ))
                 .from(itemCategory)
                 .join(itemCategory.item, item)
                 .join(item.artist, artist)
-                .leftJoin(item.itemImages, itemImage)
-                .on(itemImage.isThumbnail.isTrue())
-                .leftJoin(wish)
-                .on(
-                        wish.member.id.eq(memberId), // 로그인한 사용자인지
-                        wish.targetType.eq(TargetType.ITEM),    // 위시리스트 type이 상품인지
-                        wish.targetId.eq(item.id)   // 해당 상품이 위시리스트인지
-                )
+                .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue())
                 .where(itemCategory.category.id.eq(categoryId))
-                .orderBy(createOrderSpecifiers(pageable.getSort()))
-                .offset(pageable.getOffset())   // 몇 번째 페이지부터 보여줄지
-                .limit(pageable.getPageSize())  // 페이지마다 몇 개씩 보여줄지
-                .fetch();
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(createOrderSpecifiers(pageable.getSort()));
 
-        //페이징처리를 위한 count 쿼리
+        if (member != null) {
+            query.leftJoin(wish).on(
+                    wish.member.id.eq(member.getId())
+                            .and(wish.targetType.eq(TargetType.ITEM))
+                            .and(wish.targetId.eq(item.id))
+            );
+        }
+
+        List<ItemPreviewResponse> content = query.fetch();
+
         JPAQuery<Long> countQuery = queryFactory
                 .select(item.count())
                 .from(itemCategory)
@@ -119,23 +128,13 @@ public class ItemQueryRepository {
     }
 
     /**
-     * memberId가 있을 경우 wish 조인 조건 반환, 없으면 null 반환
+     * member가 null이면 false 아니면 wish.id 존재 여부 반환
      */
-    private BooleanExpression wishJoinCondition(Long memberId) {
-        if (memberId == null) {
-            return null;
+    private Expression<Boolean> isWishedExpression(Member member) {
+        if (member == null) {
+            return Expressions.asBoolean(false);
         }
-        return wish.member.id.eq(memberId)
-                .and(wish.targetType.eq(TargetType.ITEM))
-                .and(wish.targetId.eq(item.id));
-    }
 
-    /**
-     * memberId가 null이면 false 아니면 wish.id 존재 여부 반환
-     */
-    private Expression<Boolean> isWishedExpression(Long memberId) {
-        return (memberId == null)
-                ? Expressions.asBoolean(false)
-                : wish.id.isNotNull();
+        return wish.id.isNotNull();
     }
 }
