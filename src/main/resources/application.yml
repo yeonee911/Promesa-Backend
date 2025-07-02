@@ -23,7 +23,7 @@ spring:
             user-name-attribute: id
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret: ${JWT_SECRET:dummy} # WT_SECRET 없으면 dummy 삽입
   access-token-expiration: 3600000 # 1시간
   header: Authorization
 
