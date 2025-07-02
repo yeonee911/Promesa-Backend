@@ -80,7 +80,7 @@ public class RefreshService {
     private Cookie createHttpOnlyCookie(String name, String value) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
-        // cookie.setSecure(true); // HTTPS 환경에서만 사용
+        cookie.setSecure(true); // HTTPS 환경에서만 사용
         cookie.setPath("/");
         cookie.setMaxAge((int) (jwtProperties.getRefreshTokenExpiration() / 1000));
         return cookie;
