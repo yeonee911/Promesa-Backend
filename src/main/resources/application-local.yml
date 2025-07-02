@@ -24,6 +24,13 @@ spring:
       mode: always
       encoding: UTF-8
 
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            redirect-uri: http://localhost:8081/login/oauth2/code/kakao
+
 logging:
   level:
     org.hibernate.SQL: DEBUG

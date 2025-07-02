@@ -21,6 +21,13 @@ spring:
     redis:
       url: redis://${REDIS_HOST}:${REDIS_PORT:6379}
 
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            redirect-uri: https://promesa.co.kr/login/oauth2/code/kakao
+
 logging:
   level:
     # 운영에서는 SQL 로그는 꺼 둠
