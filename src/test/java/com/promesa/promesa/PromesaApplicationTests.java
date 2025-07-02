@@ -15,13 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class PromesaApplicationTests {
 
-	@BeforeAll
-	static void skipIfNoJwtSecret() {
-		String jwtSecret = System.getenv("JWT_SECRET");
-		Assumptions.assumeTrue(jwtSecret != null && !jwtSecret.equals("dummy"),
-				"Skipping test: JWT_SECRET not set");
-	}
-
 	@Test
 	void contextLoads() {
 	}
