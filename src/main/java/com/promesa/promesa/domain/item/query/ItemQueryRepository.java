@@ -3,13 +3,13 @@ package com.promesa.promesa.domain.item.query;
 import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.wish.domain.TargetType;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -37,27 +37,25 @@ public class ItemQueryRepository {
      * @return
      */
     public List<ItemPreviewResponse> findExhibitionItem(Long memberId, Long exhibitionId) {
+        BooleanExpression wishCondition = wishJoinCondition(memberId);
+        Expression<Boolean> isWished = isWishedExpression(memberId);
+
         return queryFactory
-                .select(Projections.fields(ItemPreviewResponse.class,
+                .select(Projections.constructor(ItemPreviewResponse.class,
                         item.id.as("itemId"),
                         item.name.as("itemName"),
                         item.description.as("itemDescription"),
                         item.price,
                         itemImage.imageKey,
                         artist.name.as("artistName"),
-                        wish.id.isNotNull().as("isWished")
+                        ExpressionUtils.as(isWished, "isWished")
                 ))
                 .from(exhibitionItem)
                 .join(exhibitionItem.item, item)
                 .join(item.artist, artist)
                 .leftJoin(item.itemImages, itemImage)
                     .on(itemImage.isThumbnail.isTrue())
-                .leftJoin(wish)
-                    .on(
-                            wish.member.id.eq(memberId), // 로그인한 사용자인지
-                            wish.targetType.eq(TargetType.ITEM),    // 위시리스트 type이 상품인지
-                            wish.targetId.eq(item.id)   // 해당 상품이 위시리스트인지
-                    )
+                .leftJoin(wish).on(wishCondition)
                 .where(exhibitionItem.exhibition.id.eq(exhibitionId))
                 .fetch();
     }
@@ -70,7 +68,7 @@ public class ItemQueryRepository {
      */
     public Page<ItemPreviewResponse> findCategoryItem(Long memberId, Long categoryId, Pageable pageable) {
         List<ItemPreviewResponse> content = queryFactory
-                .select(Projections.fields(ItemPreviewResponse.class,
+                .select(Projections.constructor(ItemPreviewResponse.class,
                         item.id.as("itemId"),
                         item.name.as("itemName"),
                         item.description.as("itemDescription"),
@@ -118,5 +116,26 @@ public class ItemQueryRepository {
         }
 
         return specifiers.toArray(new OrderSpecifier[0]);   // List를 Array로 변환
+    }
+
+    /**
+     * memberId가 있을 경우 wish 조인 조건 반환, 없으면 null 반환
+     */
+    private BooleanExpression wishJoinCondition(Long memberId) {
+        if (memberId == null) {
+            return null;
+        }
+        return wish.member.id.eq(memberId)
+                .and(wish.targetType.eq(TargetType.ITEM))
+                .and(wish.targetId.eq(item.id));
+    }
+
+    /**
+     * memberId가 null이면 false 아니면 wish.id 존재 여부 반환
+     */
+    private Expression<Boolean> isWishedExpression(Long memberId) {
+        return (memberId == null)
+                ? Expressions.asBoolean(false)
+                : wish.id.isNotNull();
     }
 }

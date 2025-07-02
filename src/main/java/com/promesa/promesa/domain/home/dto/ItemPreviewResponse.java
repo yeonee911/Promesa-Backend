@@ -1,23 +1,30 @@
 package com.promesa.promesa.domain.home.dto;
 
+import com.promesa.promesa.common.application.S3Service;
+import com.promesa.promesa.domain.item.domain.Item;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ItemPreviewResponse {   // ← 반드시 public 으로
-    private Long itemId;
-    private String itemName;
-    private String itemDescription;
-    private int price;
-    private String imageKey;
-    private String imageUrl;
-    private String artistName;
-    private boolean isWished;
+public record ItemPreviewResponse (
+        Long itemId,
+        String itemName,
+        String itemDescription,
+        int price,
+        String imageUrl,
+        String artistName,
+        boolean isWished
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+) {
+    public static ItemPreviewResponse of(ItemPreviewResponse response, String imageUrl) {
+        return new ItemPreviewResponse(
+                response.itemId(),
+                response.itemName(),
+                response.itemDescription(),
+                response.price(),
+                imageUrl,
+                response.artistName(),
+                response.isWished()
+        );
     }
 }
