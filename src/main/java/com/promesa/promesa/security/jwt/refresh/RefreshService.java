@@ -30,6 +30,7 @@ public class RefreshService {
         }
 
         if (jwtUtil.isExpired(refreshToken)) {
+            refreshRepository.delete(refreshToken); // 만료된 Refresh 토큰 Redis에서도 제거
             throw ExpiredRefreshTokenException.EXCEPTION;
         }
 
