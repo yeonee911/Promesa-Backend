@@ -67,6 +67,10 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // for JSON parsing
 
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.apache.commons:commons-pool2'
 }
 
 // gradle clean 시에 QClass 디렉토리 삭제
