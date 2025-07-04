@@ -79,7 +79,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             URI uri = new URI(baseRedirectUri);
             String host = uri.getHost();
 
-            if (!(host.equals("localhost") || host.equals("ceos-promesa.vercel.app"))) {
+            if (!(host.equals("localhost") || host.equals("ceos-promesa.vercel.app") || host.equals("promesa.co.kr"))) {
                 throw new IllegalArgumentException("허용되지 않은 리다이렉트 base URI: " + baseRedirectUri);
             }
         } catch (URISyntaxException e) {
