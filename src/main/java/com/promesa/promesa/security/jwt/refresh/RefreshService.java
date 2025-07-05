@@ -61,7 +61,7 @@ public class RefreshService {
         refreshRepository.save(newRefreshToken, nicknameFromToken, jwtProperties.getRefreshTokenExpiration());
 
         // 새 쿠키 설정
-        Cookie cookie = createHttpOnlyCookie("refresh", newRefreshToken);
+        Cookie cookie = createHttpOnlyCookie(request, "refresh", newRefreshToken);
         response.addCookie(cookie);
 
         return SuccessResponse.success(200, Map.of("accessToken", newAccessToken));
@@ -78,10 +78,10 @@ public class RefreshService {
         return null;
     }
 
-    private Cookie createHttpOnlyCookie(String name, String value) {
+    private Cookie createHttpOnlyCookie(HttpServletRequest request, String name, String value) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true); // HTTPS 환경에서만 사용
+        cookie.setSecure(request.isSecure()); // 요청이 HTTPS면 true
         cookie.setPath("/");
         cookie.setMaxAge((int) (jwtProperties.getRefreshTokenExpiration() / 1000));
         return cookie;
