@@ -79,9 +79,14 @@ public class RefreshService {
     }
 
     private Cookie createHttpOnlyCookie(HttpServletRequest request, String name, String value) {
+        String stateParam = request.getParameter("state");
+        boolean isLocalRedirect = stateParam != null && (
+                stateParam.contains("localhost") || stateParam.contains("127.0.0.1")
+        );
+
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
-        cookie.setSecure(request.isSecure()); // 요청이 HTTPS면 true
+        cookie.setSecure(!isLocalRedirect); // localhost로 리디렉션이면 Secure = false
         cookie.setPath("/");
         cookie.setMaxAge((int) (jwtProperties.getRefreshTokenExpiration() / 1000));
         return cookie;
