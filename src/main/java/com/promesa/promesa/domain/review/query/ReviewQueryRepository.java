@@ -33,8 +33,8 @@ public class ReviewQueryRepository {
                 .from(review)
                 .where(review.item.id.eq(itemId))
                 .orderBy(
-                        review.rating.desc(),
-                        Expressions.stringTemplate("char_length({0})", review.content).desc()
+                        review.rating.desc(),   // 리뷰 높은 순
+                        Expressions.stringTemplate("char_length({0})", review.content).desc()   // 글자 수 많은 순
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -46,7 +46,7 @@ public class ReviewQueryRepository {
 
         Map<Long, Integer> idOrderMap = new HashMap<>();
         for (int i = 0; i < reviewIds.size(); i++) {
-            idOrderMap.put(reviewIds.get(i), i);
+            idOrderMap.put(reviewIds.get(i), i);    // 리뷰 아이디, 정렬된 순서
         }
 
         List<ReviewQueryDto> results = queryFactory
@@ -66,7 +66,7 @@ public class ReviewQueryRepository {
                         )
                 );
 
-        results.sort(Comparator.comparingInt(dto -> idOrderMap.get(dto.getReviewId())));
+        results.sort(Comparator.comparingInt(dto -> idOrderMap.get(dto.getReviewId())));        // 정렬 순서로 복원
 
         JPAQuery<Long> countQuery = queryFactory
                 .select(review.count())

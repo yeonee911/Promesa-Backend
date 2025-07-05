@@ -3,7 +3,6 @@ package com.promesa.promesa.domain.review.dto.response;
 import com.promesa.promesa.domain.review.domain.Review;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
