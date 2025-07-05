@@ -6,7 +6,6 @@ import com.promesa.promesa.security.jwt.JwtUtil;
 import com.promesa.promesa.security.jwt.exception.ExpiredRefreshTokenException;
 import com.promesa.promesa.security.jwt.exception.InvalidRefreshTokenException;
 import com.promesa.promesa.security.jwt.exception.MissingRefreshTokenException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -61,16 +60,14 @@ public class RefreshService {
         refreshRepository.save(newRefreshToken, nicknameFromToken, jwtProperties.getRefreshTokenExpiration());
 
         // 새 쿠키 설정
-        Cookie cookie = createHttpOnlyCookie(request, "refresh", newRefreshToken);
-        response.addCookie(cookie);
-
+        setRefreshTokenCookie(request, response, newRefreshToken);
         return SuccessResponse.success(200, Map.of("accessToken", newAccessToken));
     }
 
     private String extractRefreshTokenFromCookie(HttpServletRequest request) {
         if (request.getCookies() == null) return null;
 
-        for (Cookie cookie : request.getCookies()) {
+        for (var cookie : request.getCookies()) {
             if ("refresh".equals(cookie.getName())) {
                 return cookie.getValue();
             }
@@ -78,17 +75,24 @@ public class RefreshService {
         return null;
     }
 
-    private Cookie createHttpOnlyCookie(HttpServletRequest request, String name, String value) {
+    private void setRefreshTokenCookie(HttpServletRequest request, HttpServletResponse response, String token) {
         String stateParam = request.getParameter("state");
-        boolean isLocalRedirect = stateParam != null && (
+
+        boolean isLocalState = stateParam != null && (
                 stateParam.contains("localhost") || stateParam.contains("127.0.0.1")
         );
 
-        Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(!isLocalRedirect); // localhost로 리디렉션이면 Secure = false
-        cookie.setPath("/");
-        cookie.setMaxAge((int) (jwtProperties.getRefreshTokenExpiration() / 1000));
-        return cookie;
+        StringBuilder cookieBuilder = new StringBuilder();
+        cookieBuilder.append("refresh=").append(token)
+                .append("; Path=/")
+                .append("; Max-Age=").append(jwtProperties.getRefreshTokenExpiration() / 1000)
+                .append("; HttpOnly");
+
+        if (!isLocalState) {
+            cookieBuilder.append("; Secure");
+            cookieBuilder.append("; SameSite=None");
+        }
+
+        response.setHeader("Set-Cookie", cookieBuilder.toString());
     }
 }
