@@ -18,8 +18,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Slf4j
@@ -52,29 +50,25 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // 2. Redis에 Refresh Token 저장
         refreshRepository.save(refreshToken, nickname, jwtProperties.getRefreshTokenExpiration());
 
-        // 3. Refresh Token을 HttpOnly 쿠키에 저장
+        // 3. Refresh Token을 HttpOnly 쿠키에 저장 (state 기준 Secure 여부 설정)
+        String stateParam = request.getParameter("state");
+        boolean isLocalState = stateParam != null && (
+                stateParam.contains("localhost") || stateParam.contains("127.0.0.1")
+        );
+
         Cookie refreshCookie = new Cookie("refresh", refreshToken);
         refreshCookie.setHttpOnly(true);
-        refreshCookie.setSecure(!isLocal(request)); // 로컬이면 false
+        refreshCookie.setSecure(!isLocalState); // ← 핵심: state 기준으로 Secure 설정
         refreshCookie.setPath("/");
         refreshCookie.setMaxAge((int)(jwtProperties.getRefreshTokenExpiration() / 1000));
         response.addCookie(refreshCookie);
 
-        // 4. AccessToken도 쿠키로 내려줌
-        Cookie accessCookie = new Cookie("access", accessToken);
-        accessCookie.setHttpOnly(true);
-        accessCookie.setSecure(!isLocal(request));
-        accessCookie.setPath("/");
-        accessCookie.setMaxAge((int)(jwtProperties.getAccessTokenExpiration() / 1000));
-        response.addCookie(accessCookie);
+        // 4. AccessToken은 쿼리 파라미터로만 전달 (쿠키 저장 X)
+        String baseRedirectUri = (stateParam == null || stateParam.isBlank())
+                ? "http://localhost:3000"
+                : stateParam;
 
-        // 5. 프론트 base URI 꺼내기 (state 파라미터에서)
-        String baseRedirectUri = request.getParameter("state");
-        if (baseRedirectUri == null || baseRedirectUri.isBlank()) {
-            baseRedirectUri = "http://localhost:3000";
-        }
-
-        // 6. 보안상 허용된 base 주소만 허용
+        // 5. 보안상 허용된 base 주소만 허용
         try {
             URI uri = new URI(baseRedirectUri);
             String host = uri.getHost();
@@ -86,7 +80,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             throw new IllegalArgumentException("리다이렉트 URI 파싱 실패: " + baseRedirectUri);
         }
 
-        // 7. base URI에 무조건 /login/success 붙여서 accessToken 전달
+        // 6. base URI에 무조건 /login/success 붙여서 accessToken 전달
         String finalRedirect = baseRedirectUri + "/login/success?accessToken=" + accessToken;
 
         log.info("✅ OAuth2 Login Success: {}", nickname);
@@ -99,12 +93,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         if ("kakao".equals(provider)) {
             return String.valueOf(attributes.get("id")); // 카카오의 고유 ID는 "id" 필드
         }
-        // TODO: 구글, 네이버 등 다른 provider 추가 시 확장
         throw new IllegalArgumentException("지원하지 않는 provider: " + provider);
-    }
-
-    private boolean isLocal(HttpServletRequest request) {
-        String host = request.getServerName();
-        return host.contains("localhost") || host.contains("127.0.0.1");
     }
 }
