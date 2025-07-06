@@ -113,6 +113,54 @@ public class ItemQueryRepository {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
+    /**
+     * 작가의 카테고리별 작품 조회
+     * @param member
+     * @param artistId
+     * @param categoryId
+     * @return
+     */
+    public List<ItemPreviewResponse> findItemsByArtistAndCategory(
+            Member member,
+            Long artistId,
+            Long categoryId,
+            Pageable pageable
+    ) {
+        Expression<Boolean> isWished = isWishedExpression(member);
+        BooleanExpression categoryCondition = (categoryId != 0) ? itemCategory.category.id.eq(categoryId) : null;
+        BooleanExpression artistCondition = artist.id.eq(artistId);
+
+        JPAQuery<ItemPreviewResponse> query = queryFactory
+                .select(Projections.fields(ItemPreviewResponse.class,
+                        item.id.as("itemId"),
+                        item.name.as("itemName"),
+                        item.description.as("itemDescription"),
+                        item.price,
+                        itemImage.imageKey.as("imageUrl"),
+                        artist.name.as("artistName"),
+                        ExpressionUtils.as(isWished, "isWished")
+                ))
+                .from(itemCategory)
+                .join(itemCategory.item, item)
+                .join(item.artist, artist)
+                .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue())
+                .where(artistCondition, categoryCondition);
+
+        if (pageable.getSort() != null) {
+            query.orderBy(createOrderSpecifiers(pageable.getSort()));
+        }
+
+        if (member != null) {
+            query.leftJoin(wish).on(
+                    wish.member.id.eq(member.getId())
+                            .and(wish.targetType.eq(TargetType.ITEM))
+                            .and(wish.targetId.eq(item.id))
+            );
+        }
+
+        return query.fetch();
+    }
+
     private OrderSpecifier<?>[] createOrderSpecifiers(Sort sort) {
         List<OrderSpecifier<?>> specifiers = new ArrayList<>();
 
