@@ -1,0 +1,63 @@
+package com.promesa.promesa.domain.review.domain;
+
+import com.promesa.promesa.domain.item.domain.Item;
+import com.promesa.promesa.domain.member.domain.Member;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Review {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "review_id")
+    private Long id;
+
+    private String content;
+
+    private int rating = 0;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private Item item;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewImage> reviewImages = new ArrayList<>();
+
+    public void addReviewImage(ReviewImage image) {
+        this.reviewImages.add(image);
+        image.setReview(this);
+    }
+
+    public void setReviewImages(List<ReviewImage> reviewImages) {
+        this.reviewImages.clear();  // 기존 리뷰 이미지 초기화
+        for (ReviewImage reviewImage : reviewImages) {
+            addReviewImage(reviewImage);
+        }
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+
+    @Builder
+    private Review(String content, int rating, Item item, Member member) {
+        this.content = content;
+        this.rating = rating;
+        this.item = item;
+        this.member = member;
+    }
+}
