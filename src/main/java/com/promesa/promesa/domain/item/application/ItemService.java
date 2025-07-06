@@ -41,10 +41,10 @@ public class ItemService {
      * @return
      */
     public Page<ItemPreviewResponse> findCategoryItem(Member member, Long categoryId, Pageable pageable) {
-        // 카테고리 존재 여부 검증
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> CategoryNotFoundException.EXCEPTION);
-
+        if (categoryId != 0) {  // categoryId == 0은 ALL 조회로 간주
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> CategoryNotFoundException.EXCEPTION);
+        }
         Page<ItemPreviewResponse> responses = itemQueryRepository.findCategoryItem(member, categoryId, pageable);
 
         return responses.map(r -> {

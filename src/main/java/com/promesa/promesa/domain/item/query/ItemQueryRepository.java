@@ -74,6 +74,7 @@ public class ItemQueryRepository {
      */
     public Page<ItemPreviewResponse> findCategoryItem(Member member, Long categoryId, Pageable pageable) {
         Expression<Boolean> isWished = isWishedExpression(member);
+        BooleanExpression categoryCondition = (categoryId != 0) ? itemCategory.category.id.eq(categoryId) : null;
 
         JPAQuery<ItemPreviewResponse> query = queryFactory
                 .select(Projections.fields(ItemPreviewResponse.class,
@@ -84,15 +85,18 @@ public class ItemQueryRepository {
                         itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
                         ExpressionUtils.as(isWished, "isWished")
-                ))
-                .from(itemCategory)
-                .join(itemCategory.item, item)
-                .join(item.artist, artist)
-                .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue())
-                .where(itemCategory.category.id.eq(categoryId))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .orderBy(createOrderSpecifiers(pageable.getSort()));
+                ));
+        if (categoryId != 0) {
+            query.from(itemCategory)
+                    .join(itemCategory.item, item)
+                    .join(item.artist, artist)
+                    .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue())
+                    .where(itemCategory.category.id.eq(categoryId));
+        } else {
+            query.from(item)
+                    .join(item.artist, artist)
+                    .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue());
+        }
 
         if (member != null) {
             query.leftJoin(wish).on(
@@ -104,11 +108,19 @@ public class ItemQueryRepository {
 
         List<ItemPreviewResponse> content = query.fetch();
 
-        JPAQuery<Long> countQuery = queryFactory
-                .select(item.count())
-                .from(itemCategory)
-                .join(itemCategory.item, item)
-                .where(itemCategory.category.id.eq(categoryId));
+        JPAQuery<Long> countQuery;
+
+        if (categoryId != 0) {
+            countQuery = queryFactory
+                    .select(item.count())
+                    .from(itemCategory)
+                    .join(itemCategory.item, item)
+                    .where(itemCategory.category.id.eq(categoryId));
+        } else {
+            countQuery = queryFactory
+                    .select(item.count())
+                    .from(item);
+        }
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
