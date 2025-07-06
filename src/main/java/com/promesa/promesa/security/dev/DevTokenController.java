@@ -1,6 +1,7 @@
 package com.promesa.promesa.security.dev;
 
 import com.promesa.promesa.security.jwt.JwtTokenProvider;
+import com.promesa.promesa.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,10 +11,12 @@ import org.springframework.web.bind.annotation.*;
 public class DevTokenController {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/test-token")
-    public String generateTestToken() {
-        return jwtTokenProvider.generateAccessToken("kakao:1234");
+    public String generateTestToken(@RequestParam(defaultValue = "kakao:1234") String nickname) {
+        return jwtUtil.createAccessToken(nickname, "USER"); // 운영 토큰처럼 claim 다 넣기
     }
+
 
 }

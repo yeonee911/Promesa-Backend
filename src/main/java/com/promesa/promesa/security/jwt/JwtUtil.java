@@ -22,47 +22,77 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
+        System.out.println("🔥 JWT Secret: " + jwtProperties.getSecret());
         byte[] keyBytes = jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8);
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // Access 토큰 생성
+    // ✅ 공통 JWT 생성 메서드
+    public String createJwt(String category, String nickname, String role, Long expiredMs) {
+        Claims claims = Jwts.claims();
+        claims.put("category", category); // access or refresh
+        claims.put("nickname", nickname);
+        claims.put("role", role);
+
+        Date now = new Date();
+        Date expiry = new Date(now.getTime() + expiredMs);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(expiry)
+                .signWith(secretKey, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    // ✅ Access / Refresh 생성
     public String createAccessToken(String nickname, String role) {
         return createJwt("access", nickname, role, jwtProperties.getAccessTokenExpiration());
     }
 
-    // Refresh 토큰 생성
     public String createRefreshToken(String nickname, String role) {
         return createJwt("refresh", nickname, role, jwtProperties.getRefreshTokenExpiration());
     }
 
-    // 만료 여부 확인
+    // ✅ 유효성 검사 (예외 발생 방식)
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            throw e; // JwtAuthenticationFilter 등에서 캐치
+        }
+    }
+
+    // ✅ 만료 여부 판단용
     public boolean isExpired(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token);
-            return false; // 아직 만료되지 않음
+            return false;
         } catch (io.jsonwebtoken.ExpiredJwtException e) {
-            return true; // 만료됨
+            return true;
         } catch (JwtException e) {
             throw InvalidJwtException.EXCEPTION;
         }
     }
 
-    public String getCategory(String token) {
-        return getAllClaims(token).get("category", String.class);
+    // ✅ Subject 조회 (subject 기반 로직 호환용)
+    public String getSubject(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
-    public String getNickname(String token) {
-        return getAllClaims(token).get("nickname", String.class);
-    }
-
-    public String getRole(String token) {
-        return getAllClaims(token).get("role", String.class);
-    }
-
+    // ✅ Claims 추출 메서드
     private Claims getAllClaims(String token) {
         if (token == null || token.trim().isEmpty()) {
             throw InvalidTokenFormatException.EXCEPTION;
@@ -78,5 +108,18 @@ public class JwtUtil {
         } catch (JwtException e) {
             throw InvalidJwtException.EXCEPTION;
         }
+    }
+
+    // ✅ Claim 단건 추출
+    public String getCategory(String token) {
+        return getAllClaims(token).get("category", String.class);
+    }
+
+    public String getNickname(String token) {
+        return getAllClaims(token).get("nickname", String.class);
+    }
+
+    public String getRole(String token) {
+        return getAllClaims(token).get("role", String.class);
     }
 }
