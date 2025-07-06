@@ -1,8 +1,6 @@
 package com.promesa.promesa.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.promesa.promesa.common.dto.ErrorResponse;
 import com.promesa.promesa.security.jwt.exception.JwtErrorCode;
 import jakarta.servlet.FilterChain;
@@ -43,12 +41,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             try {
-                if (!jwtUtil.validateToken(token)) {
-                    sendErrorResponse(response, JwtErrorCode.INVALID_TOKEN, request.getRequestURI());
-                    return;
-                }
+                jwtUtil.isExpired(token);
 
-                String username = jwtUtil.getSubject(token);
+                String username = jwtUtil.getNickname(token);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 UsernamePasswordAuthenticationToken authentication =
@@ -57,8 +52,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            } catch (com.promesa.promesa.security.jwt.exception.ExpiredJwtException e) {
                 sendErrorResponse(response, JwtErrorCode.EXPIRED_TOKEN, request.getRequestURI());
+                return;
+            } catch (com.promesa.promesa.security.jwt.exception.InvalidJwtException e) {
+                sendErrorResponse(response, JwtErrorCode.INVALID_TOKEN, request.getRequestURI());
                 return;
             } catch (io.jsonwebtoken.MalformedJwtException |
                      io.jsonwebtoken.UnsupportedJwtException |
@@ -71,7 +69,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        // 인증이 필요 없는 요청은 계속 진행
         filterChain.doFilter(request, response);
     }
 
@@ -84,6 +81,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
         response.flushBuffer();
-
     }
 }

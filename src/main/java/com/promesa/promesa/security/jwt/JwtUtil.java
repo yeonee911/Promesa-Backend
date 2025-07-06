@@ -2,6 +2,7 @@ package com.promesa.promesa.security.jwt;
 
 import com.promesa.promesa.security.jwt.exception.ExpiredJwtException;
 import com.promesa.promesa.security.jwt.exception.InvalidJwtException;
+import com.promesa.promesa.security.jwt.exception.InvalidTokenFormatException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -25,25 +26,57 @@ public class JwtUtil {
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public boolean validateToken(String token) {
+    // Access 토큰 생성
+    public String createAccessToken(String nickname, String role) {
+        return createJwt("access", nickname, role, jwtProperties.getAccessTokenExpiration());
+    }
+
+    // Refresh 토큰 생성
+    public String createRefreshToken(String nickname, String role) {
+        return createJwt("refresh", nickname, role, jwtProperties.getRefreshTokenExpiration());
+    }
+
+    // 만료 여부 확인
+    public boolean isExpired(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            throw e; // 반드시 throw 하도록 설정되어 있어야 위 catch 문에서 분기 가능
+            return false; // 아직 만료되지 않음
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            return true; // 만료됨
+        } catch (JwtException e) {
+            throw InvalidJwtException.EXCEPTION;
         }
     }
 
+    public String getCategory(String token) {
+        return getAllClaims(token).get("category", String.class);
+    }
 
-    public String getSubject(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+    public String getNickname(String token) {
+        return getAllClaims(token).get("nickname", String.class);
+    }
+
+    public String getRole(String token) {
+        return getAllClaims(token).get("role", String.class);
+    }
+
+    private Claims getAllClaims(String token) {
+        if (token == null || token.trim().isEmpty()) {
+            throw InvalidTokenFormatException.EXCEPTION;
+        }
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            throw ExpiredJwtException.EXCEPTION;
+        } catch (JwtException e) {
+            throw InvalidJwtException.EXCEPTION;
+        }
     }
 }
