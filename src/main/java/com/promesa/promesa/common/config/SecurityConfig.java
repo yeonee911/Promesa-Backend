@@ -47,7 +47,7 @@ public class SecurityConfig {
                                 "/", "/login", "/signup",
                                 "/brand-info", "/categories/**", "exhibitions/**","/inquiries/**","/artists/**",
                                 "/index.html", "/static/**", "/favicon.ico",
-                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**"
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**","dev/**"
                         ).permitAll()                        // 위 경로는 인증 없이 접근 허용
                         .requestMatchers("/oauth/loginInfo").authenticated() // 이건 명시적으로 인증 필요
                         .anyRequest().authenticated()       // 나머지는 모두 인증 필요

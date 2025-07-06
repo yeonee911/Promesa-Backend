@@ -21,20 +21,8 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
-        System.out.println("🔥 JWT Secret: " + jwtProperties.getSecret());
         byte[] keyBytes = jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8);
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
-    }
-    public String createToken(String subject) {
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + jwtProperties.getAccessTokenExpiration());
-
-        return Jwts.builder()
-                .setSubject(subject)
-                .setIssuedAt(now)
-                .setExpiration(expiry)
-                .signWith(secretKey, SignatureAlgorithm.HS512)
-                .compact();
     }
 
     public boolean validateToken(String token) {

@@ -1,11 +1,13 @@
 package com.promesa.promesa.domain.wish.api;
 
+import com.promesa.promesa.common.dto.SuccessResponse;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.wish.application.WishService;
 import com.promesa.promesa.domain.wish.domain.TargetType;
 import com.promesa.promesa.domain.wish.dto.WishResponse;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,25 +27,25 @@ public class WishController {
     private final WishService wishService;
 
     @PostMapping
-    public ResponseEntity<Void> addWish(
+    public String addWish(
             @RequestParam TargetType targetType,
             @RequestParam Long targetId,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        Member member = (user != null) ? user.getMember() : null; // 로그인하지 않았을 경우, member = null로 전달
+        Member member = user.getMember();
         wishService.addWish(member, targetType, targetId);
-        return ResponseEntity.ok().build();
+        return "위시리스트에 추가되었습니다.";
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteWish(
+    public String deleteWish(
             @RequestParam TargetType targetType,
             @RequestParam Long targetId,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        Member member = (user != null) ? user.getMember() : null;
+        Member member = user.getMember();
         wishService.deleteWish(member, targetType, targetId);
-        return ResponseEntity.ok().build();
+        return "위시리스트에서 삭제되었습니다.";
     }
 
     @GetMapping("/list")
