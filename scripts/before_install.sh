@@ -6,11 +6,7 @@ if [ -f "/home/ubuntu/app/.env" ]; then
   cp /home/ubuntu/app/.env /home/ubuntu/.env.backup
 fi
 
-CONTAINER_NAME=promesa-container
-
-# 기존에 실행 중인 "promesa-container"가 있으면 중지 후 제거
-EXISTS=$(docker ps -q --filter "name=${CONTAINER_NAME}")
-if [ -n "$EXISTS" ]; then
-  docker stop ${CONTAINER_NAME}
-  docker rm ${CONTAINER_NAME}
-fi
+# 사용하지 않는 Docker 이미지 정리
+echo "> 사용하지 않는 Docker 이미지 정리 시작"
+docker image prune -af
+echo "> 이미지 정리 완료"
