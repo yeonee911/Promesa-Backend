@@ -27,23 +27,16 @@ public class ItemService {
     private String bucketName;
 
 
-    public Page<ItemPreviewResponse> findCategoryItem(Long memberId, Long categoryId, Pageable pageable) {
+    public Page<ItemPreviewResponse> findCategoryItem(Member member, Long categoryId, Pageable pageable) {
         // 카테고리 존재 여부 검증
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> CategoryNotFoundException.EXCEPTION);
 
-        // 멤버 존재 여부 검증
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> MemberNotFoundException.EXCEPTION);
+        Page<ItemPreviewResponse> responses = itemQueryRepository.findCategoryItem(member, categoryId, pageable);
 
-        Page<ItemPreviewResponse> responses = itemQueryRepository.findCategoryItem(memberId, categoryId, pageable);
-        // imageKey → presigned URL 변환
-        responses.forEach(response -> {
-            if (response.getImageKey() != null) {
-                String url = s3Service.createPresignedGetUrl(bucketName, response.getImageKey());
-                response.setImageUrl(url);
-            }
+        return responses.map(r -> {
+            String imageUrl = s3Service.createPresignedGetUrl(bucketName, r.getImageUrl());
+            return ItemPreviewResponse.of(r, imageUrl);
         });
-        return responses;
     }
 }

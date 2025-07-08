@@ -15,6 +15,7 @@ import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.member.exception.MemberNotFoundException;
+import com.promesa.promesa.domain.wish.domain.TargetType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -33,27 +34,28 @@ public class ExhibitionService {
     private final ExhibitionQueryRepository exhibitionQueryRepository;
     private final ArtistRepository artistRepository;
 
-    @Value("${aws.s3.bucket}")  // application.yml 에 정의 필요
+    @Value("${aws.s3.bucket}")
     private String bucketName;
 
-    public List<ItemPreviewResponse> getExhibitionItems(Long memberId, Long exhibitionId) {
+    /**
+     * 특정 기획전 조회
+     * @param exhibitionId
+     * @param member
+     * @return
+     */
+    public List<ItemPreviewResponse> getExhibitionItems(Member member, Long exhibitionId) {
         // 기획전 존재 여부 검증
         Exhibition exhibition = exhibitionRepository.findById(exhibitionId)
                 .orElseThrow(() -> ExhibitionNotFoundException.EXCEPTION);
-        // member 존재 여부 검증
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> MemberNotFoundException.EXCEPTION);
 
-        List<ItemPreviewResponse> responses = itemQueryRepository.findExhibitionItem(memberId, exhibitionId);
+        List<ItemPreviewResponse> responses = itemQueryRepository.findExhibitionItem(member, exhibitionId);
 
-        // imageKey → presigned URL 변환
-        responses.forEach(response -> {
-            if (response.getImageKey() != null) {
-                String url = s3Service.createPresignedGetUrl(bucketName, response.getImageKey());
-                response.setImageUrl(url);
-            }
-        });
-        return responses;
+        return responses.stream()
+                .map(r -> {
+                    String imageUrl = s3Service.createPresignedGetUrl(bucketName, r.getImageUrl());
+                    return ItemPreviewResponse.of(r, imageUrl);
+                })
+                .toList();
     }
 
     /**

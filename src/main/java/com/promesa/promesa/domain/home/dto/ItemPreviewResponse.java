@@ -5,19 +5,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class ItemPreviewResponse {   // ← 반드시 public 으로
+@NoArgsConstructor
+public class ItemPreviewResponse {
     private Long itemId;
     private String itemName;
     private String itemDescription;
     private int price;
-    private String imageKey;
     private String imageUrl;
     private String artistName;
     private boolean isWished;
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public static ItemPreviewResponse of(ItemPreviewResponse response, String imageUrl) {
+        return new ItemPreviewResponse(
+                response.getItemId(),
+                response.getItemName(),
+                response.getItemDescription(),
+                response.getPrice(),
+                imageUrl,
+                response.getArtistName(),
+                response.isWished()
+        );
     }
 }
