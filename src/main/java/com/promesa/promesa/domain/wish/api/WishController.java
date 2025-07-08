@@ -1,13 +1,12 @@
 package com.promesa.promesa.domain.wish.api;
 
-import com.promesa.promesa.common.dto.SuccessResponse;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.wish.application.WishService;
 import com.promesa.promesa.domain.wish.domain.TargetType;
 import com.promesa.promesa.domain.wish.dto.WishResponse;
+import com.promesa.promesa.domain.wish.dto.WishToggleResponse;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,31 +20,31 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/wish")
+@RequestMapping("/wishes")
 public class WishController {
 
     private final WishService wishService;
 
     @PostMapping
-    public String addWish(
+    public ResponseEntity<WishToggleResponse> addWish(
             @RequestParam TargetType targetType,
             @RequestParam Long targetId,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Member member = user.getMember();
-        wishService.addWish(member, targetType, targetId);
-        return "위시리스트에 추가되었습니다.";
+        WishToggleResponse response = wishService.addWish(member, targetType, targetId);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping
-    public String deleteWish(
+    public ResponseEntity<WishToggleResponse> deleteWish(
             @RequestParam TargetType targetType,
             @RequestParam Long targetId,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Member member = user.getMember();
-        wishService.deleteWish(member, targetType, targetId);
-        return "위시리스트에서 삭제되었습니다.";
+        WishToggleResponse response = wishService.deleteWish(member, targetType, targetId);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/list")

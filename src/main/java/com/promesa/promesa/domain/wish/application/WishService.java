@@ -6,12 +6,15 @@ import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
+import com.promesa.promesa.domain.item.domain.ItemImage;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.wish.dao.WishRepository;
 import com.promesa.promesa.domain.wish.domain.TargetType;
 import com.promesa.promesa.domain.wish.domain.Wish;
 import com.promesa.promesa.domain.wish.dto.WishResponse;
+import com.promesa.promesa.domain.wish.dto.WishToggleResponse;
+import com.promesa.promesa.domain.wish.exception.DuplicatedWishException;
 import com.promesa.promesa.domain.wish.exception.UnsupportedTargetTypeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,11 +40,11 @@ public class WishService {
     private String bucketName;
 
     @PreAuthorize("isAuthenticated()") // 로그인 한 경우에만 접근 허용
-    public void addWish(Member member, TargetType targetType, Long targetId) {
-        log.info("🧾 addWish 호출 - member_id: {}, target_id: {}, target_type: {}",
-                member.getId(), targetId, targetType);
+    public WishToggleResponse addWish(Member member, TargetType targetType, Long targetId) {
         boolean exists = wishRepository.existsByMemberAndTargetTypeAndTargetId(member, targetType, targetId);
-        if (exists) return; // 이미 위시에 존재하는 경우 return
+        if (exists) {
+            throw DuplicatedWishException.EXCEPTION;
+        }
 
         validateTargetExistence(targetType, targetId);
 
@@ -51,14 +54,69 @@ public class WishService {
                 .targetId(targetId)
                 .build();
         wishRepository.save(wish);
+
+        // wishCount 증가
+        int wishCount;
+        if (targetType == TargetType.ITEM) {
+            Item item = itemRepository.findById(targetId)
+                    .orElseThrow(() -> ItemNotFoundException.EXCEPTION);
+            item.increaseWishCount();
+            wishCount = item.getWishCount();
+        } else if (targetType == TargetType.ARTIST) {
+            Artist artist = artistRepository.findById(targetId)
+                    .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+            artist.increaseWishCount();
+            wishCount = artist.getWishCount();
+        } else {
+            throw UnsupportedTargetTypeException.EXCEPTION;
+        }
+
+        return WishToggleResponse.builder()
+                .message("위시리스트에 추가되었습니다.")
+                .wished(true)
+                .target(
+                        WishToggleResponse.Target.builder()
+                                .targetType(targetType)
+                                .targetId(targetId)
+                                .wishCount(wishCount)
+                                .build()
+                )
+                .build();
     }
 
     @PreAuthorize("isAuthenticated()")
-    public void deleteWish(Member member, TargetType targetType, Long targetId) {
-
+    public WishToggleResponse deleteWish(Member member, TargetType targetType, Long targetId) {
         validateTargetExistence(targetType, targetId);
 
         wishRepository.deleteByMemberAndTargetTypeAndTargetId(member, targetType, targetId);
+
+        // wishCount 감소
+        int wishCount;
+        if (targetType == TargetType.ITEM) {
+            Item item = itemRepository.findById(targetId)
+                    .orElseThrow(() -> ItemNotFoundException.EXCEPTION);
+            item.decreaseWishCount();
+            wishCount = item.getWishCount();
+        } else if (targetType == TargetType.ARTIST) {
+            Artist artist = artistRepository.findById(targetId)
+                    .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+            artist.decreaseWishCount();
+            wishCount = artist.getWishCount();
+        } else {
+            throw UnsupportedTargetTypeException.EXCEPTION;
+        }
+
+        return WishToggleResponse.builder()
+                .message("위시리스트에서 삭제되었습니다.")
+                .wished(false)
+                .target(
+                        WishToggleResponse.Target.builder()
+                                .targetType(targetType)
+                                .targetId(targetId)
+                                .wishCount(wishCount)
+                                .build()
+                )
+                .build();
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -74,14 +132,17 @@ public class WishService {
 
                         String title = item.getName();
 
-                        // 썸네일 = main 이미지 중 첫 번째 이미지
+                        // 썸네일
                         String thumbnailUrl = item.getItemImages().stream()
-                                .filter(img -> img.getImageKey().contains("/main/"))
+                                .filter(ItemImage::isThumbnail)
                                 .map(img -> s3Service.createPresignedGetUrl(bucketName, img.getImageKey()))
                                 .findFirst()
                                 .orElse(null);  // 없으면 null 반환
 
-                        return WishResponse.from(wish, title, thumbnailUrl);
+                        String artistName = item.getArtist().getName();
+                        int price = item.getPrice();
+
+                        return WishResponse.fromItem(wish, title, thumbnailUrl, artistName, price);
                     }
 
                     // Artist 위시리스트 목록
@@ -91,7 +152,7 @@ public class WishService {
 
                         String thumbnailUrl = s3Service.createPresignedGetUrl(bucketName, artist.getProfileImageKey());
 
-                        return WishResponse.from(wish, artist.getName(), thumbnailUrl);
+                        return WishResponse.fromArtist(wish, artist.getName(), thumbnailUrl);
                     }
 
                     else {

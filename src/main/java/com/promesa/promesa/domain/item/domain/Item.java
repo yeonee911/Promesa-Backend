@@ -44,10 +44,10 @@ public class Item extends BaseTimeEntity {
     private Double averageRating;   // 리뷰가 없을 경우 null 가능
 
     @Column(name = "review_count")
-    private Integer reviewCount; // ✔ Null-safe
+    private int reviewCount = 0;
 
     @Column(name = "total_rating")
-    private Double totalRating = 0.0;
+    private double totalRating = 0.0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id")
@@ -101,4 +101,14 @@ public class Item extends BaseTimeEntity {
             this.averageRating = this.totalRating / this.reviewCount;
         }
     }
+
+
+    public void increaseWishCount() {
+        this.wishCount++;
+    }
+
+    public void decreaseWishCount() {
+        this.wishCount--;
+    }
+
 }
