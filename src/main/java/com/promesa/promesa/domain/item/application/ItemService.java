@@ -41,9 +41,8 @@ public class ItemService {
      * @return
      */
     public Page<ItemPreviewResponse> findCategoryItem(Member member, Long categoryId, Pageable pageable) {
-        if (categoryId != 0) {  // categoryId == 0은 ALL 조회로 간주
-            Category category = categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> CategoryNotFoundException.EXCEPTION);
+        if (categoryId != 0 && !categoryRepository.existsById(categoryId)) {  // categoryId == 0은 ALL 조회로 간주
+            throw CategoryNotFoundException.EXCEPTION;
         }
         Page<ItemPreviewResponse> responses = itemQueryRepository.findCategoryItem(member, categoryId, pageable);
 
@@ -61,8 +60,9 @@ public class ItemService {
      * @return
      */
     public List<ItemPreviewResponse> findItemsByArtistAndCategory(Member member, Long artistId, Long categoryId, Pageable pageable) {
-        Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+        if (!artistRepository.existsById(artistId)) {
+            throw ArtistNotFoundException.EXCEPTION;
+        }
 
         if (categoryId != 0) {  // categoryId == 0은 ALL 조회로 간주
             Category category = categoryRepository.findById(categoryId)
