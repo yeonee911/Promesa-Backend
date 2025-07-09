@@ -45,7 +45,8 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/reviews/**", "/review-images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/items/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/review-images/**").permitAll()
                         .requestMatchers(
                                 "/actuator/**",
                                 "/", "/login", "/signup",

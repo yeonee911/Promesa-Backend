@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.review.domain;
 
+import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.member.domain.Member;
 import jakarta.persistence.*;
@@ -12,7 +13,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Review {
+public class Review extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long id;

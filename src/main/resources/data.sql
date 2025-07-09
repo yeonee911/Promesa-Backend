@@ -3,7 +3,8 @@ VALUES (1, '김회원', 'kakao', '1234'),
        (2, '원회원', 'kakao', '5678'),
        (3, '김작가', 'kakao', '1011'),
        (4, '이작가', 'kakao', '1213'),
-       (5, '박작가', 'kakao', '1415')
+       (5, '박작가', 'kakao', '1415'),
+       (6, '남궁회원', 'kakao', '1617')
 ;
 
 ALTER TABLE MEMBER ALTER COLUMN MEMBER_ID RESTART WITH 7;
@@ -582,3 +583,14 @@ VALUES
 INSERT INTO INQUIRY (INQUIRY_ID, QUESTION, ANSWER, ARTIST_ID)
 VALUES (1, '배송은 얼마나 걸리나요?', '약 3~5일 소요됩니다.', 1),
        (2, '포장 상태는 어떤가요?', NULL, 1);
+
+INSERT INTO REVIEW (REVIEW_ID, ITEM_ID, MEMBER_ID, RATING, CONTENT)
+VALUES (1, 1, 1, 1, '도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ'),
+       (2, 1, 2, 5, '완전 굿굿굿굿짱짱짱짱이에욤'),
+       (3, 1, 6, 5, '너무너무 마음에 들어요. 제가 찾아 헤맨 작품입니다.')
+;
+
+INSERT INTO REVIEW_IMAGE (REVIEW_IMAGE_ID, REVIEW_ID, IMAGE_KEY)
+VALUES (1, 1, 'member/1/review/1/불만.jpg'),
+       (2, 3, 'member/6/review/1/최고.jpg'),
+       (3, 3, 'member/6/review/1/엄지.jpg');
