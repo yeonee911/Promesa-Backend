@@ -42,4 +42,12 @@ public class Artist extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL)
     private List<ExhibitionArtist> exhibitionArtists = new ArrayList<>();
+
+    public void increaseWishCount() {
+        this.wishCount++;
+    }
+
+    public void decreaseWishCount() {
+        this.wishCount--;
+    }
 }

@@ -41,6 +41,7 @@ public class ArtistService {
             );
         }
 
+
         return ArtistResponse.from(artist, presignedUrl, isWishlisted);
     }
 

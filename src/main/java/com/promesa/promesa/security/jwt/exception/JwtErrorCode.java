@@ -20,6 +20,7 @@ public enum JwtErrorCode implements BaseErrorCode {
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "JWT_411", "유효하지 않은 Refresh Token입니다."),
     EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "JWT_412", "만료된 Refresh Token입니다.");
 
+
     private final Integer status;
     private final String code;
     private final String reason;
