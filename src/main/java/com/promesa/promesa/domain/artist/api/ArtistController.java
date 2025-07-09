@@ -2,18 +2,21 @@ package com.promesa.promesa.domain.artist.api;
 
 import com.promesa.promesa.domain.artist.application.ArtistService;
 import com.promesa.promesa.domain.artist.dto.ArtistResponse;
+import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
+import com.promesa.promesa.domain.item.application.ItemService;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
 import com.promesa.promesa.domain.exhibition.application.ExhibitionService;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
+import com.querydsl.core.types.OrderSpecifier;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +26,7 @@ import java.util.List;
 public class ArtistController {
     private final ArtistService artistService;
     private final ExhibitionService exhibitionService;
+    private final ItemService itemService;
 
     @GetMapping("/{artistId}")
     public ResponseEntity<ArtistResponse> getArtistProfile(
@@ -37,5 +41,19 @@ public class ArtistController {
     @Operation(summary = "작가가 참여한 전시 목록 조회")
     public ResponseEntity<List<ExhibitionResponse>> getExhibitionsByArtist(@PathVariable Long artistId) {
         return ResponseEntity.ok(exhibitionService.getExhibitionsByArtist(artistId));
+    }
+
+    @GetMapping("/{artistId}/categories/{categoryId}/items")
+    @Operation(summary = "작가의 카테고리별 작품 목록 조회")
+    public ResponseEntity<List<ItemPreviewResponse>> getItemsByCategory(
+            @PathVariable Long artistId,
+            @PathVariable Long categoryId,
+            @ParameterObject Pageable pageable,
+            @AuthenticationPrincipal CustomUserDetails user
+    )
+    {
+        Member member = (user != null) ? user.getMember() : null;
+        List<ItemPreviewResponse> responses = itemService.findItemsByArtistAndCategory(member, artistId, categoryId, pageable);
+        return ResponseEntity.ok(responses);
     }
 }
