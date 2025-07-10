@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -24,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -45,17 +47,18 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/reviews/**", "/review-images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/items/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/review-images/**").permitAll()
                         .requestMatchers(
                                 "/actuator/**",
                                 "/", "/login", "/signup",
                                 "/brand-info", "/categories/**", "/exhibitions/**", "/inquiries/**", "/artists/**",
                                 "/index.html", "/static/**", "/favicon.ico",
-                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**",
-                                "/auth/reissue", "/auth/logout"
-                        ).permitAll()
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**","dev/**"
+                        ).permitAll()                    
                         .requestMatchers("/oauth/loginInfo").authenticated()
                         .anyRequest().authenticated()
+
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)

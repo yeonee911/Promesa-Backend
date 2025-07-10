@@ -3,9 +3,12 @@ package com.promesa.promesa.domain.exhibition.api;
 import com.promesa.promesa.domain.exhibition.application.ExhibitionService;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
 import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
+import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.security.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,12 +20,13 @@ public class ExhibitionController {
     private final ExhibitionService exhibitionService;
 
     @GetMapping("/{exhibitionId}/items")
+    @Operation(summary = "특정 전시 조회")
     public ResponseEntity<List<ItemPreviewResponse>> getExhibitionItems(
             @PathVariable Long exhibitionId,
-            @RequestParam(required = false) Long memberId // 요청 URL에 ?memberId=1 붙여야 함. 개발 테스트용
-            // 로그인 기능 구현 시 @AuthenticationPrincipal
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
-        List<ItemPreviewResponse> response = exhibitionService.getExhibitionItems(memberId, exhibitionId);
+        Member member = (user != null) ? user.getMember() : null; // 로그인하지 않았을 경우, member = null로 전달
+        List<ItemPreviewResponse> response = exhibitionService.getExhibitionItems(member, exhibitionId);
         return ResponseEntity.ok(response);
     }
 

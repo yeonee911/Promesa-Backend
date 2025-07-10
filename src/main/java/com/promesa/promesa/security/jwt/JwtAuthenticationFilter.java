@@ -32,6 +32,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String header = request.getHeader("Authorization");
 
+        // 토큰이 없을 경우 처리
+        if (header == null || !header.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response); // 일단 인증 없이 접근 허용 -> 로그인 필수인 API에서 나중에 처리
+            return;
+        }
+
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             try {

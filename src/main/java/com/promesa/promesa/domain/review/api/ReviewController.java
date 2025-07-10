@@ -13,6 +13,9 @@ import com.promesa.promesa.security.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -80,5 +83,15 @@ public class ReviewController {
         Member member = (user != null) ? user.getMember() : null;
         ReviewResponse response = reviewService.updateReview(request, itemId, reviewId, member);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/items/{itemId}/reviews")
+    @Operation(summary = "리뷰 조회")
+    public ResponseEntity<Page<ReviewResponse>> getReviews(
+            @PathVariable Long itemId,
+            @ParameterObject Pageable pageable
+    ){
+        Page<ReviewResponse> responses = reviewService.getReviews(itemId, pageable);
+        return ResponseEntity.ok(responses);
     }
 }

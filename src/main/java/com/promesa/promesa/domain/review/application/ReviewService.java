@@ -12,10 +12,15 @@ import com.promesa.promesa.domain.review.domain.Review;
 import com.promesa.promesa.domain.review.domain.ReviewImage;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
 import com.promesa.promesa.domain.review.dto.request.UpdateReviewRequest;
+import com.promesa.promesa.domain.review.dto.response.ReviewQueryDto;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
 import com.promesa.promesa.domain.review.exception.*;
+import com.promesa.promesa.domain.review.query.ReviewQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +35,11 @@ public class ReviewService {
     private final ItemRepository itemRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewImageService reviewImageService;
+    private final ReviewQueryRepository reviewQueryRepository;
     private final S3Service s3Service;
+
+    @Value("${aws.s3.bucket}")  // application.yml 에 정의 필요
+    private String bucketName;
 
     /**
      * 리뷰 작성하기
@@ -141,6 +150,30 @@ public class ReviewService {
         }
 
         return ReviewResponse.from(target, extractImageKeys(target));
+    }
+
+    /**
+     * 리뷰 조회하기
+     * @param itemId
+     * @return
+     */
+    public Page<ReviewResponse> getReviews(Long itemId, Pageable pageable) {
+        Page<ReviewQueryDto> results = reviewQueryRepository.findAllReviews(itemId, pageable);
+        List<ReviewResponse> responseList = results.getContent().stream()
+                .map(dto -> {
+                    List<String> presignedUrls = dto.getReviewImages().stream()
+                            .map(key -> s3Service.createPresignedGetUrl(bucketName, key))
+                            .toList();
+
+                    return ReviewResponse.from(dto, presignedUrls);
+                })
+                .toList();
+
+        return PageableExecutionUtils.getPage(
+                responseList,
+                pageable,
+                results::getTotalElements
+        );
     }
 
     public Review getVerifiedReview(Long itemId, Long reviewId, Member member) {

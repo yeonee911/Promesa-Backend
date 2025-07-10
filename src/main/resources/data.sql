@@ -3,7 +3,8 @@ VALUES (1, '김회원', 'kakao', '1234'),
        (2, '원회원', 'kakao', '5678'),
        (3, '김작가', 'kakao', '1011'),
        (4, '이작가', 'kakao', '1213'),
-       (5, '박작가', 'kakao', '1415')
+       (5, '박작가', 'kakao', '1415'),
+       (6, '남궁회원', 'kakao', '1617')
 ;
 
 ALTER TABLE MEMBER ALTER COLUMN MEMBER_ID RESTART WITH 7;
@@ -30,9 +31,14 @@ VALUES
     (5, '오브제', NULL);
 
 INSERT INTO ITEM (
+    ITEM_ID, CREATED_AT, UPDATED_AT, NAME, DESCRIPTION, PRICE, SALE_STATUS, STOCK, WISH_COUNT, ARTIST_ID, REVIEW_COUNT, AVERAGE_RATING, TOTAL_RATING)
+VALUES
+    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '빈티지 블랙 높은잔 세트', '작품에 대한 설명', 10000, 'ON_SALE', 10, 1, 1,0, 0.0, 0.0)
+;
+
+INSERT INTO ITEM (
     ITEM_ID, CREATED_AT, UPDATED_AT, NAME, DESCRIPTION, PRICE, SALE_STATUS, STOCK, WISH_COUNT, ARTIST_ID)
 VALUES
-    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '빈티지 블랙 높은잔 세트', '작품에 대한 설명', 10000, 'ON_SALE', 10, 1, 1),
     (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 2', '작품에 대한 설명',25000, 'ON_SALE', 1, 0, 1),
     (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 3', '작품에 대한 설명',10000, 'ON_SALE', 14, 0, 2),
     (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 4', '작품에 대한 설명',20000, 'ON_SALE', 10, 1, 1),
@@ -352,98 +358,6 @@ VALUES
     (200, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/100/main/2.png', FALSE, 100)
 ;
 
-INSERT INTO WISH (WISH_ID, TARGET_ID, TARGET_TYPE, MEMBER_ID)
-VALUES
-    (1, 1, 'ITEM', 1),
-    (2, 4, 'ITEM', 2),
-    (3, 5, 'ITEM', 1),
-    (4, 10, 'ITEM', 2),
-    (5, 11, 'ITEM', 1),
-    (6, 12, 'ITEM', 2),
-    (7, 12, 'ITEM', 2),
-    (8, 13, 'ITEM', 1),
-    (9, 16, 'ITEM', 1),
-    (10, 20, 'ITEM', 1),
-    (11, 21, 'ITEM', 2),
-    (12, 21, 'ITEM', 1),
-    (13, 22, 'ITEM', 1),
-    (14, 23, 'ITEM', 2),
-    (15, 25, 'ITEM', 2),
-    (16, 25, 'ITEM', 2),
-    (17, 26, 'ITEM', 1),
-    (18, 27, 'ITEM', 1),
-    (19, 28, 'ITEM', 2),
-    (20, 29, 'ITEM', 1),
-    (21, 29, 'ITEM', 1),
-    (22, 30, 'ITEM', 2),
-    (23, 30, 'ITEM', 1),
-    (24, 31, 'ITEM', 1),
-    (25, 32, 'ITEM', 1),
-    (26, 32, 'ITEM', 1),
-    (27, 33, 'ITEM', 2),
-    (28, 34, 'ITEM', 2),
-    (29, 37, 'ITEM', 1),
-    (30, 38, 'ITEM', 2),
-    (31, 38, 'ITEM', 2),
-    (32, 42, 'ITEM', 2),
-    (33, 43, 'ITEM', 1),
-    (34, 43, 'ITEM', 2),
-    (35, 45, 'ITEM', 1),
-    (36, 46, 'ITEM', 2),
-    (37, 46, 'ITEM', 1),
-    (38, 47, 'ITEM', 1),
-    (39, 47, 'ITEM', 1),
-    (40, 51, 'ITEM', 1),
-    (41, 51, 'ITEM', 2),
-    (42, 52, 'ITEM', 1),
-    (43, 53, 'ITEM', 1),
-    (44, 54, 'ITEM', 1),
-    (45, 56, 'ITEM', 1),
-    (46, 56, 'ITEM', 1),
-    (47, 57, 'ITEM', 1),
-    (48, 57, 'ITEM', 2),
-    (49, 58, 'ITEM', 1),
-    (50, 59, 'ITEM', 1),
-    (51, 60, 'ITEM', 2),
-    (52, 60, 'ITEM', 2),
-    (53, 61, 'ITEM', 2),
-    (54, 61, 'ITEM', 2),
-    (55, 63, 'ITEM', 1),
-    (56, 64, 'ITEM', 2),
-    (57, 64, 'ITEM', 1),
-    (58, 65, 'ITEM', 1),
-    (59, 65, 'ITEM', 1),
-    (60, 66, 'ITEM', 1),
-    (61, 67, 'ITEM', 1),
-    (62, 68, 'ITEM', 1),
-    (63, 68, 'ITEM', 2),
-    (64, 72, 'ITEM', 1),
-    (65, 72, 'ITEM', 2),
-    (66, 73, 'ITEM', 2),
-    (67, 73, 'ITEM', 2),
-    (68, 74, 'ITEM', 1),
-    (69, 74, 'ITEM', 1),
-    (70, 75, 'ITEM', 2),
-    (71, 75, 'ITEM', 2),
-    (72, 78, 'ITEM', 1),
-    (73, 79, 'ITEM', 1),
-    (74, 80, 'ITEM', 1),
-    (75, 81, 'ITEM', 2),
-    (76, 81, 'ITEM', 2),
-    (77, 86, 'ITEM', 1),
-    (78, 88, 'ITEM', 2),
-    (79, 88, 'ITEM', 2),
-    (80, 90, 'ITEM', 1),
-    (81, 93, 'ITEM', 2),
-    (82, 93, 'ITEM', 2),
-    (83, 94, 'ITEM', 1),
-    (84, 95, 'ITEM', 2),
-    (85, 95, 'ITEM', 2),
-    (86, 96, 'ITEM', 1),
-    (87, 98, 'ITEM', 2),
-    (88, 99, 'ITEM', 1),
-    (89, 100, 'ITEM', 1)
-;
 
 INSERT INTO ITEM_CATEGORY (ITEM_CATEGORY_ID, CATEGORY_ID, ITEM_ID)
 VALUES
@@ -582,3 +496,14 @@ VALUES
 INSERT INTO INQUIRY (INQUIRY_ID, QUESTION, ANSWER, ARTIST_ID)
 VALUES (1, '배송은 얼마나 걸리나요?', '약 3~5일 소요됩니다.', 1),
        (2, '포장 상태는 어떤가요?', NULL, 1);
+
+INSERT INTO REVIEW (REVIEW_ID, ITEM_ID, MEMBER_ID, RATING, CONTENT)
+VALUES (1, 1, 1, 1, '도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ'),
+       (2, 1, 2, 5, '완전 굿굿굿굿짱짱짱짱이에욤'),
+       (3, 1, 6, 5, '너무너무 마음에 들어요. 제가 찾아 헤맨 작품입니다.')
+;
+
+INSERT INTO REVIEW_IMAGE (REVIEW_IMAGE_ID, REVIEW_ID, IMAGE_KEY)
+VALUES (1, 1, 'member/1/review/1/불만.jpg'),
+       (2, 3, 'member/6/review/1/최고.jpg'),
+       (3, 3, 'member/6/review/1/엄지.jpg');
