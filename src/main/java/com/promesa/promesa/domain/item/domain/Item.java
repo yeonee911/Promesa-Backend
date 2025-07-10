@@ -109,4 +109,14 @@ public class Item extends BaseTimeEntity {
             this.averageRating = this.totalRating / this.reviewCount;
         }
     }
+
+
+    public void increaseWishCount() {
+        this.wishCount++;
+    }
+
+    public void decreaseWishCount() {
+        this.wishCount--;
+    }
+
 }
