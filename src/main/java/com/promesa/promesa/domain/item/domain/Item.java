@@ -49,6 +49,14 @@ public class Item extends BaseTimeEntity {
     @Column(name = "total_rating")
     private double totalRating = 0.0;
 
+    @NotBlank
+    @Column(name = "product_code")
+    private String productCode;
+
+    private int width;
+    private int height;
+    private int depth;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id")
     private Artist artist;
