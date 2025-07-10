@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,12 +49,24 @@ public class ItemInfoService {
         Long categoryId = itemCategory.getCategory().getId();
         String categoryName = itemCategory.getCategory().getName();
 
-        // 이미지 Presigned URL
-        List<String> imageUrls = item.getItemImages().stream()
-                .map(image -> s3Service.createPresignedGetUrl(bucketName, image.getImageKey()))
+
+        // 이미지 Presigned URL (null-safe)
+        List<String> imageUrls = Optional.ofNullable(item.getItemImages())
+                .orElse(List.of())
+                .stream()
+                .map(image -> {
+                    String key = image.getImageKey();
+                    return key != null ? s3Service.createPresignedGetUrl(bucketName, key) : null;
+                })
+                .filter(url -> url != null) // null 제거
                 .toList();
 
-        String artistImageUrl = s3Service.createPresignedGetUrl(bucketName, artist.getProfileImageKey());
+        // 작가 프로필 이미지 Presigned URL (null-safe)
+        String artistImageUrl = null;
+        if (artist.getProfileImageKey() != null && !artist.getProfileImageKey().isBlank()) {
+            artistImageUrl = s3Service.createPresignedGetUrl(bucketName, artist.getProfileImageKey());
+        }
+
 
         // DTO 조립
         ItemSummary itemSummary = new ItemSummary(
@@ -62,7 +75,7 @@ public class ItemInfoService {
                 categoryName,
                 item.getName(),
                 imageUrls,
-                item.getAverageRating(),
+                Optional.ofNullable(item.getAverageRating()).orElse(0.0),
                 item.getReviewCount(),
                 artist.getId()
         );
