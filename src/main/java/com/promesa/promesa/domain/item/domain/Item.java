@@ -108,7 +108,10 @@ public class Item extends BaseTimeEntity {
     }
 
     public void decreaseWishCount() {
-        this.wishCount--;
+        if (this.wishCount > 0) {
+            this.wishCount -= 1; 
+        } else {
+            this.wishCount = 0; // wishCount가 음수가 되지 않도록 방지
+        }
     }
-
 }
