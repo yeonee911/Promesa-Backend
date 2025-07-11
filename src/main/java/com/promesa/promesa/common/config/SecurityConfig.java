@@ -51,7 +51,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/review-images/**").permitAll()
                         .requestMatchers(EndpointRequest.to("health", "metrics", "info")).permitAll()
                         .requestMatchers(
-                                "/actuator/**",
                                 "/", "/login", "/signup",
                                 "/brand-info", "/categories/**", "/exhibitions/**", "/inquiries/**", "/artists/**",
                                 "/index.html", "/static/**", "/favicon.ico",
