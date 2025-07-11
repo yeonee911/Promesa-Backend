@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -44,85 +45,50 @@ public class ItemInfoService {
         Artist artist = artistRepository.findById(item.getArtist().getId())
                 .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
 
-        // 카테고리
         ItemCategory itemCategory = item.getItemCategories().get(0);
-        Long categoryId = itemCategory.getCategory().getId();
-        String categoryName = itemCategory.getCategory().getName();
 
+        // 이미지 Presigned URL
+        List<String> imageUrls = getPresignedImageUrls(item);
 
-        // 이미지 Presigned URL (null-safe)
-        List<String> imageUrls = Optional.ofNullable(item.getItemImages())
+        // 작가 이미지 Presigned URL
+        String artistImageUrl = getPresignedArtistImageUrl(artist);
+
+        // 위시 상태 & 개수
+        boolean itemWished = isWished(member, TargetType.ITEM, item.getId());
+
+        boolean artistWished = isWished(member, TargetType.ARTIST, artist.getId());
+
+        return ItemResponse.of(
+                item,
+                itemCategory.getCategory(),
+                imageUrls,
+                artist,
+                artistImageUrl,
+                itemWished,
+                artistWished
+        );
+
+    }
+
+    private List<String> getPresignedImageUrls(Item item) {
+        return Optional.ofNullable(item.getItemImages())
                 .orElse(List.of())
                 .stream()
                 .map(image -> {
                     String key = image.getImageKey();
                     return key != null ? s3Service.createPresignedGetUrl(bucketName, key) : null;
                 })
-                .filter(url -> url != null) // null 제거
+                .filter(Objects::nonNull)
                 .toList();
-
-        // 작가 프로필 이미지 Presigned URL (null-safe)
-        String artistImageUrl = null;
-        if (artist.getProfileImageKey() != null && !artist.getProfileImageKey().isBlank()) {
-            artistImageUrl = s3Service.createPresignedGetUrl(bucketName, artist.getProfileImageKey());
-        }
-
-
-        // DTO 조립
-        ItemSummary itemSummary = new ItemSummary(
-                item.getId(),
-                categoryId,
-                categoryName,
-                item.getName(),
-                imageUrls,
-                Optional.ofNullable(item.getAverageRating()).orElse(0.0),
-                item.getReviewCount(),
-                artist.getId()
-        );
-
-        ItemDetail itemDetail = new ItemDetail(
-                item.getProductCode(),
-                categoryName,
-                item.getWidth(),
-                item.getHeight(),
-                item.getDepth()
-        );
-
-        // 위시 처리 - member가 null인지 먼저 체크
-        boolean itemWished = (member != null) &&
-                wishRepository.existsByMemberAndTargetTypeAndTargetId(member, TargetType.ITEM, itemId);
-        int itemWishCount = wishRepository.countByTargetTypeAndTargetId(TargetType.ITEM, itemId);
-        ItemWish itemWish = new ItemWish(itemWished, itemWishCount);
-
-        ItemSale itemSale = new ItemSale(
-                item.getStock(),
-                item.getStock() == 0,
-                item.getPrice(),
-                item.getPrice() >= 70000,
-                "제주/도서산간 3,000원 추가"
-        );
-
-        boolean artistWished = (member != null) &&
-                wishRepository.existsByMemberAndTargetTypeAndTargetId(member, TargetType.ARTIST, artist.getId());
-        int artistWishCount = wishRepository.countByTargetTypeAndTargetId(TargetType.ARTIST, artist.getId());
-
-        ArtistProfile artistProfile = new ArtistProfile(
-                artist.getId(),
-                artist.getName(),
-                artistImageUrl,
-                artist.getDescription(),
-                "https://instagram.com/" + artist.getInsta()
-        );
-        ArtistWish artistWish = new ArtistWish(artistWished, artistWishCount);
-
-        return new ItemResponse(
-                itemSummary,
-                itemDetail,
-                itemWish,
-                artistProfile,
-                artistWish,
-                itemSale
-        );
     }
 
+    private String getPresignedArtistImageUrl(Artist artist) {
+        String key = artist.getProfileImageKey();
+        return (key != null && !key.isBlank()) ? s3Service.createPresignedGetUrl(bucketName, key) : null;
+    }
+
+    private boolean isWished(Member member, TargetType type, Long targetId) {
+        return member != null &&
+                wishRepository.existsByMemberAndTargetTypeAndTargetId(member, type, targetId);
+    }
 }
