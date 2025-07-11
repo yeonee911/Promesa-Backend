@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/promesa
+    url: jdbc:h2:tcp://localhost/~/promesa;MODE=MYSQL;DATABASE_TO_LOWER=TRUE;IGNORECASE=TRUE
     username: sa
     password:
     driver-class-name: org.h2.Driver
