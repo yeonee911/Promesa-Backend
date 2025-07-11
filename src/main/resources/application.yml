@@ -45,3 +45,10 @@ aws:
     presigned:
       expire-minutes: 15
     bucket: ceos-promesa
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics  # 노출할 엔드포인트 목록
+        exclude: beans, env              # 제외할 엔드포인트 목록
