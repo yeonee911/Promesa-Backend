@@ -15,6 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name="artist")
 public class Artist extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "artist_id")
@@ -48,6 +49,10 @@ public class Artist extends BaseTimeEntity {
     }
 
     public void decreaseWishCount() {
-        this.wishCount--;
+        if (this.wishCount > 0) {
+            this.wishCount -= 1;
+        } else {
+            this.wishCount = 0; // wishCount가 음수가 되지 않도록 방지
+        }
     }
 }

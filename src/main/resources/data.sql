@@ -1,17 +1,16 @@
-INSERT INTO MEMBER (MEMBER_ID, NAME, PROVIDER, PROVIDER_ID)
-VALUES (1, '김회원', 'kakao', '1234'),
-       (2, '원회원', 'kakao', '5678'),
-       (3, '김작가', 'kakao', '1011'),
-       (4, '이작가', 'kakao', '1213'),
-       (5, '박작가', 'kakao', '1415'),
-       (6, '남궁회원', 'kakao', '1617'),
-       (7, '정회원', 'kakao', '1415');
+insert into member (name, provider, provider_id)
+values ('김회원', 'kakao', '1234'),
+       ('원회원', 'kakao', '5678'),
+       ('김작가', 'kakao', '1011'),
+       ('이작가', 'kakao', '1213'),
+       ('박작가', 'kakao', '1415'),
+       ('남궁회원', 'kakao', '1617'),
+       ('정회원', 'kakao', '1819');
 ;
 
-ALTER TABLE MEMBER ALTER COLUMN MEMBER_ID RESTART WITH 7;
 
-INSERT INTO ARTIST (ARTIST_ID,  NAME, DESCRIPTION, INSTA, PROFILE_IMAGE_KEY, WISH_COUNT, MEMBER_ID)
-VALUES
+insert into artist (artist_id, name, description, insta, profile_image_key, wish_count, member_id)
+values
     (1, '김작가', '000 작가는 오랜 시간 부서져 작은 알갱이가 된 돌의 조각들을 다시 하나의 덩어리로 만들고 고온의 불에 소성하여 원래의 성질로 환원시킵니다.' ||
                '이 작은 입자들이 모여 이루는 형태를 통해, 자연과 일상 속에 깃든 시간의 흐름을 표현하고자 합니다. 작가의 작업은 일상 속에서 새로운 역할을 가지며 우리 삶의 한 부분이 됩니다.',
      'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/1/profile/꿀꺽이.jpg', 0, 3),
@@ -28,17 +27,19 @@ VALUES
                '감정의 결을 담아낸 작업은 개인의 내면을 조용히 반영합니다.',
      'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/5/profile/profile.jpg', 0, 7);
 
+update artist set created_at = current_timestamp() where created_at is null;
+update artist set updated_at = current_timestamp() where updated_at is null;
 
-INSERT INTO CATEGORY (CATEGORY_ID, CATEGORY_NAME, PARENT_CATEGORY_ID)
-VALUES
+insert into category (category_id, category_name, parent_category_id)
+values
     (1, '컵/잔', NULL),
     (2, '그릇/사기', NULL),
     (3, '커피/티용품', NULL),
     (4, '화병', NULL),
     (5, '오브제', NULL);
 
-INSERT INTO ITEM (ITEM_ID, CREATED_AT, UPDATED_AT, NAME, DESCRIPTION, PRICE, SALE_STATUS, STOCK, WISH_COUNT, AVERAGE_RATING, REVIEW_COUNT, TOTAL_RATING, PRODUCT_CODE, WIDTH, HEIGHT, DEPTH, ARTIST_ID)
-VALUES
+insert into item (item_id, created_at, updated_at, name, description, price, sale_status, stock, wish_count, average_rating, review_count, total_rating, product_code, width, height, depth, artist_id)
+values
     (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '빈티지 블랙 높은잔 세트', '작품에 대한 설명', 15000, 'ON_SALE', 11, 1, 3.5, 1, 3.5, 'PRD001', 10, 20, 30, 2),
     (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 2', '작품에 대한 설명', 20000, 'ON_SALE', 12, 2, 4.0, 2, 8.0, 'PRD002', 10, 20, 30, 3),
     (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 3', '작품에 대한 설명', 25000, 'ON_SALE', 13, 0, 3.0, 0, 0.0, 'PRD003', 10, 20, 30, 4),
@@ -90,8 +91,9 @@ VALUES
     (49, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 49', '작품에 대한 설명', 30000, 'ON_SALE', 19, 1, 3.5, 1, 3.5, 'PRD049', 10, 20, 30, 5),
     (50, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 50', '작품에 대한 설명', 10000, 'ON_SALE', 10, 2, 4.0, 2, 8.0, 'PRD050', 10, 20, 30, 1);
 
-INSERT INTO ITEM (ITEM_ID, CREATED_AT, UPDATED_AT, NAME, DESCRIPTION, PRICE, SALE_STATUS, STOCK, WISH_COUNT, AVERAGE_RATING, REVIEW_COUNT, TOTAL_RATING, PRODUCT_CODE, WIDTH, HEIGHT, DEPTH, ARTIST_ID)
-VALUES
+insert into item (
+    item_id, created_at, updated_at, name, description, price, sale_status, stock, wish_count, average_rating, review_count, total_rating, product_code, width, height, depth, artist_id)
+values
     (51, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 51', '작품에 대한 설명', 70000, 'ON_SALE', 11, 0, 3.0, 0, 0.0, 'PRD051', 10, 20, 30, 2),
     (52, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 52', '작품에 대한 설명', 80000, 'ON_SALE', 12, 1, NULL, 1, 0.0, 'PRD052', 10, 20, 30, 3),
     (53, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 53', '작품에 대한 설명', 90000, 'ON_SALE', 13, 2, 4.0, 2, 8.0, 'PRD053', 10, 20, 30, 4),
@@ -143,8 +145,11 @@ VALUES
     (99, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 99', '작품에 대한 설명', 30000, 'ON_SALE', 19, 0, 3.0, 0, 0.0, 'PRD099', 10, 20, 30, 5),
     (100, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 100', '작품에 대한 설명', 10000, 'ON_SALE', 10, 1, NULL, 1, 0.0, 'PRD100', 10, 20, 30, 1);
 
-INSERT INTO ITEM_IMAGE (ITEM_IMAGE_ID, CREATED_AT, UPDATED_AT, ITEM_IMAGE_KEY, IS_THUMBNAIL, ITEM_ID)
-VALUES
+update item set review_count = 0 where review_count is null;
+update item set total_rating = 0.0 where total_rating is null;
+
+insert into item_image (item_image_id, created_at, updated_at, item_image_key, is_thumbnail, item_id)
+values
     (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/1/main/1.png', TRUE, 1),
     (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/1/main/2.png', FALSE, 1),
     (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/2/main/1.png', TRUE, 2),
@@ -196,8 +201,8 @@ VALUES
     (49, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/25/main/1.png', TRUE, 25),
     (50, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/25/main/2.png', FALSE, 25);
 
-INSERT INTO ITEM_IMAGE (ITEM_IMAGE_ID, CREATED_AT, UPDATED_AT, ITEM_IMAGE_KEY, IS_THUMBNAIL, ITEM_ID)
-VALUES
+insert into item_image (item_image_id, created_at, updated_at, item_image_key, is_thumbnail, item_id)
+values
     (51, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/26/main/1.png', TRUE, 26),
     (52, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/26/main/2.png', FALSE, 26),
     (53, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/27/main/1.png', TRUE, 27),
@@ -248,8 +253,8 @@ VALUES
     (98, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/49/main/2.png', FALSE, 49),
     (99, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/50/main/1.png', TRUE, 50);
 
-INSERT INTO ITEM_IMAGE (ITEM_IMAGE_ID, CREATED_AT, UPDATED_AT, ITEM_IMAGE_KEY, IS_THUMBNAIL, ITEM_ID)
-VALUES
+insert into item_image (item_image_id, created_at, updated_at, item_image_key, is_thumbnail, item_id)
+values
     (100, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/50/main/2.png', FALSE, 50),
     (101, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/51/main/1.png', TRUE, 51),
     (102, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/51/main/2.png', FALSE, 51),
@@ -302,8 +307,8 @@ VALUES
     (149, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/75/main/1.png', TRUE, 75),
     (150, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/75/main/2.png', FALSE, 75);
 
-INSERT INTO ITEM_IMAGE (ITEM_IMAGE_ID, CREATED_AT, UPDATED_AT, ITEM_IMAGE_KEY, IS_THUMBNAIL, ITEM_ID)
-VALUES
+insert into item_image (item_image_id, created_at, updated_at, item_image_key, is_thumbnail, item_id)
+values
     (151, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/76/main/1.png', TRUE, 76),
     (152, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/76/main/2.png', FALSE, 76),
     (153, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/77/main/1.png', TRUE, 77),
@@ -356,101 +361,9 @@ VALUES
     (200, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/100/main/2.png', FALSE, 100)
 ;
 
-INSERT INTO WISH (WISH_ID, TARGET_ID, TARGET_TYPE, MEMBER_ID)
-VALUES
-    (1, 1, 'ITEM', 1),
-    (2, 4, 'ITEM', 2),
-    (3, 5, 'ITEM', 1),
-    (4, 10, 'ITEM', 2),
-    (5, 11, 'ITEM', 1),
-    (6, 12, 'ITEM', 2),
-    (7, 12, 'ITEM', 2),
-    (8, 13, 'ITEM', 1),
-    (9, 16, 'ITEM', 1),
-    (10, 20, 'ITEM', 1),
-    (11, 21, 'ITEM', 2),
-    (12, 21, 'ITEM', 1),
-    (13, 22, 'ITEM', 1),
-    (14, 23, 'ITEM', 2),
-    (15, 25, 'ITEM', 2),
-    (16, 25, 'ITEM', 2),
-    (17, 26, 'ITEM', 1),
-    (18, 27, 'ITEM', 1),
-    (19, 28, 'ITEM', 2),
-    (20, 29, 'ITEM', 1),
-    (21, 29, 'ITEM', 1),
-    (22, 30, 'ITEM', 2),
-    (23, 30, 'ITEM', 1),
-    (24, 31, 'ITEM', 1),
-    (25, 32, 'ITEM', 1),
-    (26, 32, 'ITEM', 1),
-    (27, 33, 'ITEM', 2),
-    (28, 34, 'ITEM', 2),
-    (29, 37, 'ITEM', 1),
-    (30, 38, 'ITEM', 2),
-    (31, 38, 'ITEM', 2),
-    (32, 42, 'ITEM', 2),
-    (33, 43, 'ITEM', 1),
-    (34, 43, 'ITEM', 2),
-    (35, 45, 'ITEM', 1),
-    (36, 46, 'ITEM', 2),
-    (37, 46, 'ITEM', 1),
-    (38, 47, 'ITEM', 1),
-    (39, 47, 'ITEM', 1),
-    (40, 51, 'ITEM', 1),
-    (41, 51, 'ITEM', 2),
-    (42, 52, 'ITEM', 1),
-    (43, 53, 'ITEM', 1),
-    (44, 54, 'ITEM', 1),
-    (45, 56, 'ITEM', 1),
-    (46, 56, 'ITEM', 1),
-    (47, 57, 'ITEM', 1),
-    (48, 57, 'ITEM', 2),
-    (49, 58, 'ITEM', 1),
-    (50, 59, 'ITEM', 1),
-    (51, 60, 'ITEM', 2),
-    (52, 60, 'ITEM', 2),
-    (53, 61, 'ITEM', 2),
-    (54, 61, 'ITEM', 2),
-    (55, 63, 'ITEM', 1),
-    (56, 64, 'ITEM', 2),
-    (57, 64, 'ITEM', 1),
-    (58, 65, 'ITEM', 1),
-    (59, 65, 'ITEM', 1),
-    (60, 66, 'ITEM', 1),
-    (61, 67, 'ITEM', 1),
-    (62, 68, 'ITEM', 1),
-    (63, 68, 'ITEM', 2),
-    (64, 72, 'ITEM', 1),
-    (65, 72, 'ITEM', 2),
-    (66, 73, 'ITEM', 2),
-    (67, 73, 'ITEM', 2),
-    (68, 74, 'ITEM', 1),
-    (69, 74, 'ITEM', 1),
-    (70, 75, 'ITEM', 2),
-    (71, 75, 'ITEM', 2),
-    (72, 78, 'ITEM', 1),
-    (73, 79, 'ITEM', 1),
-    (74, 80, 'ITEM', 1),
-    (75, 81, 'ITEM', 2),
-    (76, 81, 'ITEM', 2),
-    (77, 86, 'ITEM', 1),
-    (78, 88, 'ITEM', 2),
-    (79, 88, 'ITEM', 2),
-    (80, 90, 'ITEM', 1),
-    (81, 93, 'ITEM', 2),
-    (82, 93, 'ITEM', 2),
-    (83, 94, 'ITEM', 1),
-    (84, 95, 'ITEM', 2),
-    (85, 95, 'ITEM', 2),
-    (86, 96, 'ITEM', 1),
-    (87, 98, 'ITEM', 2),
-    (88, 99, 'ITEM', 1),
-    (89, 100, 'ITEM', 1)
-;
 
-INSERT INTO ITEM_CATEGORY (ITEM_CATEGORY_ID, CATEGORY_ID, ITEM_ID)
-VALUES
+insert into item_category (item_category_id, category_id, item_id)
+values
     (1, 1, 1),
     (2, 4, 2),
     (3, 2, 3),
@@ -502,8 +415,8 @@ VALUES
     (49, 1, 49),
     (50, 2, 50);
 
-INSERT INTO ITEM_CATEGORY (ITEM_CATEGORY_ID, CATEGORY_ID, ITEM_ID)
-VALUES
+insert into item_category (item_category_id, category_id, item_id)
+values
     (51, 2, 51),
     (52, 3, 52),
     (53, 1, 53),
@@ -556,15 +469,15 @@ VALUES
     (100, 2, 100)
 ;
 
-INSERT INTO EXHIBITION (EXHIBITION_ID, CREATED_AT, UPDATED_AT, DESCRIPTION, TITLE, IMAGE_KEY, EXHIBITION_STATUS)
-VALUES
+insert into exhibition (exhibition_id, created_at, updated_at, description, title, image_key, exhibition_status)
+values
     (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전', 'exhibition/1/thumnail/spring.jpg', 'ENDED'),
     (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전', 'exhibition/2/thumnail/summer.jpg', 'ONGOING'),
     (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아', '토마토 기획전', 'exhibition/3/thumnail/tomato.jpg', 'ONGOING')
 ;
 
-INSERT INTO EXHIBITION_ITEM (EXHIBITION_ITEM_ID, EXHIBITION_ID, ITEM_ID)
-VALUES
+insert into exhibition_item (exhibition_item_id, exhibition_id, item_id)
+values
     (1, 1, 1),
     (2, 2, 2),
     (3, 3, 3),
@@ -573,8 +486,8 @@ VALUES
     (6, 3, 6)
 ;
 
-INSERT INTO EXHIBITION_ARTIST (EXHIBITION_ARTIST_ID, ARTIST_ID, EXHIBITION_ID, CREATED_AT, UPDATED_AT)
-VALUES
+insert into exhibition_artist (exhibition_artist_id, artist_id, exhibition_id, created_at, updated_at)
+values
     (1, 1, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (2, 1, 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (3, 2, 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
@@ -583,17 +496,81 @@ VALUES
     (6, 2, 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())
 ;
 
-INSERT INTO INQUIRY (INQUIRY_ID, QUESTION, ANSWER, ARTIST_ID)
-VALUES (1, '배송은 얼마나 걸리나요?', '약 3~5일 소요됩니다.', 1),
+insert into inquiry (inquiry_id, question, answer, artist_id)
+values (1, '배송은 얼마나 걸리나요?', '약 3~5일 소요됩니다.', 1),
        (2, '포장 상태는 어떤가요?', NULL, 1);
 
-INSERT INTO REVIEW (REVIEW_ID, ITEM_ID, MEMBER_ID, RATING, CONTENT, CREATED_AT, UPDATED_AT)
-VALUES (1, 1, 1, 1, '도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-       (2, 1, 2, 5, '완전 굿굿굿굿짱짱짱짱이에욤',CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-       (3, 1, 6, 5, '너무너무 마음에 들어요. 제가 찾아 헤맨 작품입니다.',CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())
-;
-
-INSERT INTO REVIEW_IMAGE (REVIEW_IMAGE_ID, REVIEW_ID, IMAGE_KEY)
-VALUES (1, 1, 'member/1/review/1/불만.jpg'),
-       (2, 3, 'member/6/review/1/최고.jpg'),
-       (3, 3, 'member/6/review/1/엄지.jpg');
+insert into wish (target_id, target_type, member_id, created_at, updated_at)
+values
+    (1, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (4, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (5, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (10, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (11, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (12, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (13, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (16, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (20, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (21, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (21, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (22, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (23, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (25, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (26, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (27, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (28, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (29, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (30, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (30, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (31, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (32, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (33, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (34, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (37, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (38, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (42, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (43, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (43, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (45, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (46, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (46, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (47, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (51, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (51, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (52, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (53, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (54, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (56, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (57, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (57, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (58, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (59, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (60, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (61, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (63, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (64, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (64, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (65, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (66, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (67, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (68, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (68, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (72, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (72, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (73, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (74, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (75, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (78, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (79, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (80, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (81, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (86, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (88, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (90, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (93, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (94, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (95, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (96, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (98, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (99, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (100, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
