@@ -5,7 +5,7 @@ values ('김회원', 'kakao', '1234'),
        ('이작가', 'kakao', '1213'),
        ('박작가', 'kakao', '1415'),
        ('남궁회원', 'kakao', '1617'),
-       ('정회원', 'kakao', '1415');
+       ('정회원', 'kakao', '1819');
 ;
 
 
@@ -27,9 +27,6 @@ values
                '감정의 결을 담아낸 작업은 개인의 내면을 조용히 반영합니다.',
      'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/5/profile/profile.jpg', 0, 7);
 
-     'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/3/profile/profile.jpg', 0, 5)
-;
-
 update artist set created_at = current_timestamp() where created_at is null;
 update artist set updated_at = current_timestamp() where updated_at is null;
 
@@ -41,8 +38,8 @@ values
     (4, '화병', NULL),
     (5, '오브제', NULL);
 
-INSERT INTO ITEM (ITEM_ID, CREATED_AT, UPDATED_AT, NAME, DESCRIPTION, PRICE, SALE_STATUS, STOCK, WISH_COUNT, AVERAGE_RATING, REVIEW_COUNT, TOTAL_RATING, PRODUCT_CODE, WIDTH, HEIGHT, DEPTH, ARTIST_ID)
-VALUES
+insert into item (item_id, created_at, updated_at, name, description, price, sale_status, stock, wish_count, average_rating, review_count, total_rating, product_code, width, height, depth, artist_id)
+values
     (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '빈티지 블랙 높은잔 세트', '작품에 대한 설명', 15000, 'ON_SALE', 11, 1, 3.5, 1, 3.5, 'PRD001', 10, 20, 30, 2),
     (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 2', '작품에 대한 설명', 20000, 'ON_SALE', 12, 2, 4.0, 2, 8.0, 'PRD002', 10, 20, 30, 3),
     (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 3', '작품에 대한 설명', 25000, 'ON_SALE', 13, 0, 3.0, 0, 0.0, 'PRD003', 10, 20, 30, 4),
@@ -93,60 +90,6 @@ VALUES
     (48, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 48', '작품에 대한 설명', 25000, 'ON_SALE', 18, 0, NULL, 0, 0.0, 'PRD048', 10, 20, 30, 4),
     (49, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 49', '작품에 대한 설명', 30000, 'ON_SALE', 19, 1, 3.5, 1, 3.5, 'PRD049', 10, 20, 30, 5),
     (50, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 50', '작품에 대한 설명', 10000, 'ON_SALE', 10, 2, 4.0, 2, 8.0, 'PRD050', 10, 20, 30, 1);
-insert into item (
-    item_id, created_at, updated_at, name, description, price, sale_status, stock, wish_count, artist_id)
-values
-    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '빈티지 블랙 높은잔 세트', '작품에 대한 설명', 10000, 'ON_SALE', 10, 1, 1),
-    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 2', '작품에 대한 설명',25000, 'ON_SALE', 1, 0, 1),
-    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 3', '작품에 대한 설명',10000, 'ON_SALE', 14, 0, 2),
-    (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 4', '작품에 대한 설명',20000, 'ON_SALE', 10, 1, 1),
-    (5, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 5', '작품에 대한 설명',10000, 'ON_SALE', 2, 1, 2),
-    (6, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 6', '작품에 대한 설명',25000, 'ON_SALE', 13, 0, 2),
-    (7, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 7', '작품에 대한 설명',15000, 'ON_SALE', 4, 0, 2),
-    (8, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 8', '작품에 대한 설명',25000, 'ON_SALE', 13, 0, 1),
-    (9, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 9', '작품에 대한 설명',15000, 'ON_SALE', 4, 0, 1),
-    (10, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 10', '작품에 대한 설명',15000, 'ON_SALE', 11, 1, 2),
-    (11, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 11', '작품에 대한 설명',25000, 'ON_SALE', 15, 1, 1),
-    (12, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 12', '작품에 대한 설명',15000, 'ON_SALE', 5, 2, 3),
-    (13, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 13', '작품에 대한 설명',15000, 'ON_SALE', 3, 1, 1),
-    (14, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 14', '작품에 대한 설명',20000, 'ON_SALE', 17, 0, 2),
-    (15, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 15', '작품에 대한 설명',15000, 'ON_SALE', 19, 0, 1),
-    (16, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 16','작품에 대한 설명', 10000, 'ON_SALE', 8, 1, 1),
-    (17, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 17', '작품에 대한 설명',10000, 'ON_SALE', 4, 0, 1),
-    (18, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 18', '작품에 대한 설명',10000, 'ON_SALE', 12, 0, 1),
-    (19, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 19', '작품에 대한 설명',10000, 'ON_SALE', 8, 0, 2),
-    (20, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 20', '작품에 대한 설명',15000, 'ON_SALE', 6, 1, 1),
-    (21, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 21', '작품에 대한 설명',25000, 'ON_SALE', 1, 2, 1),
-    (22, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 22', '작품에 대한 설명',20000, 'ON_SALE', 17, 1, 3),
-    (23, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 23', '작품에 대한 설명',25000, 'ON_SALE', 2, 1, 3),
-    (24, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 24', '작품에 대한 설명',10000, 'ON_SALE', 3, 0, 1),
-    (25, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 25', '작품에 대한 설명',15000, 'ON_SALE', 11, 2, 2),
-    (26, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 26', '작품에 대한 설명',10000, 'ON_SALE', 8, 1, 1),
-    (27, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 27', '작품에 대한 설명',20000, 'ON_SALE', 9, 1, 1),
-    (28, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 28', '작품에 대한 설명',25000, 'ON_SALE', 3, 1, 1),
-    (29, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 29', '작품에 대한 설명',10000, 'ON_SALE', 17, 2, 1),
-    (30, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 30', '작품에 대한 설명',15000, 'ON_SALE', 17, 2, 1),
-    (31, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 31', '작품에 대한 설명',10000, 'ON_SALE', 15, 1, 2),
-    (32, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 32', '작품에 대한 설명',20000, 'ON_SALE', 3, 2, 1),
-    (33, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 33', '작품에 대한 설명',20000, 'ON_SALE', 2, 1, 3),
-    (34, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 34', '작품에 대한 설명',15000, 'ON_SALE', 14, 1, 1),
-    (35, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 35', '작품에 대한 설명',20000, 'ON_SALE', 8, 0, 1),
-    (36, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 36','작품에 대한 설명', 20000, 'ON_SALE', 19, 0, 3),
-    (37, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 37', '작품에 대한 설명',15000, 'ON_SALE', 1, 1, 3),
-    (38, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 38', '작품에 대한 설명',15000, 'ON_SALE', 18, 2, 1),
-    (39, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 39', '작품에 대한 설명',25000, 'ON_SALE', 12, 0, 2),
-    (40, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 40', '작품에 대한 설명',10000, 'ON_SALE', 2, 0, 3),
-    (41, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 41', '작품에 대한 설명',25000, 'ON_SALE', 13, 0, 2),
-    (42, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 42', '작품에 대한 설명',25000, 'ON_SALE', 13, 1, 3),
-    (43, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 43', '작품에 대한 설명',20000, 'ON_SALE', 13, 2, 1),
-    (44, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 44', '작품에 대한 설명',20000, 'ON_SALE', 9, 0, 3),
-    (45, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 45', '작품에 대한 설명',25000, 'ON_SALE', 11, 1, 3),
-    (46, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 46', '작품에 대한 설명',10000, 'ON_SALE', 16, 2, 2),
-    (47, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 47', '작품에 대한 설명',20000, 'ON_SALE', 19, 2, 1),
-    (48, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 48', '작품에 대한 설명',20000, 'ON_SALE', 15, 0, 3),
-    (49, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 49', '작품에 대한 설명',15000, 'ON_SALE', 15, 0, 1),
-    (50, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 50', '작품에 대한 설명',10000, 'ON_SALE', 17, 0, 2)
-;
 
 insert into item (
     item_id, created_at, updated_at, name, description, price, sale_status, stock, wish_count, average_rating, review_count, total_rating, product_code, width, height, depth, artist_id)
@@ -201,60 +144,6 @@ values
     (98, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 98', '작품에 대한 설명', 25000, 'ON_SALE', 18, 2, 4.0, 2, 8.0, 'PRD098', 10, 20, 30, 4),
     (99, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 99', '작품에 대한 설명', 30000, 'ON_SALE', 19, 0, 3.0, 0, 0.0, 'PRD099', 10, 20, 30, 5),
     (100, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 100', '작품에 대한 설명', 10000, 'ON_SALE', 10, 1, NULL, 1, 0.0, 'PRD100', 10, 20, 30, 1);
-insert into item (
-    item_id, created_at, updated_at, name, description, price, sale_status, stock, wish_count, artist_id)
-values
-    (51, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 51', '작품에 대한 설명',10000, 'ON_SALE', 20, 2, 2),
-    (52, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 52', '작품에 대한 설명',25000, 'ON_SALE', 5, 1, 1),
-    (53, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 53', '작품에 대한 설명',10000, 'ON_SALE', 14, 1, 3),
-    (54, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 54', '작품에 대한 설명',15000, 'ON_SALE', 1, 1, 3),
-    (55, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 55', '작품에 대한 설명',25000, 'ON_SALE', 20, 0, 3),
-    (56, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 56', '작품에 대한 설명',15000, 'ON_SALE', 8, 2, 1),
-    (57, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 57', '작품에 대한 설명',25000, 'ON_SALE', 2, 2, 1),
-    (58, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 58', '작품에 대한 설명',25000, 'ON_SALE', 12, 1, 2),
-    (59, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 59', '작품에 대한 설명',15000, 'ON_SALE', 3, 1, 3),
-    (60, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 60', '작품에 대한 설명',15000, 'ON_SALE', 7, 2, 1),
-    (61, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 61', '작품에 대한 설명',15000, 'ON_SALE', 19, 2, 1),
-    (62, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 62', '작품에 대한 설명',20000, 'ON_SALE', 6, 0, 1),
-    (63, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 63', '작품에 대한 설명',10000, 'ON_SALE', 12, 1, 2),
-    (64, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 64', '작품에 대한 설명',10000, 'ON_SALE', 2, 2, 1),
-    (65, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 65', '작품에 대한 설명',20000, 'ON_SALE', 4, 2, 2),
-    (66, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 66', '작품에 대한 설명',15000, 'ON_SALE', 16, 1, 2),
-    (67, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 67', '작품에 대한 설명',10000, 'ON_SALE', 12, 1, 1),
-    (68, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 68', '작품에 대한 설명',15000, 'ON_SALE', 6, 2, 3),
-    (69, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 69', '작품에 대한 설명',15000, 'ON_SALE', 9, 0, 3),
-    (70, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 70', '작품에 대한 설명',10000, 'ON_SALE', 11, 0, 1),
-    (71, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 71', '작품에 대한 설명',25000, 'ON_SALE', 14, 0, 1),
-    (72, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 72', '작품에 대한 설명',20000, 'ON_SALE', 10, 2, 2),
-    (73, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 73', '작품에 대한 설명',15000, 'ON_SALE', 6, 2, 2),
-    (74, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 74', '작품에 대한 설명',25000, 'ON_SALE', 4, 2, 2),
-    (75, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 75', '작품에 대한 설명',10000, 'ON_SALE', 5, 2, 2),
-    (76, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 76', '작품에 대한 설명',10000, 'ON_SALE', 2, 0, 2),
-    (77, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 77', '작품에 대한 설명',15000, 'ON_SALE', 5, 0, 2),
-    (78, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 78', '작품에 대한 설명',10000, 'ON_SALE', 9, 1, 2),
-    (79, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 79', '작품에 대한 설명',15000, 'ON_SALE', 14, 1, 1),
-    (80, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 80', '작품에 대한 설명',20000, 'ON_SALE', 8, 1, 3),
-    (81, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 81', '작품에 대한 설명',20000, 'ON_SALE', 12, 2, 3),
-    (82, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 82', '작품에 대한 설명',10000, 'ON_SALE', 12, 0, 3),
-    (83, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 83', '작품에 대한 설명',25000, 'ON_SALE', 8, 0, 3),
-    (84, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 84', '작품에 대한 설명',20000, 'ON_SALE', 6, 0, 2),
-    (85, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 85', '작품에 대한 설명',10000, 'ON_SALE', 1, 0, 1),
-    (86, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 86', '작품에 대한 설명',15000, 'ON_SALE', 2, 1, 1),
-    (87, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 87', '작품에 대한 설명',25000, 'ON_SALE', 9, 0, 2),
-    (88, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 88', '작품에 대한 설명',15000, 'ON_SALE', 18, 2, 1),
-    (89, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 89', '작품에 대한 설명',25000, 'ON_SALE', 15, 0, 1),
-    (90, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 90', '작품에 대한 설명',10000, 'ON_SALE', 16, 1, 3),
-    (91, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 91', '작품에 대한 설명',10000, 'ON_SALE', 7, 0, 2),
-    (92, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 92', '작품에 대한 설명',20000, 'ON_SALE', 15, 0, 3),
-    (93, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 93', '작품에 대한 설명',15000, 'ON_SALE', 15, 2, 2),
-    (94, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 94', '작품에 대한 설명',15000, 'ON_SALE', 15, 1, 1),
-    (95, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 95', '작품에 대한 설명',15000, 'ON_SALE', 10, 2, 3),
-    (96, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 96', '작품에 대한 설명',25000, 'ON_SALE', 2, 1, 1),
-    (97, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 97', '작품에 대한 설명',20000, 'ON_SALE', 2, 0, 2),
-    (98, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 98', '작품에 대한 설명',25000, 'ON_SALE', 13, 1, 2),
-    (99, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 99', '작품에 대한 설명',25000, 'ON_SALE', 5, 1, 3),
-    (100, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 100', '작품에 대한 설명',10000, 'ON_SALE', 11, 1, 1)
-;
 
 update item set review_count = 0 where review_count is null;
 update item set total_rating = 0.0 where total_rating is null;
@@ -685,8 +574,3 @@ values
     (98, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (99, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (100, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
-
-insert into review_image (review_image, id, review_id, image_key)
-values (1, 1, 'member/1/review/1/불만.jpg'),
-       (2, 3, 'member/6/review/1/최고.jpg'),
-       (3, 3, 'member/6/review/1/엄지.jpg');
