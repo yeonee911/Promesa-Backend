@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.item.application;
 
+import com.promesa.promesa.common.advice.ItemLog;
 import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
