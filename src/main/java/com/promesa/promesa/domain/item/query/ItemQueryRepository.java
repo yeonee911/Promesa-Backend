@@ -108,6 +108,8 @@ public class ItemQueryRepository {
             );
         }
 
+        query.offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
         List<ItemPreviewResponse> content = query.fetch();
 
         JPAQuery<Long> countQuery;
