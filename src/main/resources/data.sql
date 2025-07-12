@@ -3,7 +3,9 @@ values ('김회원', 'kakao', '1234'),
        ('원회원', 'kakao', '5678'),
        ('김작가', 'kakao', '1011'),
        ('이작가', 'kakao', '1213'),
-       ('박작가', 'kakao', '1415')
+       ('박작가', 'kakao', '1415'),
+       ('남궁회원', 'kakao', '1617'),
+       ('정회원', 'kakao', '1415');
 ;
 
 
@@ -17,6 +19,14 @@ values
      'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/2/profile/profile.jpg', 0, 4),
     (3, '박작가', '000 작가는 오랜 시간 부서져 작은 알갱이가 된 돌의 조각들을 다시 하나의 덩어리로 만들고 고온의 불에 소성하여 원래의 성질로 환원시킵니다.' ||
                '이 작은 입자들이 모여 이루는 형태를 통해, 자연과 일상 속에 깃든 시간의 흐름을 표현하고자 합니다. 작가의 작업은 일상 속에서 새로운 역할을 가지며 우리 삶의 한 부분이 됩니다.',
+     'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/3/profile/profile.jpg', 0, 5),
+    (4, '최작가', '000 작가는 다양한 재료의 물성을 실험하며 삶의 흔적을 담는 작업을 합니다.' ||
+               '형태와 색감의 실험을 통해, 작품이 공간에 자연스럽게 스며드는 방식을 연구합니다.',
+     'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/4/profile/profile.jpg', 0, 6),
+    (5, '정작가', '000 작가는 반복과 축적의 과정을 통해 형태를 구성하며, 일상의 사물을 재해석합니다.' ||
+               '감정의 결을 담아낸 작업은 개인의 내면을 조용히 반영합니다.',
+     'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/5/profile/profile.jpg', 0, 7);
+
      'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/3/profile/profile.jpg', 0, 5)
 ;
 
@@ -31,6 +41,58 @@ values
     (4, '화병', NULL),
     (5, '오브제', NULL);
 
+INSERT INTO ITEM (ITEM_ID, CREATED_AT, UPDATED_AT, NAME, DESCRIPTION, PRICE, SALE_STATUS, STOCK, WISH_COUNT, AVERAGE_RATING, REVIEW_COUNT, TOTAL_RATING, PRODUCT_CODE, WIDTH, HEIGHT, DEPTH, ARTIST_ID)
+VALUES
+    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '빈티지 블랙 높은잔 세트', '작품에 대한 설명', 15000, 'ON_SALE', 11, 1, 3.5, 1, 3.5, 'PRD001', 10, 20, 30, 2),
+    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 2', '작품에 대한 설명', 20000, 'ON_SALE', 12, 2, 4.0, 2, 8.0, 'PRD002', 10, 20, 30, 3),
+    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 3', '작품에 대한 설명', 25000, 'ON_SALE', 13, 0, 3.0, 0, 0.0, 'PRD003', 10, 20, 30, 4),
+    (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 4', '작품에 대한 설명', 30000, 'ON_SALE', 14, 1, NULL, 1, 0.0, 'PRD004', 10, 20, 30, 5),
+    (5, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 5', '작품에 대한 설명', 10000, 'ON_SALE', 15, 2, 4.0, 2, 8.0, 'PRD005', 10, 20, 30, 1),
+    (6, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 6', '작품에 대한 설명', 15000, 'ON_SALE', 16, 0, 3.0, 0, 0.0, 'PRD006', 10, 20, 30, 2),
+    (7, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 7', '작품에 대한 설명', 20000, 'ON_SALE', 17, 1, 3.5, 1, 3.5, 'PRD007', 10, 20, 30, 3),
+    (8, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 8', '작품에 대한 설명', 25000, 'ON_SALE', 18, 2, NULL, 2, 0.0, 'PRD008', 10, 20, 30, 4),
+    (9, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 9', '작품에 대한 설명', 30000, 'ON_SALE', 19, 0, 3.0, 0, 0.0, 'PRD009', 10, 20, 30, 5),
+    (10, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 10', '작품에 대한 설명', 10000, 'ON_SALE', 10, 1, 3.5, 1, 3.5, 'PRD010', 10, 20, 30, 1),
+    (11, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 11', '작품에 대한 설명', 15000, 'ON_SALE', 11, 2, 4.0, 2, 8.0, 'PRD011', 10, 20, 30, 2),
+    (12, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 12', '작품에 대한 설명', 20000, 'ON_SALE', 12, 0, NULL, 0, 0.0, 'PRD012', 10, 20, 30, 3),
+    (13, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 13', '작품에 대한 설명', 25000, 'ON_SALE', 13, 1, 3.5, 1, 3.5, 'PRD013', 10, 20, 30, 4),
+    (14, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 14', '작품에 대한 설명', 30000, 'ON_SALE', 14, 2, 4.0, 2, 8.0, 'PRD014', 10, 20, 30, 5),
+    (15, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 15', '작품에 대한 설명', 10000, 'ON_SALE', 15, 0, 3.0, 0, 0.0, 'PRD015', 10, 20, 30, 1),
+    (16, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 16', '작품에 대한 설명', 15000, 'ON_SALE', 16, 1, NULL, 1, 0.0, 'PRD016', 10, 20, 30, 2),
+    (17, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 17', '작품에 대한 설명', 20000, 'ON_SALE', 17, 2, 4.0, 2, 8.0, 'PRD017', 10, 20, 30, 3),
+    (18, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 18', '작품에 대한 설명', 25000, 'ON_SALE', 18, 0, 3.0, 0, 0.0, 'PRD018', 10, 20, 30, 4),
+    (19, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 19', '작품에 대한 설명', 30000, 'ON_SALE', 19, 1, 3.5, 1, 3.5, 'PRD019', 10, 20, 30, 5),
+    (20, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 20', '작품에 대한 설명', 10000, 'ON_SALE', 10, 2, NULL, 2, 0.0, 'PRD020', 10, 20, 30, 1),
+    (21, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 21', '작품에 대한 설명', 15000, 'ON_SALE', 11, 0, 3.0, 0, 0.0, 'PRD021', 10, 20, 30, 2),
+    (22, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 22', '작품에 대한 설명', 20000, 'ON_SALE', 12, 1, 3.5, 1, 3.5, 'PRD022', 10, 20, 30, 3),
+    (23, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 23', '작품에 대한 설명', 25000, 'ON_SALE', 13, 2, 4.0, 2, 8.0, 'PRD023', 10, 20, 30, 4),
+    (24, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 24', '작품에 대한 설명', 30000, 'ON_SALE', 14, 0, NULL, 0, 0.0, 'PRD024', 10, 20, 30, 5),
+    (25, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 25', '작품에 대한 설명', 10000, 'ON_SALE', 15, 1, 3.5, 1, 3.5, 'PRD025', 10, 20, 30, 1),
+    (26, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 26', '작품에 대한 설명', 15000, 'ON_SALE', 16, 2, 4.0, 2, 8.0, 'PRD026', 10, 20, 30, 2),
+    (27, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 27', '작품에 대한 설명', 20000, 'ON_SALE', 17, 0, 3.0, 0, 0.0, 'PRD027', 10, 20, 30, 3),
+    (28, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 28', '작품에 대한 설명', 25000, 'ON_SALE', 18, 1, NULL, 1, 0.0, 'PRD028', 10, 20, 30, 4),
+    (29, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 29', '작품에 대한 설명', 30000, 'ON_SALE', 19, 2, 4.0, 2, 8.0, 'PRD029', 10, 20, 30, 5),
+    (30, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 30', '작품에 대한 설명', 10000, 'ON_SALE', 10, 0, 3.0, 0, 0.0, 'PRD030', 10, 20, 30, 1),
+    (31, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 31', '작품에 대한 설명', 15000, 'ON_SALE', 11, 1, 3.5, 1, 3.5, 'PRD031', 10, 20, 30, 2),
+    (32, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 32', '작품에 대한 설명', 20000, 'ON_SALE', 12, 2, NULL, 2, 0.0, 'PRD032', 10, 20, 30, 3),
+    (33, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 33', '작품에 대한 설명', 25000, 'ON_SALE', 13, 0, 3.0, 0, 0.0, 'PRD033', 10, 20, 30, 4),
+    (34, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 34', '작품에 대한 설명', 30000, 'ON_SALE', 14, 1, 3.5, 1, 3.5, 'PRD034', 10, 20, 30, 5),
+    (35, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 35', '작품에 대한 설명', 10000, 'ON_SALE', 15, 2, 4.0, 2, 8.0, 'PRD035', 10, 20, 30, 1),
+    (36, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 36', '작품에 대한 설명', 15000, 'ON_SALE', 16, 0, NULL, 0, 0.0, 'PRD036', 10, 20, 30, 2),
+    (37, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 37', '작품에 대한 설명', 20000, 'ON_SALE', 17, 1, 3.5, 1, 3.5, 'PRD037', 10, 20, 30, 3),
+    (38, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 38', '작품에 대한 설명', 25000, 'ON_SALE', 18, 2, 4.0, 2, 8.0, 'PRD038', 10, 20, 30, 4),
+    (39, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 39', '작품에 대한 설명', 30000, 'ON_SALE', 19, 0, 3.0, 0, 0.0, 'PRD039', 10, 20, 30, 5),
+    (40, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 40', '작품에 대한 설명', 10000, 'ON_SALE', 10, 1, NULL, 1, 0.0, 'PRD040', 10, 20, 30, 1),
+    (41, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 41', '작품에 대한 설명', 15000, 'ON_SALE', 11, 2, 4.0, 2, 8.0, 'PRD041', 10, 20, 30, 2),
+    (42, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 42', '작품에 대한 설명', 20000, 'ON_SALE', 12, 0, 3.0, 0, 0.0, 'PRD042', 10, 20, 30, 3),
+    (43, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 43', '작품에 대한 설명', 25000, 'ON_SALE', 13, 1, 3.5, 1, 3.5, 'PRD043', 10, 20, 30, 4),
+    (44, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 44', '작품에 대한 설명', 30000, 'ON_SALE', 14, 2, NULL, 2, 0.0, 'PRD044', 10, 20, 30, 5),
+    (45, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 45', '작품에 대한 설명', 10000, 'ON_SALE', 15, 0, 3.0, 0, 0.0, 'PRD045', 10, 20, 30, 1),
+    (46, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 46', '작품에 대한 설명', 15000, 'ON_SALE', 16, 1, 3.5, 1, 3.5, 'PRD046', 10, 20, 30, 2),
+    (47, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 47', '작품에 대한 설명', 20000, 'ON_SALE', 17, 2, 4.0, 2, 8.0, 'PRD047', 10, 20, 30, 3),
+    (48, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 48', '작품에 대한 설명', 25000, 'ON_SALE', 18, 0, NULL, 0, 0.0, 'PRD048', 10, 20, 30, 4),
+    (49, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 49', '작품에 대한 설명', 30000, 'ON_SALE', 19, 1, 3.5, 1, 3.5, 'PRD049', 10, 20, 30, 5),
+    (50, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 50', '작품에 대한 설명', 10000, 'ON_SALE', 10, 2, 4.0, 2, 8.0, 'PRD050', 10, 20, 30, 1);
 insert into item (
     item_id, created_at, updated_at, name, description, price, sale_status, stock, wish_count, artist_id)
 values
@@ -86,6 +148,59 @@ values
     (50, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 50', '작품에 대한 설명',10000, 'ON_SALE', 17, 0, 2)
 ;
 
+insert into item (
+    item_id, created_at, updated_at, name, description, price, sale_status, stock, wish_count, average_rating, review_count, total_rating, product_code, width, height, depth, artist_id)
+values
+    (51, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 51', '작품에 대한 설명', 70000, 'ON_SALE', 11, 0, 3.0, 0, 0.0, 'PRD051', 10, 20, 30, 2),
+    (52, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 52', '작품에 대한 설명', 80000, 'ON_SALE', 12, 1, NULL, 1, 0.0, 'PRD052', 10, 20, 30, 3),
+    (53, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 53', '작품에 대한 설명', 90000, 'ON_SALE', 13, 2, 4.0, 2, 8.0, 'PRD053', 10, 20, 30, 4),
+    (54, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 54', '작품에 대한 설명', 30000, 'ON_SALE', 14, 0, 3.0, 0, 0.0, 'PRD054', 10, 20, 30, 5),
+    (55, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 55', '작품에 대한 설명', 10000, 'ON_SALE', 15, 1, 3.5, 1, 3.5, 'PRD055', 10, 20, 30, 1),
+    (56, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 56', '작품에 대한 설명', 15000, 'ON_SALE', 16, 2, NULL, 2, 0.0, 'PRD056', 10, 20, 30, 2),
+    (57, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 57', '작품에 대한 설명', 20000, 'ON_SALE', 17, 0, 3.0, 0, 0.0, 'PRD057', 10, 20, 30, 3),
+    (58, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 58', '작품에 대한 설명', 25000, 'ON_SALE', 18, 1, 3.5, 1, 3.5, 'PRD058', 10, 20, 30, 4),
+    (59, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 59', '작품에 대한 설명', 30000, 'ON_SALE', 19, 2, 4.0, 2, 8.0, 'PRD059', 10, 20, 30, 5),
+    (60, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 60', '작품에 대한 설명', 10000, 'ON_SALE', 10, 0, NULL, 0, 0.0, 'PRD060', 10, 20, 30, 1),
+    (61, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 61', '작품에 대한 설명', 15000, 'ON_SALE', 11, 1, 3.5, 1, 3.5, 'PRD061', 10, 20, 30, 2),
+    (62, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 62', '작품에 대한 설명', 20000, 'ON_SALE', 12, 2, 4.0, 2, 8.0, 'PRD062', 10, 20, 30, 3),
+    (63, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 63', '작품에 대한 설명', 25000, 'ON_SALE', 13, 0, 3.0, 0, 0.0, 'PRD063', 10, 20, 30, 4),
+    (64, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 64', '작품에 대한 설명', 30000, 'ON_SALE', 14, 1, NULL, 1, 0.0, 'PRD064', 10, 20, 30, 5),
+    (65, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 65', '작품에 대한 설명', 10000, 'ON_SALE', 15, 2, 4.0, 2, 8.0, 'PRD065', 10, 20, 30, 1),
+    (66, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 66', '작품에 대한 설명', 15000, 'ON_SALE', 16, 0, 3.0, 0, 0.0, 'PRD066', 10, 20, 30, 2),
+    (67, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 67', '작품에 대한 설명', 20000, 'ON_SALE', 17, 1, 3.5, 1, 3.5, 'PRD067', 10, 20, 30, 3),
+    (68, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 68', '작품에 대한 설명', 25000, 'ON_SALE', 18, 2, NULL, 2, 0.0, 'PRD068', 10, 20, 30, 4),
+    (69, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 69', '작품에 대한 설명', 30000, 'ON_SALE', 19, 0, 3.0, 0, 0.0, 'PRD069', 10, 20, 30, 5),
+    (70, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 70', '작품에 대한 설명', 10000, 'ON_SALE', 10, 1, 3.5, 1, 3.5, 'PRD070', 10, 20, 30, 1),
+    (71, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 71', '작품에 대한 설명', 15000, 'ON_SALE', 11, 2, 4.0, 2, 8.0, 'PRD071', 10, 20, 30, 2),
+    (72, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 72', '작품에 대한 설명', 20000, 'ON_SALE', 12, 0, NULL, 0, 0.0, 'PRD072', 10, 20, 30, 3),
+    (73, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 73', '작품에 대한 설명', 25000, 'ON_SALE', 13, 1, 3.5, 1, 3.5, 'PRD073', 10, 20, 30, 4),
+    (74, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 74', '작품에 대한 설명', 30000, 'ON_SALE', 14, 2, 4.0, 2, 8.0, 'PRD074', 10, 20, 30, 5),
+    (75, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 75', '작품에 대한 설명', 10000, 'ON_SALE', 15, 0, 3.0, 0, 0.0, 'PRD075', 10, 20, 30, 1),
+    (76, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 76', '작품에 대한 설명', 15000, 'ON_SALE', 16, 1, NULL, 1, 0.0, 'PRD076', 10, 20, 30, 2),
+    (77, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 77', '작품에 대한 설명', 20000, 'ON_SALE', 17, 2, 4.0, 2, 8.0, 'PRD077', 10, 20, 30, 3),
+    (78, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 78', '작품에 대한 설명', 25000, 'ON_SALE', 18, 0, 3.0, 0, 0.0, 'PRD078', 10, 20, 30, 4),
+    (79, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 79', '작품에 대한 설명', 30000, 'ON_SALE', 19, 1, 3.5, 1, 3.5, 'PRD079', 10, 20, 30, 5),
+    (80, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 80', '작품에 대한 설명', 10000, 'ON_SALE', 10, 2, NULL, 2, 0.0, 'PRD080', 10, 20, 30, 1),
+    (81, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 81', '작품에 대한 설명', 15000, 'ON_SALE', 11, 0, 3.0, 0, 0.0, 'PRD081', 10, 20, 30, 2),
+    (82, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 82', '작품에 대한 설명', 20000, 'ON_SALE', 12, 1, 3.5, 1, 3.5, 'PRD082', 10, 20, 30, 3),
+    (83, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 83', '작품에 대한 설명', 25000, 'ON_SALE', 13, 2, 4.0, 2, 8.0, 'PRD083', 10, 20, 30, 4),
+    (84, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 84', '작품에 대한 설명', 30000, 'ON_SALE', 14, 0, NULL, 0, 0.0, 'PRD084', 10, 20, 30, 5),
+    (85, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 85', '작품에 대한 설명', 10000, 'ON_SALE', 15, 1, 3.5, 1, 3.5, 'PRD085', 10, 20, 30, 1),
+    (86, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 86', '작품에 대한 설명', 15000, 'ON_SALE', 16, 2, 4.0, 2, 8.0, 'PRD086', 10, 20, 30, 2),
+    (87, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 87', '작품에 대한 설명', 20000, 'ON_SALE', 17, 0, 3.0, 0, 0.0, 'PRD087', 10, 20, 30, 3),
+    (88, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 88', '작품에 대한 설명', 25000, 'ON_SALE', 18, 1, NULL, 1, 0.0, 'PRD088', 10, 20, 30, 4),
+    (89, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 89', '작품에 대한 설명', 30000, 'ON_SALE', 19, 2, 4.0, 2, 8.0, 'PRD089', 10, 20, 30, 5),
+    (90, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 90', '작품에 대한 설명', 10000, 'ON_SALE', 10, 0, 3.0, 0, 0.0, 'PRD090', 10, 20, 30, 1),
+    (91, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 91', '작품에 대한 설명', 15000, 'ON_SALE', 11, 1, 3.5, 1, 3.5, 'PRD091', 10, 20, 30, 2),
+    (92, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 92', '작품에 대한 설명', 20000, 'ON_SALE', 12, 2, NULL, 2, 0.0, 'PRD092', 10, 20, 30, 3),
+    (93, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 93', '작품에 대한 설명', 25000, 'ON_SALE', 13, 0, 3.0, 0, 0.0, 'PRD093', 10, 20, 30, 4),
+    (94, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 94', '작품에 대한 설명', 30000, 'ON_SALE', 14, 1, 3.5, 1, 3.5, 'PRD094', 10, 20, 30, 5),
+    (95, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 95', '작품에 대한 설명', 10000, 'ON_SALE', 15, 2, 4.0, 2, 8.0, 'PRD095', 10, 20, 30, 1),
+    (96, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 96', '작품에 대한 설명', 15000, 'ON_SALE', 16, 0, NULL, 0, 0.0, 'PRD096', 10, 20, 30, 2),
+    (97, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 97', '작품에 대한 설명', 20000, 'ON_SALE', 17, 1, 3.5, 1, 3.5, 'PRD097', 10, 20, 30, 3),
+    (98, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 98', '작품에 대한 설명', 25000, 'ON_SALE', 18, 2, 4.0, 2, 8.0, 'PRD098', 10, 20, 30, 4),
+    (99, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 99', '작품에 대한 설명', 30000, 'ON_SALE', 19, 0, 3.0, 0, 0.0, 'PRD099', 10, 20, 30, 5),
+    (100, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 100', '작품에 대한 설명', 10000, 'ON_SALE', 10, 1, NULL, 1, 0.0, 'PRD100', 10, 20, 30, 1);
 insert into item (
     item_id, created_at, updated_at, name, description, price, sale_status, stock, wish_count, artist_id)
 values
@@ -570,3 +685,8 @@ values
     (98, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (99, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (100, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+insert into review_image (review_image, id, review_id, image_key)
+values (1, 1, 'member/1/review/1/불만.jpg'),
+       (2, 3, 'member/6/review/1/최고.jpg'),
+       (3, 3, 'member/6/review/1/엄지.jpg');

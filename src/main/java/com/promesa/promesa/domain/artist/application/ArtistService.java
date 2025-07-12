@@ -7,13 +7,11 @@ import com.promesa.promesa.domain.artist.dto.ArtistResponse;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
-import com.promesa.promesa.domain.member.exception.MemberNotFoundException;
 import com.promesa.promesa.domain.wish.dao.WishRepository;
 import com.promesa.promesa.domain.wish.domain.TargetType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -42,7 +40,7 @@ public class ArtistService {
         }
 
 
-        return ArtistResponse.from(artist, presignedUrl, isWishlisted);
+        return ArtistResponse.of(artist, presignedUrl, isWishlisted);
     }
 
 }

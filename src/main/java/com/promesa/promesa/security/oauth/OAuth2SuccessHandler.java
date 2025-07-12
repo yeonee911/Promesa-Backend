@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -67,6 +68,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         response.setHeader("Set-Cookie", cookieBuilder.toString());
 
         // 4. redirect URI 추출
+        /*
         String stateParam = request.getParameter("state");
         String baseRedirectUri = (stateParam == null || stateParam.isBlank())
                 ? "http://localhost:3000"
@@ -81,18 +83,45 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             }
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("리다이렉트 URI 파싱 실패: " + baseRedirectUri);
+
+        }
+         */
+        String stateParam = request.getParameter("state");
+        String baseRedirectUri = "http://localhost:3000";
+        String afterLogin = "";
+
+        if (stateParam != null && !stateParam.isBlank()) {
+            try {
+                URI stateUri = new URI(stateParam);
+                baseRedirectUri = stateUri.getScheme() + "://" + stateUri.getHost();
+                if (stateUri.getPort() != -1) {
+                    baseRedirectUri += ":" + stateUri.getPort(); // 포트 붙이기 (localhost:3000 등)
+                }
+
+                // afterLogin 파라미터 추출
+                String query = stateUri.getQuery();
+                if (query != null) {
+                    for (String param : query.split("&")) {
+                        String[] keyValue = param.split("=");
+                        if (keyValue.length == 2 && keyValue[0].equals("afterLogin")) {
+                            afterLogin = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
+                            break;
+                        }
+                    }
+                }
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException("리다이렉트 URI 파싱 실패: " + stateParam);
+            }
         }
 
-        // 5. 쿼리 파라미터로 AccessToken + RefreshToken 전달 (개발 중만 사용)
-        String finalRedirect = baseRedirectUri + "/login/success"
-                + "?accessToken=" + URLEncoder.encode(accessToken, StandardCharsets.UTF_8)
-                + "&refresh=" + URLEncoder.encode(refreshToken, StandardCharsets.UTF_8);
 
-        /*
-        // 🔒 운영 전환 시: 쿼리 파라미터에 refreshToken을 넘기지 않음
+        // 5. 쿼리 파라미터로 afterLogin & AccessToken 전달
         String finalRedirect = baseRedirectUri + "/login/success"
                 + "?accessToken=" + URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
-        */
+
+        if (!afterLogin.isBlank()) {
+            finalRedirect += "&afterLogin=" + URLEncoder.encode(afterLogin, StandardCharsets.UTF_8);
+        }
 
         log.info("✅ OAuth2 Login Success: {}", nickname);
         log.info("🔑 AccessToken & RefreshToken issued, redirecting to {}", finalRedirect);

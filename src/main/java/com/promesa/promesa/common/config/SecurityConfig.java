@@ -49,8 +49,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/items/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/review-images/**").permitAll()
+                        .requestMatchers("/actuator/health", "/actuator/info", "/actuator/metrics/**").permitAll()
                         .requestMatchers(
-                                "/actuator/**",
                                 "/", "/login", "/signup",
                                 "/brand-info", "/categories/**", "/exhibitions/**", "/inquiries/**", "/artists/**",
                                 "/index.html", "/static/**", "/favicon.ico",
