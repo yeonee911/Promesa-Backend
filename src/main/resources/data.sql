@@ -587,10 +587,10 @@ INSERT INTO INQUIRY (INQUIRY_ID, QUESTION, ANSWER, ARTIST_ID)
 VALUES (1, '배송은 얼마나 걸리나요?', '약 3~5일 소요됩니다.', 1),
        (2, '포장 상태는 어떤가요?', NULL, 1);
 
-INSERT INTO REVIEW (REVIEW_ID, ITEM_ID, MEMBER_ID, RATING, CONTENT)
-VALUES (1, 1, 1, 1, '도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ'),
-       (2, 1, 2, 5, '완전 굿굿굿굿짱짱짱짱이에욤'),
-       (3, 1, 6, 5, '너무너무 마음에 들어요. 제가 찾아 헤맨 작품입니다.')
+INSERT INTO REVIEW (REVIEW_ID, ITEM_ID, MEMBER_ID, RATING, CONTENT, CREATED_AT, UPDATED_AT)
+VALUES (1, 1, 1, 1, '도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       (2, 1, 2, 5, '완전 굿굿굿굿짱짱짱짱이에욤',CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       (3, 1, 6, 5, '너무너무 마음에 들어요. 제가 찾아 헤맨 작품입니다.',CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())
 ;
 
 INSERT INTO REVIEW_IMAGE (REVIEW_IMAGE_ID, REVIEW_ID, IMAGE_KEY)
