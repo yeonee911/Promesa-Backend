@@ -574,3 +574,13 @@ values
     (98, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (99, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (100, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+insert into review (review_id, item_id, member_id, rating, content, created_at, updated_at)
+values (1, 1, 1, 1, '도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ',CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       (2, 1, 2, 5, '완전 굿굿굿굿짱짱짱짱이에욤', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       (3, 1, 6, 5, '너무너무 마음에 들어요. 제가 찾아 헤맨 작품입니다.', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+insert into review_image (review_image_id, review_id, image_key, created_at, updated_at)
+values (1, 1, 'member/1/review/1/불만.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       (2, 3, 'member/6/review/1/최고.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       (3, 3, 'member/6/review/1/엄지.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());

@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.review.domain;
 
+import com.promesa.promesa.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,7 +8,7 @@ import lombok.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ReviewImage {
+public class ReviewImage extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "review_image_id")
     private Long id;

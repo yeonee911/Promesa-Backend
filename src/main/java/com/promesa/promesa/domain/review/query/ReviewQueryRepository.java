@@ -61,7 +61,9 @@ public class ReviewQueryRepository {
                                         review.item.id.as("itemId"),
                                         review.member.id.as("reviewerId"),
                                         review.rating.as("rating"),
-                                        list(reviewImage.key).as("reviewImages")
+                                        list(reviewImage.key).as("reviewImages"),
+                                        review.createdAt,
+                                        review.updatedAt
                                 )
                         )
                 );
