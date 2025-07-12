@@ -48,7 +48,8 @@ public class ItemQueryRepository {
                         item.price,
                         itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
-                        ExpressionUtils.as(isWished, "isWished")
+                        ExpressionUtils.as(isWished, "isWished"),
+                        item.wishCount.as("wishCount")
                 ))
                 .from(exhibitionItem)
                 .join(exhibitionItem.item, item)
@@ -84,7 +85,8 @@ public class ItemQueryRepository {
                         item.price,
                         itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
-                        ExpressionUtils.as(isWished, "isWished")
+                        ExpressionUtils.as(isWished, "isWished"),
+                        item.wishCount.as("wishCount")
                 ));
         if (categoryId != 0) {
             query.from(itemCategory)
@@ -150,7 +152,8 @@ public class ItemQueryRepository {
                         item.price,
                         itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
-                        ExpressionUtils.as(isWished, "isWished")
+                        ExpressionUtils.as(isWished, "isWished"),
+                        item.wishCount.as("wishCount")
                 ))
                 .from(itemCategory)
                 .join(itemCategory.item, item)
