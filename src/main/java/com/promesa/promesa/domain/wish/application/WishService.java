@@ -40,6 +40,7 @@ public class WishService {
     private String bucketName;
 
     @PreAuthorize("isAuthenticated()") // 로그인 한 경우에만 접근 허용
+    @Transactional
     public WishToggleResponse addWish(Member member, TargetType targetType, Long targetId) {
         boolean exists = wishRepository.existsByMemberAndTargetTypeAndTargetId(member, targetType, targetId);
         if (exists) {
@@ -85,6 +86,7 @@ public class WishService {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @Transactional
     public WishToggleResponse deleteWish(Member member, TargetType targetType, Long targetId) {
         validateTargetExistence(targetType, targetId);
 
