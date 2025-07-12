@@ -15,6 +15,7 @@ public class ItemPreviewResponse {
     private String imageUrl;
     private String artistName;
     private boolean isWished;
+    private int wishCount;
 
     public static ItemPreviewResponse of(ItemPreviewResponse response, String imageUrl) {
         return new ItemPreviewResponse(
@@ -24,7 +25,8 @@ public class ItemPreviewResponse {
                 response.getPrice(),
                 imageUrl,
                 response.getArtistName(),
-                response.isWished()
+                response.isWished(),
+                response.getWishCount()
         );
     }
 }
