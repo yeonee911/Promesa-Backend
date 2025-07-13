@@ -139,6 +139,10 @@ public class ReviewService {
         }
 
         if (request.getImageKeys() != null) {
+            for (ReviewImage reviewImage : target.getReviewImages()) {  // 리뷰 이미지 삭제
+                reviewImageService.deleteReviewImage(reviewImage.getKey());
+            }
+
             List<ReviewImage> images = request.getImageKeys().stream()
                     .map(fileName -> ReviewImage.builder()
                             .fileName(fileName)
