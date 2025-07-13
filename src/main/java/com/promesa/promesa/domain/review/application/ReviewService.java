@@ -1,8 +1,6 @@
 package com.promesa.promesa.domain.review.application;
 
 import com.promesa.promesa.common.application.S3Service;
-import com.promesa.promesa.common.dto.s3.PresignedUrlRequest;
-import com.promesa.promesa.common.dto.s3.PresignedUrlResponse;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
@@ -24,7 +22,6 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +61,7 @@ public class ReviewService {
         }
 
         // 리뷰 생성
-        Review review = Review.builder()
+        Review newReview = Review.builder()
                 .content(request.getContent())
                 .rating(request.getRating())
                 .item(item)
@@ -72,17 +69,19 @@ public class ReviewService {
                 .build();
 
         // DB에 저장
-        Review savedReview = reviewRepository.save(review);
+        Review savedReview = reviewRepository.save(newReview);
 
         // 리뷰 이미지 추가
         if (request.getImageKeys() != null) {
             List<ReviewImage> images = request.getImageKeys().stream()
-                    .map(key -> ReviewImage.builder()
-                            .key(key)
+                    .map(fileName -> ReviewImage.builder()
+                            .fileName(fileName)
+                            .memberId(member.getId())
+                            .reviewId(newReview.getId())
                             .build())
                     .toList();
 
-            review.setReviewImages(images);
+            newReview.setReviewImages(images);
         }
 
         // 상품 평점 업데이트 및 상품의 리뷰 개수 추가
@@ -141,8 +140,10 @@ public class ReviewService {
 
         if (request.getImageKeys() != null) {
             List<ReviewImage> images = request.getImageKeys().stream()
-                    .map(key -> ReviewImage.builder()
-                            .key(key)
+                    .map(fileName -> ReviewImage.builder()
+                            .fileName(fileName)
+                            .memberId(member.getId())
+                            .reviewId(reviewId)
                             .build())
                     .toList();
 

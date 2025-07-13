@@ -1,6 +1,7 @@
 package com.promesa.promesa.domain.review.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
+import com.promesa.promesa.domain.member.domain.QMember;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,7 +26,8 @@ public class ReviewImage extends BaseTimeEntity {
     };
 
     @Builder
-    public ReviewImage(String key) {
+    public ReviewImage(String fileName, Long memberId, Long reviewId) {
+        String key = "member/" + memberId + "/review/" + reviewId + "/" + fileName;
         this.key = key;
     }
 }
