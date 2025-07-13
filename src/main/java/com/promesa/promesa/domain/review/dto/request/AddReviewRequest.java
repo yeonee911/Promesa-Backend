@@ -24,5 +24,5 @@ public class AddReviewRequest {
         private int rating;
 
         @Size(max = 3, message = "이미지는 최대 3장입니다.")
-        private List<String> imageKeys;
+        private List<String> fileNames;
 }

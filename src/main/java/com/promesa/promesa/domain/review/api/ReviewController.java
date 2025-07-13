@@ -28,7 +28,6 @@ public class ReviewController {
 
     private final ReviewService reviewService;
     private final ReviewImageService reviewImageService;
-    private final MemberRepository memberRepository;
 
     @PostMapping("/review-images/presigned-url")
     @Operation(summary = "이미지 업로드용 url 발급")

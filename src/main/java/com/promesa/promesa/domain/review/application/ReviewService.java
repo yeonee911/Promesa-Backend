@@ -72,8 +72,8 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(newReview);
 
         // 리뷰 이미지 추가
-        if (request.getImageKeys() != null) {
-            List<ReviewImage> images = request.getImageKeys().stream()
+        if (request.getFileNames() != null) {
+            List<ReviewImage> images = request.getFileNames().stream()
                     .map(fileName -> ReviewImage.builder()
                             .fileName(fileName)
                             .memberId(member.getId())
@@ -138,12 +138,12 @@ public class ReviewService {
             item.addReview(target.getRating());
         }
 
-        if (request.getImageKeys() != null) {
+        if (request.getFileNames() != null) {
             for (ReviewImage reviewImage : target.getReviewImages()) {  // 리뷰 이미지 삭제
                 reviewImageService.deleteReviewImage(reviewImage.getKey());
             }
 
-            List<ReviewImage> images = request.getImageKeys().stream()
+            List<ReviewImage> images = request.getFileNames().stream()
                     .map(fileName -> ReviewImage.builder()
                             .fileName(fileName)
                             .memberId(member.getId())
