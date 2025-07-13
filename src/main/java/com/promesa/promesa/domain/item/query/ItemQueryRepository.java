@@ -100,6 +100,10 @@ public class ItemQueryRepository {
                     .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue());
         }
 
+        if (pageable.getSort() != null) {
+            query.orderBy(createOrderSpecifiers(pageable.getSort()));
+        }
+
         if (member != null) {
             query.leftJoin(wish).on(
                     wish.member.id.eq(member.getId())
