@@ -2,6 +2,7 @@ package com.promesa.promesa.domain.member.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.artist.domain.Artist;
+import com.promesa.promesa.domain.shippingAddress.domain.ShippingAddress;
 import com.promesa.promesa.domain.wish.domain.Wish;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -34,6 +35,10 @@ public class Member extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Artist artist;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "shipping_address_id", unique = true)
+    private ShippingAddress shippingAddress;
 
     // 사용자의 이름 업데이트하는 메소드
     public Member updateMember(String name){
