@@ -63,6 +63,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         if (!isLocalRequest(request)) {
             cookieBuilder.append("; Secure");
             cookieBuilder.append("; SameSite=None");
+            cookieBuilder.append("; Domain=.promesa.co.kr");
         }
 
         response.setHeader("Set-Cookie", cookieBuilder.toString());
