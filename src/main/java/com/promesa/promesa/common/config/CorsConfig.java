@@ -14,9 +14,12 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000") // 프론트 주소
-                        .allowedOrigins("https://ceos-promesa.vercel.app")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowedOrigins(
+                                "http://localhost:3000",
+                                "https://ceos-promesa.vercel.app",
+                                "https://www.promesa.co.kr" 
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(true);
             }
         };

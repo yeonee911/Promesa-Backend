@@ -4,6 +4,7 @@ import com.promesa.promesa.domain.review.domain.Review;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -15,6 +16,8 @@ public class ReviewResponse {
     private final Long reviewerId;
     private final int rating;
     private final List<String> reviewImages;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public static ReviewResponse from(Review review, List<String> imageKeys) {
         return ReviewResponse.builder()
@@ -24,6 +27,8 @@ public class ReviewResponse {
                 .reviewerId(review.getMember().getId())
                 .rating(review.getRating())
                 .reviewImages(imageKeys)
+                .createdAt(review.getCreatedAt())
+                .updatedAt(review.getUpdatedAt())
                 .build();
     }
 
@@ -35,6 +40,8 @@ public class ReviewResponse {
                 .reviewerId(dto.getReviewerId())
                 .rating(dto.getRating())
                 .reviewImages(imageKeys)
+                .createdAt(dto.getCreatedAt())
+                .updatedAt(dto.getUpdatedAt())
                 .build();
     }
 }

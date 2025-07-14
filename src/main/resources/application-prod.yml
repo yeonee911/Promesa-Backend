@@ -26,7 +26,7 @@ spring:
       client:
         registration:
           kakao:
-            redirect-uri: https://promesa.co.kr/login/oauth2/code/kakao
+            redirect-uri: https://promesa.co.kr/api/login/oauth2/code/kakao
 
 logging:
   level:
