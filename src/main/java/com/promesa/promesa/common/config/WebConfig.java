@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "http://localhost:3000",
                         "https://ceos-promesa.vercel.app",
                         "http://13.209.202.120:8081",
-                        "https://www.promesa.co.kr",
+                        "https://promesa.co.kr",
                         "http://localhost:8080")
                 .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS")
                 .allowedHeaders("*")
