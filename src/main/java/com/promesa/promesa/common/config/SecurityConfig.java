@@ -54,7 +54,8 @@ public class SecurityConfig {
                                 "/", "/login", "/signup",
                                 "/brand-info", "/categories/**", "/exhibitions/**", "/inquiries/**", "/artists/**",
                                 "/index.html", "/static/**", "/favicon.ico",
-                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**","dev/**"
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**","dev/**",
+                                "/auth/reissue", "/auth/logout"
                         ).permitAll()                    
                         .requestMatchers("/oauth/loginInfo").authenticated()
                         .anyRequest().authenticated()
