@@ -6,18 +6,13 @@ import com.promesa.promesa.security.jwt.JwtUtil;
 import com.promesa.promesa.security.jwt.exception.ExpiredRefreshTokenException;
 import com.promesa.promesa.security.jwt.exception.InvalidRefreshTokenException;
 import com.promesa.promesa.security.jwt.exception.MissingRefreshTokenException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-import static com.promesa.promesa.security.jwt.refresh.CookieUtil.*;
-
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RefreshService {
@@ -59,18 +54,14 @@ public class RefreshService {
         String newAccessToken = jwtUtil.createAccessToken(nicknameFromToken, role);
         String newRefreshToken = jwtUtil.createRefreshToken(nicknameFromToken, role);
 
-        refreshRepository.deleteByNickname(nicknameFromToken); // 기존 토큰 & 인덱스 모두 삭제
+        refreshRepository.delete(refreshToken);
         refreshRepository.save(newRefreshToken, nicknameFromToken, jwtProperties.getRefreshTokenExpiration());
 
         // 4. RefreshToken을 쿠키에 저장
         boolean isSecure = request.isSecure();
-        boolean includeDomain = !isLocalRequest(request);
-        Cookie refreshCookie = createRefreshTokenCookie(newRefreshToken, jwtProperties.getRefreshTokenExpiration(), isSecure, includeDomain);
-        response.addCookie(refreshCookie);
-
-        // 로그 추가
-        log.info("🔐 Set-Cookie: refreshToken set with Secure={}, SameSite=None, Domain={}",
-                isSecure, includeDomain ? ".promesa.co.kr" : "(none)");
+        boolean includeDomain = !CookieUtil.isLocalRequest(request);
+        String setCookieHeader = CookieUtil.buildSetCookieHeader(newRefreshToken, jwtProperties.getRefreshTokenExpiration(), isSecure, includeDomain);
+        response.setHeader("Set-Cookie", setCookieHeader);
 
         // 5. 응답 JSON에 AccessToken 포함
         return SuccessResponse.success(200, Map.of(
@@ -95,5 +86,22 @@ public class RefreshService {
         }
 
         return null;
+    }
+
+    private void setRefreshTokenCookie(HttpServletRequest request, HttpServletResponse response, String token) {
+        boolean isSecureRequest = request.isSecure();
+
+        StringBuilder cookieBuilder = new StringBuilder();
+        cookieBuilder.append("refresh=").append(token)
+                .append("; Path=/")
+                .append("; Max-Age=").append(jwtProperties.getRefreshTokenExpiration() / 1000)
+                .append("; HttpOnly");
+
+        if (isSecureRequest) {
+            cookieBuilder.append("; Secure");
+            cookieBuilder.append("; SameSite=None");
+        }
+
+        response.setHeader("Set-Cookie", cookieBuilder.toString());
     }
 }
