@@ -39,7 +39,8 @@ server:
       enabled: false
       include-message: always
       include-binding-errors: always
-
+  forward-headers-strategy: framework
+  
 aws:
   s3:
     presigned:
