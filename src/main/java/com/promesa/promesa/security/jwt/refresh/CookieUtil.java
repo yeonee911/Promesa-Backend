@@ -1,13 +1,15 @@
 package com.promesa.promesa.security.jwt.refresh;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class CookieUtil {
 
     public static boolean isLocalRequest(HttpServletRequest request) {
         String state = request.getParameter("state");
-        return state != null && (state.contains("localhost") || state.contains("127.0.0.1"));
+        String host = request.getServerName();
+
+        return (state != null && (state.contains("localhost") || state.contains("127.0.0.1")))
+                || host.contains("localhost") || host.contains("127.0.0.1");
     }
 
     public static String buildSetCookieHeader(String token, long maxAgeMillis, boolean isSecure, boolean includeDomain) {
@@ -17,9 +19,10 @@ public class CookieUtil {
                 .append("; Max-Age=").append(maxAgeMillis / 1000)
                 .append("; HttpOnly");
 
+        cookieBuilder.append("; SameSite=None");
+
         if (isSecure) {
             cookieBuilder.append("; Secure");
-            cookieBuilder.append("; SameSite=None");
         }
 
         if (includeDomain) {
@@ -35,9 +38,10 @@ public class CookieUtil {
                 .append("; Max-Age=0")
                 .append("; HttpOnly");
 
+        cookieBuilder.append("; SameSite=None");
+
         if (isSecure) {
             cookieBuilder.append("; Secure");
-            cookieBuilder.append("; SameSite=None");
         }
 
         if (includeDomain) {
