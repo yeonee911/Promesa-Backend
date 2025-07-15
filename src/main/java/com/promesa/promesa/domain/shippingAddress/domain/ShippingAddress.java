@@ -23,7 +23,7 @@ public class ShippingAddress {
     private String addressMain;
 
     @Column(name = "address_detail")
-    private String addressDetail;
+    private String addressDetails;
 
     @Column(name = "recipient_phone")
     private String recipientPhone;
