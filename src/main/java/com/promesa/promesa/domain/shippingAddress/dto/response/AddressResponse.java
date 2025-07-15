@@ -1,4 +1,4 @@
-package com.promesa.promesa.domain.shippingAddress.dto;
+package com.promesa.promesa.domain.shippingAddress.dto.response;
 
 import com.promesa.promesa.domain.shippingAddress.domain.ShippingAddress;
 import lombok.Builder;

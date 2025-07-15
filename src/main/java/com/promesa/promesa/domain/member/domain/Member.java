@@ -45,4 +45,12 @@ public class Member extends BaseTimeEntity {
         this.name = name;
         return this;
     }
+
+    /**
+     * 기본 배송지를 업데이트
+     * @param shippingAddress
+     */
+    public void updateShippingAddress(ShippingAddress shippingAddress){
+        this.shippingAddress = shippingAddress;
+    }
 }

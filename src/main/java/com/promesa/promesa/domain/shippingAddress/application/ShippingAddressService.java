@@ -1,9 +1,13 @@
 package com.promesa.promesa.domain.shippingAddress.application;
 
+import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.shippingAddress.dao.ShippingAddressRepository;
 import com.promesa.promesa.domain.shippingAddress.domain.ShippingAddress;
-import com.promesa.promesa.domain.shippingAddress.dto.AddressResponse;
+import com.promesa.promesa.domain.shippingAddress.dto.request.AddressRequest;
+import com.promesa.promesa.domain.shippingAddress.dto.response.AddressResponse;
+import com.promesa.promesa.domain.shippingAddress.exception.ShippingAddressAlreadyExistsException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +17,40 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ShippingAddressService {
 
+    private final ShippingAddressRepository shippingAddressRepository;
+    private final MemberRepository memberRepository;
+
+    /**
+     * 기본 배송지 조회
+     * @param member
+     * @return
+     */
     public AddressResponse getShippingAddress(Member member) {
         ShippingAddress address = member.getShippingAddress();
-        AddressResponse response = AddressResponse.from(address);
+        return AddressResponse.from(address);
+    }
 
-        return response;
+    /**
+     * 기본 배송지 추가
+     * @param request
+     * @param member
+     * @return
+     */
+    @Transactional
+    public AddressResponse addShippingAddress(@Valid AddressRequest request, Member member) {
+        if (member.getShippingAddress() != null)    // 기본 배송지는 하나만 등록 가능
+            throw ShippingAddressAlreadyExistsException.EXCEPTION;
+
+        ShippingAddress address = ShippingAddress.builder()
+                .recipientName(request.getRecipientName())
+                .zipCode(request.getZipCode())
+                .addressMain(request.getAddressMain())
+                .addressDetails(request.getAddressDetails())
+                .recipientPhone(request.getRecipientPhone())
+                .build();
+        ShippingAddress savedAddress = shippingAddressRepository.save(address);
+        member.updateShippingAddress(savedAddress);
+        memberRepository.save(member);
+        return AddressResponse.from(savedAddress);
     }
 }
