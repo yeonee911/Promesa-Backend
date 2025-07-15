@@ -26,6 +26,9 @@ public class ShippingAddressService {
      * @return
      */
     public AddressResponse getShippingAddress(Member member) {
+        if (member.getShippingAddress() == null) {
+            return null;
+        }
         ShippingAddress address = member.getShippingAddress();
         return AddressResponse.from(address);
     }
