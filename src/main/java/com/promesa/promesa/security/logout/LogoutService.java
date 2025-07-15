@@ -7,8 +7,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import static com.promesa.promesa.security.jwt.refresh.CookieUtil.*;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LogoutService {
@@ -49,16 +53,16 @@ public class LogoutService {
         }
 
         // Redis에서 해당 refreshToken 삭제
-        refreshRepository.delete(refreshToken);
+        refreshRepository.deleteByNickname(nickname);
 
-        // 쿠키 무효화
-        Cookie expiredCookie = new Cookie("refresh", null);
-        expiredCookie.setMaxAge(0);
-        expiredCookie.setHttpOnly(true);
-        expiredCookie.setPath("/");
-        expiredCookie.setSecure(true); // if using HTTPS
-
+        // 쿠키 삭제
+        boolean isSecure = request.isSecure();
+        boolean includeDomain = !isLocalRequest(request);
+        Cookie expiredCookie = expireRefreshTokenCookie(isSecure, includeDomain);
         response.addCookie(expiredCookie);
+
+        log.info("🔓 Clear-Cookie: refreshToken removed with Secure={}, Domain={}",
+                isSecure, includeDomain ? ".promesa.co.kr" : "(none)");
 
         return SuccessResponse.success(200, "로그아웃되었습니다");
     }
