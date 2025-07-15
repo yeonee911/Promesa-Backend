@@ -19,10 +19,9 @@ public class CookieUtil {
                 .append("; Max-Age=").append(maxAgeMillis / 1000)
                 .append("; HttpOnly");
 
-        cookieBuilder.append("; SameSite=None");
-
         if (isSecure) {
             cookieBuilder.append("; Secure");
+            cookieBuilder.append("; SameSite=None");
         }
 
         if (includeDomain) {
@@ -38,10 +37,9 @@ public class CookieUtil {
                 .append("; Max-Age=0")
                 .append("; HttpOnly");
 
-        cookieBuilder.append("; SameSite=None");
-
         if (isSecure) {
             cookieBuilder.append("; Secure");
+            cookieBuilder.append("; SameSite=None");
         }
 
         if (includeDomain) {
