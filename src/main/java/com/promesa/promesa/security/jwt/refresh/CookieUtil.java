@@ -10,28 +10,40 @@ public class CookieUtil {
         return state != null && (state.contains("localhost") || state.contains("127.0.0.1"));
     }
 
-    public static Cookie createRefreshTokenCookie(String token, long maxAgeMillis, boolean isSecure, boolean includeDomain) {
-        Cookie cookie = new Cookie("refresh", token);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(isSecure);
-        cookie.setMaxAge((int) (maxAgeMillis / 1000));
-        if (includeDomain) {
-            cookie.setDomain(".promesa.co.kr");
+    public static String buildSetCookieHeader(String token, long maxAgeMillis, boolean isSecure, boolean includeDomain) {
+        StringBuilder cookieBuilder = new StringBuilder();
+        cookieBuilder.append("refresh=").append(token)
+                .append("; Path=/")
+                .append("; Max-Age=").append(maxAgeMillis / 1000)
+                .append("; HttpOnly");
+
+        if (isSecure) {
+            cookieBuilder.append("; Secure");
+            cookieBuilder.append("; SameSite=None");
         }
-        return cookie;
+
+        if (includeDomain) {
+            cookieBuilder.append("; Domain=.promesa.co.kr");
+        }
+
+        return cookieBuilder.toString();
     }
 
-    public static Cookie expireRefreshTokenCookie(boolean isSecure, boolean includeDomain) {
-        Cookie cookie = new Cookie("refresh", null);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(isSecure);
-        cookie.setMaxAge(0);
-        if (includeDomain) {
-            cookie.setDomain(".promesa.co.kr");
+    public static String buildExpiredSetCookieHeader(boolean isSecure, boolean includeDomain) {
+        StringBuilder cookieBuilder = new StringBuilder();
+        cookieBuilder.append("refresh=; Path=/")
+                .append("; Max-Age=0")
+                .append("; HttpOnly");
+
+        if (isSecure) {
+            cookieBuilder.append("; Secure");
+            cookieBuilder.append("; SameSite=None");
         }
-        return cookie;
+
+        if (includeDomain) {
+            cookieBuilder.append("; Domain=.promesa.co.kr");
+        }
+
+        return cookieBuilder.toString();
     }
 }
-

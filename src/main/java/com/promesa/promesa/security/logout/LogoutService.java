@@ -2,17 +2,14 @@ package com.promesa.promesa.security.logout;
 
 import com.promesa.promesa.common.dto.SuccessResponse;
 import com.promesa.promesa.security.jwt.JwtUtil;
+import com.promesa.promesa.security.jwt.refresh.CookieUtil;
 import com.promesa.promesa.security.jwt.refresh.RefreshRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static com.promesa.promesa.security.jwt.refresh.CookieUtil.*;
-
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LogoutService {
@@ -53,16 +50,13 @@ public class LogoutService {
         }
 
         // Redis에서 해당 refreshToken 삭제
-        refreshRepository.deleteByNickname(nickname);
+        refreshRepository.delete(refreshToken);
 
-        // 쿠키 삭제
+        // 쿠키 무효화
         boolean isSecure = request.isSecure();
-        boolean includeDomain = !isLocalRequest(request);
-        Cookie expiredCookie = expireRefreshTokenCookie(isSecure, includeDomain);
-        response.addCookie(expiredCookie);
-
-        log.info("🔓 Clear-Cookie: refreshToken removed with Secure={}, Domain={}",
-                isSecure, includeDomain ? ".promesa.co.kr" : "(none)");
+        boolean includeDomain = !CookieUtil.isLocalRequest(request);
+        String expiredCookieHeader = CookieUtil.buildExpiredSetCookieHeader(isSecure, includeDomain);
+        response.setHeader("Set-Cookie", expiredCookieHeader);
 
         return SuccessResponse.success(200, "로그아웃되었습니다");
     }

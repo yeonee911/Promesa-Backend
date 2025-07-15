@@ -2,9 +2,9 @@ package com.promesa.promesa.security.oauth;
 
 import com.promesa.promesa.security.jwt.JwtProperties;
 import com.promesa.promesa.security.jwt.JwtUtil;
+import com.promesa.promesa.security.jwt.refresh.CookieUtil;
 import com.promesa.promesa.security.jwt.refresh.RefreshRepository;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-
-import static com.promesa.promesa.security.jwt.refresh.CookieUtil.*;
 
 @Slf4j
 @Component
@@ -52,22 +50,34 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtUtil.createAccessToken(nickname, role);
         String refreshToken = jwtUtil.createRefreshToken(nickname, role);
 
-        // 2. 기존 RefreshToken 제거
-        refreshRepository.deleteByNickname(nickname);
-
-        // 3. 새 RefreshToken 저장 (보조 인덱스 포함)
+        // 2. Redis에 Refresh Token 저장
         refreshRepository.save(refreshToken, nickname, jwtProperties.getRefreshTokenExpiration());
 
-        // 4. RefreshToken을 쿠키에 저장
+        // 3. 쿠키에도 Refresh Token 저장 (보안 테스트 시 HttpOnly + Secure 설정)
         boolean isSecure = request.isSecure();
-        boolean includeDomain = !isLocalRequest(request);
-        Cookie refreshCookie = createRefreshTokenCookie(refreshToken, jwtProperties.getRefreshTokenExpiration(), isSecure, includeDomain);
-        response.addCookie(refreshCookie);
+        boolean includeDomain = !CookieUtil.isLocalRequest(request);
+        String setCookieHeader = CookieUtil.buildSetCookieHeader(refreshToken, jwtProperties.getRefreshTokenExpiration(), isSecure, includeDomain);
+        response.setHeader("Set-Cookie", setCookieHeader);
 
-        log.info("🔐 Set-Cookie: refreshToken set with Secure={}, SameSite=None, Domain={}",
-                isSecure, includeDomain ? ".promesa.co.kr" : "(none)");
+        // 4. redirect URI 추출
+        /*
+        String stateParam = request.getParameter("state");
+        String baseRedirectUri = (stateParam == null || stateParam.isBlank())
+                ? "http://localhost:3000"
+                : stateParam;
 
-        // 5. Redirect URI 처리
+        try {
+            URI uri = new URI(baseRedirectUri);
+            String host = uri.getHost();
+
+            if (!(host.equals("localhost") || host.equals("ceos-promesa.vercel.app") || host.equals("promesa.co.kr"))) {
+                throw new IllegalArgumentException("허용되지 않은 리다이렉트 base URI: " + baseRedirectUri);
+            }
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("리다이렉트 URI 파싱 실패: " + baseRedirectUri);
+
+        }
+         */
         String stateParam = request.getParameter("state");
         String baseRedirectUri = "http://localhost:3000";
         String afterLogin = "";
@@ -77,7 +87,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 URI stateUri = new URI(stateParam);
                 baseRedirectUri = stateUri.getScheme() + "://" + stateUri.getHost();
                 if (stateUri.getPort() != -1) {
-                    baseRedirectUri += ":" + stateUri.getPort();
+                    baseRedirectUri += ":" + stateUri.getPort(); // 포트 붙이기 (localhost:3000 등)
                 }
 
                 // afterLogin 파라미터 추출
@@ -96,7 +106,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             }
         }
 
-        // 6. accessToken & afterLogin redirect 전달
+
+        // 5. 쿼리 파라미터로 afterLogin & AccessToken 전달
         String finalRedirect = baseRedirectUri + "/login/success"
                 + "?accessToken=" + URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
 
@@ -104,8 +115,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             finalRedirect += "&afterLogin=" + URLEncoder.encode(afterLogin, StandardCharsets.UTF_8);
         }
 
-        log.info("OAuth2 Login Success: {}", nickname);
-        log.info("AccessToken & RefreshToken issued, redirecting to {}", finalRedirect);
+        log.info("✅ OAuth2 Login Success: {}", nickname);
+        log.info("🔑 AccessToken & RefreshToken issued, redirecting to {}", finalRedirect);
 
         response.sendRedirect(finalRedirect);
     }
