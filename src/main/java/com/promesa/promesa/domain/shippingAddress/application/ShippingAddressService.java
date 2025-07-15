@@ -56,4 +56,16 @@ public class ShippingAddressService {
         memberRepository.save(member);
         return AddressResponse.from(savedAddress);
     }
+
+    /**
+     * 기본 배송지 정보 삭제
+     * @param member
+     */
+    @Transactional
+    public void deleteShippingAddress(Member member) {
+        ShippingAddress address = member.getShippingAddress();
+        member.updateShippingAddress(null);
+        memberRepository.save(member);
+        shippingAddressRepository.delete(address);
+    }
 }

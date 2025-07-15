@@ -38,4 +38,14 @@ public class ShippingAddressController {
         AddressResponse response = shippingAddressService.addShippingAddress(request, member);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping
+    @Operation(summary = "기본 배송지 정보를 삭제")
+    public ResponseEntity<AddressResponse> deleteShippingAddress(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        Member member = (user != null) ? user.getMember() : null;
+        shippingAddressService.deleteShippingAddress(member);
+        return ResponseEntity.ok().build();
+    }
 }
