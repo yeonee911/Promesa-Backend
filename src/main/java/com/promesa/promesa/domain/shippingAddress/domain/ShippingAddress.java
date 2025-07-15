@@ -27,4 +27,12 @@ public class ShippingAddress {
 
     @Column(name = "recipient_phone")
     private String recipientPhone;
+
+    public void update(String recipientName, String zipCode, String addressMain, String addressDetails, String recipientPhone) {
+        if (recipientName != null) this.recipientName = recipientName;
+        if (zipCode != null) this.zipCode = zipCode;
+        if (addressMain != null) this.addressMain = addressMain;
+        if (addressDetails != null) this.addressDetails = addressDetails;
+        if (recipientPhone != null) this.recipientPhone = recipientPhone;
+    }
 }

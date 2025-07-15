@@ -48,4 +48,16 @@ public class ShippingAddressController {
         shippingAddressService.deleteShippingAddress(member);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping
+    @Operation(summary = "기본 배송지 정보를 수정")
+    public ResponseEntity<AddressResponse> updateShippingAddress(
+            @RequestBody @Valid AddressRequest request,
+            @AuthenticationPrincipal CustomUserDetails user
+    )
+    {
+        Member member = (user != null) ? user.getMember() : null;
+        AddressResponse response = shippingAddressService.updateShippingAddress(request, member);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -7,6 +7,7 @@ import com.promesa.promesa.domain.shippingAddress.domain.ShippingAddress;
 import com.promesa.promesa.domain.shippingAddress.dto.request.AddressRequest;
 import com.promesa.promesa.domain.shippingAddress.dto.response.AddressResponse;
 import com.promesa.promesa.domain.shippingAddress.exception.ShippingAddressAlreadyExistsException;
+import com.promesa.promesa.domain.shippingAddress.exception.ShippingAddressNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -67,5 +68,26 @@ public class ShippingAddressService {
         member.updateShippingAddress(null);
         memberRepository.save(member);
         shippingAddressRepository.delete(address);
+    }
+
+    /**
+     * 기본 배송지 정보 수정
+     * @param request
+     * @param member
+     */
+    @Transactional
+    public AddressResponse updateShippingAddress(@Valid AddressRequest request, Member member) {
+        ShippingAddress address = shippingAddressRepository.findById(member.getShippingAddress().getId())
+                .orElseThrow(() -> ShippingAddressNotFoundException.EXCEPTION);
+
+        address.update(
+                request.getRecipientName(),
+                request.getZipCode(),
+                request.getAddressMain(),
+                request.getAddressDetails(),
+                request.getRecipientPhone()
+        );
+
+        return AddressResponse.from(address);
     }
 }
