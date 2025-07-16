@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -122,6 +121,7 @@ public class WishService {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @Transactional(readOnly = true)
     public List<WishResponse> getWishList(Member member, TargetType targetType) {
         List<Wish> wishes = wishRepository.findByMemberAndTargetType(member, targetType);
 
