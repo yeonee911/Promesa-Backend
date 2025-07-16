@@ -17,16 +17,10 @@ public class CookieUtil {
         cookieBuilder.append("refresh=").append(token)
                 .append("; Path=/")
                 .append("; Max-Age=").append(maxAgeMillis / 1000)
-                .append("; HttpOnly");
-
-        if (isSecure) {
-            cookieBuilder.append("; secure");
-            cookieBuilder.append("; SameSite=None");
-        }
-
-        if (includeDomain) {
-            cookieBuilder.append("; Domain=.promesa.co.kr");
-        }
+                .append("; HttpOnly")
+                .append("; Secure")
+                .append("; SameSite=None")
+                .append("; Domain=.promesa.co.kr");
 
         return cookieBuilder.toString();
     }
@@ -35,16 +29,10 @@ public class CookieUtil {
         StringBuilder cookieBuilder = new StringBuilder();
         cookieBuilder.append("refresh=; Path=/")
                 .append("; Max-Age=0")
-                .append("; HttpOnly");
-
-        if (isSecure) {
-            cookieBuilder.append("; secure");
-            cookieBuilder.append("; SameSite=None");
-        }
-
-        if (includeDomain) {
-            cookieBuilder.append("; Domain=.promesa.co.kr");
-        }
+                .append("; HttpOnly")
+                .append("; Secure")
+                .append("; SameSite=None")
+                .append("; Domain=.promesa.co.kr");
 
         return cookieBuilder.toString();
     }
