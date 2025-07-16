@@ -20,14 +20,15 @@ public record ItemResponse(
     public static ItemResponse of(
             Item item,
             Category category,
-            List<String> imageUrls,
+            List<String> mainImageUrls,
+            List<String> detailImageUrls,
             Artist artist,
             String artistImageUrl,
             boolean itemWished,
             boolean artistWished
     ) {
         return new ItemResponse(
-                ItemSummary.from(item, category, imageUrls, artist),
+                ItemSummary.from(item, category, mainImageUrls, detailImageUrls, artist),
                 ItemDetail.from(item, category.getName()),
                 ItemWish.from(item, itemWished),
                 ArtistProfile.from(artist, artistImageUrl),

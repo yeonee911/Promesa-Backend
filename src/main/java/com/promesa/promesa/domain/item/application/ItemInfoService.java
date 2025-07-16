@@ -50,7 +50,8 @@ public class ItemInfoService {
         ItemCategory itemCategory = item.getItemCategories().get(0);
 
         // 이미지 Presigned URL
-        List<String> imageUrls = getPresignedImageUrls(item);
+        List<String> mainImageUrls = getPresignedImageUrlsByType(item, "main");
+        List<String> detailImageUrls = getPresignedImageUrlsByType(item, "detail");
 
         // 작가 이미지 Presigned URL
         String artistImageUrl = getPresignedArtistImageUrl(artist);
@@ -63,7 +64,8 @@ public class ItemInfoService {
         return ItemResponse.of(
                 item,
                 itemCategory.getCategory(),
-                imageUrls,
+                mainImageUrls,
+                detailImageUrls,
                 artist,
                 artistImageUrl,
                 itemWished,
@@ -72,17 +74,18 @@ public class ItemInfoService {
 
     }
 
-    private List<String> getPresignedImageUrls(Item item) {
+    private List<String> getPresignedImageUrlsByType(Item item, String type) {
         return Optional.ofNullable(item.getItemImages())
                 .orElse(List.of())
                 .stream()
-                .map(image -> {
-                    String key = image.getImageKey();
-                    return key != null ? s3Service.createPresignedGetUrl(bucketName, key) : null;
+                .filter(img -> {
+                    String key = img.getImageKey();
+                    return key != null && key.contains("/" + type + "/");
                 })
-                .filter(Objects::nonNull)
+                .map(img -> s3Service.createPresignedGetUrl(bucketName, img.getImageKey()))
                 .toList();
     }
+
 
     private String getPresignedArtistImageUrl(Artist artist) {
         String key = artist.getProfileImageKey();
