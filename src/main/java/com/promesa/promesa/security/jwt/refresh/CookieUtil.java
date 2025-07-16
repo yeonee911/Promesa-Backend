@@ -20,7 +20,7 @@ public class CookieUtil {
                 .append("; HttpOnly");
 
         if (isSecure) {
-            cookieBuilder.append("; Secure");
+            cookieBuilder.append("; secure");
             cookieBuilder.append("; SameSite=None");
         }
 
@@ -38,7 +38,7 @@ public class CookieUtil {
                 .append("; HttpOnly");
 
         if (isSecure) {
-            cookieBuilder.append("; Secure");
+            cookieBuilder.append("; secure");
             cookieBuilder.append("; SameSite=None");
         }
 
