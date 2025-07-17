@@ -1,6 +1,7 @@
 package com.promesa.promesa.domain.artist.api;
 
 import com.promesa.promesa.domain.artist.application.ArtistService;
+import com.promesa.promesa.domain.artist.dto.ArtistNameResponse;
 import com.promesa.promesa.domain.artist.dto.ArtistResponse;
 import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
 import com.promesa.promesa.domain.item.application.ItemService;
@@ -29,6 +30,7 @@ public class ArtistController {
     private final ItemService itemService;
 
     @GetMapping("/{artistId}")
+    @Operation(summary = "작가 프로필 정보 조회")
     public ResponseEntity<ArtistResponse> getArtistProfile(
             @PathVariable Long artistId,
             @AuthenticationPrincipal CustomUserDetails user
@@ -56,4 +58,18 @@ public class ArtistController {
         List<ItemPreviewResponse> responses = itemService.findItemsByArtistAndCategory(member, artistId, categoryId, pageable);
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping
+    @Operation(summary = "전체 작가 목록 조회")
+    public ResponseEntity<List<ArtistResponse>> getAllArtists(@AuthenticationPrincipal CustomUserDetails user) {
+        Member member = (user != null) ? user.getMember() : null;
+        return ResponseEntity.ok(artistService.getAllArtists(member));
+    }
+
+    @GetMapping("/names")
+    @Operation(summary = "전체 작가 이름 리스트 조회 (인덱스 탐색용)")
+    public ResponseEntity<List<ArtistNameResponse>> getArtistNames() {
+        return ResponseEntity.ok(artistService.getArtistNames());
+    }
+
 }
