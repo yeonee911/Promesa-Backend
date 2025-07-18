@@ -2,6 +2,7 @@ package com.promesa.promesa.security.logout;
 
 import com.promesa.promesa.common.dto.SuccessResponse;
 import com.promesa.promesa.security.jwt.JwtUtil;
+import com.promesa.promesa.security.jwt.refresh.CookieUtil;
 import com.promesa.promesa.security.jwt.refresh.RefreshRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,13 +53,10 @@ public class LogoutService {
         refreshRepository.delete(refreshToken);
 
         // 쿠키 무효화
-        Cookie expiredCookie = new Cookie("refresh", null);
-        expiredCookie.setMaxAge(0);
-        expiredCookie.setHttpOnly(true);
-        expiredCookie.setPath("/");
-        expiredCookie.setSecure(true); // if using HTTPS
-
-        response.addCookie(expiredCookie);
+        boolean isSecure = request.isSecure();
+        boolean includeDomain = !CookieUtil.isLocalRequest(request);
+        String expiredCookieHeader = CookieUtil.buildExpiredSetCookieHeader(isSecure, includeDomain);
+        response.setHeader("Set-Cookie", expiredCookieHeader);
 
         return SuccessResponse.success(200, "로그아웃되었습니다");
     }

@@ -58,7 +58,10 @@ public class RefreshService {
         refreshRepository.save(newRefreshToken, nicknameFromToken, jwtProperties.getRefreshTokenExpiration());
 
         // 4. RefreshToken을 쿠키에 저장
-        setRefreshTokenCookie(request, response, newRefreshToken);
+        boolean isSecure = request.isSecure();
+        boolean includeDomain = !CookieUtil.isLocalRequest(request);
+        String setCookieHeader = CookieUtil.buildSetCookieHeader(newRefreshToken, jwtProperties.getRefreshTokenExpiration(), isSecure, includeDomain);
+        response.setHeader("Set-Cookie", setCookieHeader);
 
         // 5. 응답 JSON에 AccessToken 포함
         return SuccessResponse.success(200, Map.of(

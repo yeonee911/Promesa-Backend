@@ -2,6 +2,7 @@ package com.promesa.promesa.security.oauth;
 
 import com.promesa.promesa.security.jwt.JwtProperties;
 import com.promesa.promesa.security.jwt.JwtUtil;
+import com.promesa.promesa.security.jwt.refresh.CookieUtil;
 import com.promesa.promesa.security.jwt.refresh.RefreshRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,19 +54,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         refreshRepository.save(refreshToken, nickname, jwtProperties.getRefreshTokenExpiration());
 
         // 3. 쿠키에도 Refresh Token 저장 (보안 테스트 시 HttpOnly + Secure 설정)
-        StringBuilder cookieBuilder = new StringBuilder();
-        cookieBuilder.append("refresh=").append(refreshToken)
-                .append("; Path=/")
-                .append("; Max-Age=").append(jwtProperties.getRefreshTokenExpiration() / 1000)
-                .append("; HttpOnly");
-
-        // HTTPS 환경일 경우 SameSite=None + Secure
-        if (!isLocalRequest(request)) {
-            cookieBuilder.append("; Secure");
-            cookieBuilder.append("; SameSite=None");
-        }
-
-        response.setHeader("Set-Cookie", cookieBuilder.toString());
+        boolean isSecure = request.isSecure();
+        boolean includeDomain = !CookieUtil.isLocalRequest(request);
+        String setCookieHeader = CookieUtil.buildSetCookieHeader(refreshToken, jwtProperties.getRefreshTokenExpiration(), isSecure, includeDomain);
+        response.setHeader("Set-Cookie", setCookieHeader);
 
         // 4. redirect URI 추출
         /*

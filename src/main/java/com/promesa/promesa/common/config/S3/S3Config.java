@@ -1,6 +1,7 @@
 package com.promesa.promesa.common.config.S3;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 @RequiredArgsConstructor
 @Slf4j
 public class S3Config {
+    private S3Client s3Client;
+    private S3Presigner s3Presigner;
 
     @Bean
     public S3Client amazoneS3(){
@@ -35,5 +38,16 @@ public class S3Config {
                 .region(Region.AP_NORTHEAST_2)
                 .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        try {
+            if (s3Presigner != null) s3Presigner.close();
+            if (s3Client != null)    s3Client.close();
+            log.info("S3 SDK 자원 정상 해제 완료");
+        } catch (Exception e) {
+            log.warn("S3 SDK 자원 해제 실패", e);
+        }
     }
 }

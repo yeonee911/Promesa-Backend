@@ -1,11 +1,13 @@
 package com.promesa.promesa.domain.review.query;
 
 import com.promesa.promesa.domain.review.dto.response.ReviewQueryDto;
+import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import com.querydsl.core.group.GroupExpression;
 
 import static com.promesa.promesa.domain.review.domain.QReview.review;
 import static com.promesa.promesa.domain.review.domain.QReviewImage.reviewImage;
@@ -26,6 +28,20 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ReviewQueryRepository {
     private final JPAQueryFactory queryFactory;
+
+    private static final ResultTransformer<List<ReviewQueryDto>> REVIEW_TRANSFORMER =
+            groupBy(review.id).list(
+                    Projections.fields(ReviewQueryDto.class,
+                            review.id.as("reviewId"),
+                            review.content.as("content"),
+                            review.item.id.as("itemId"),
+                            review.member.id.as("reviewerId"),
+                            review.rating.as("rating"),
+                            list(reviewImage.key).as("reviewImages"),
+                            review.createdAt,
+                            review.updatedAt
+                    )
+            );
 
     public Page<ReviewQueryDto> findAllReviews(Long itemId, Pageable pageable) {
         List<Long> reviewIds = queryFactory
@@ -53,20 +69,7 @@ public class ReviewQueryRepository {
                 .from(review)
                 .leftJoin(review.reviewImages, reviewImage)
                 .where(review.id.in(reviewIds))
-                .transform(
-                        groupBy(review.id).list(
-                                Projections.fields(ReviewQueryDto.class,
-                                        review.id.as("reviewId"),
-                                        review.content.as("content"),
-                                        review.item.id.as("itemId"),
-                                        review.member.id.as("reviewerId"),
-                                        review.rating.as("rating"),
-                                        list(reviewImage.key).as("reviewImages"),
-                                        review.createdAt,
-                                        review.updatedAt
-                                )
-                        )
-                );
+                .transform(REVIEW_TRANSFORMER);
 
         results.sort(Comparator.comparingInt(dto -> idOrderMap.get(dto.getReviewId())));        // 정렬 순서로 복원
 
