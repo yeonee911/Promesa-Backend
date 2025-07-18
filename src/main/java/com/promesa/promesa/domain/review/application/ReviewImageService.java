@@ -25,10 +25,13 @@ public class ReviewImageService {
      * @return
      */
     public List<PresignedUrlResponse> getPresignedPutUrls(PresignedUrlRequest request) {
+
         return s3Service.createPresignedPutUrl(
                 bucketName,
                 request.imageType(),
                 request.referenceId(),
+                request.subType(),
+                request.subReferenceId(),
                 request.fileNames(),
                 request.metadata()
         );
