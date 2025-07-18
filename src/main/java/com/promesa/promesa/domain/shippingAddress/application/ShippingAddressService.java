@@ -1,6 +1,5 @@
 package com.promesa.promesa.domain.shippingAddress.application;
 
-import com.nimbusds.openid.connect.sdk.claims.Address;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.shippingAddress.dao.ShippingAddressRepository;
@@ -78,7 +77,12 @@ public class ShippingAddressService {
      */
     @Transactional
     public AddressResponse updateShippingAddress(@Valid AddressRequest request, Member member) {
-        ShippingAddress address = shippingAddressRepository.findById(member.getShippingAddress().getId())
+        ShippingAddress current = member.getShippingAddress();
+        if (current == null) {
+            throw ShippingAddressNotFoundException.EXCEPTION;
+        }
+
+        ShippingAddress address = shippingAddressRepository.findById(current.getId())
                 .orElseThrow(() -> ShippingAddressNotFoundException.EXCEPTION);
 
         address.update(
