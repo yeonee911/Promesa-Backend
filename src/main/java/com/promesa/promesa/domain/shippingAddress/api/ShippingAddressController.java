@@ -60,4 +60,16 @@ public class ShippingAddressController {
         AddressResponse response = shippingAddressService.updateShippingAddress(request, member);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping
+    @Operation(summary = "기본 배송지 정보를 추가 또는 수정")
+    public ResponseEntity<AddressResponse> addOrUpdateShippingAddress(
+            @RequestBody @Valid AddressRequest request,
+            @AuthenticationPrincipal CustomUserDetails user
+    )
+    {
+        Member member = (user != null) ? user.getMember() : null;
+        AddressResponse response = shippingAddressService.addOrUpdateShippingAddress(request, member);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.shippingAddress.application;
 
+import com.nimbusds.openid.connect.sdk.claims.Address;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.shippingAddress.dao.ShippingAddressRepository;
@@ -89,5 +90,20 @@ public class ShippingAddressService {
         );
 
         return AddressResponse.from(address);
+    }
+
+    /**
+     * 기본 배송지를 추가 또는 수정
+     * @param request
+     * @param member
+     * @return
+     */
+    @Transactional
+    public AddressResponse addOrUpdateShippingAddress(@Valid AddressRequest request, Member member) {
+        AddressResponse response;
+        if (member.getShippingAddress() != null) response = updateShippingAddress(request, member);
+        else response = addShippingAddress(request, member);
+
+        return response;
     }
 }
