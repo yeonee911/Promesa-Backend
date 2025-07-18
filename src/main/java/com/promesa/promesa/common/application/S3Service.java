@@ -1,6 +1,7 @@
 package com.promesa.promesa.common.application;
 
 import com.promesa.promesa.common.consts.ImageType;
+import com.promesa.promesa.common.consts.SubType;
 import com.promesa.promesa.common.dto.s3.PresignedUrlResponse;
 import com.promesa.promesa.common.exception.InternalServerError;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +69,8 @@ public class S3Service {
             String bucketName,
             ImageType imageType,
             Long referenceId,
+            SubType subType,
+            Long subReferenceId,
             List<String> fileNames,
             Map<String, String> metadata
     ) {
@@ -75,7 +78,7 @@ public class S3Service {
             return fileNames.stream()
                     .map(originalFileName -> {
                         try {
-                            String key = generateKey(imageType,  referenceId, originalFileName);
+                            String key = generateKey(imageType,  referenceId, subType, subReferenceId, originalFileName);
 
                             PutObjectRequest objectRequest = PutObjectRequest.builder()
                                     .bucket(bucketName)
@@ -104,16 +107,6 @@ public class S3Service {
         }
     }
 
-    private String generateKey(ImageType imageType, Long referenceId, String originalFileName) {
-        String uuid = UUID.randomUUID().toString();
-
-        return switch (imageType) {
-            case REVIEW -> "reviews/" + referenceId + "/" + uuid + "-" + originalFileName;
-            case PROFILE -> "profiles/" + referenceId + "/" + uuid + "-" + originalFileName;
-            case ITEM -> "items/" + referenceId + "/" + uuid + "-" + originalFileName;
-        };
-    }
-
     public void deleteObject(String bucketName, String key) {
         try {
             s3Client.deleteObject(builder -> builder
@@ -126,5 +119,28 @@ public class S3Service {
             log.error("S3 객체 삭제 실패: {}/{}", bucketName, key, e);
             throw InternalServerError.EXCEPTION;
         }
+    }
+
+    private String generateKey(ImageType imageType, Long referenceId, SubType subType, Long subReferenceId , String originalFileName) {
+        String uuid = UUID.randomUUID().toString();
+
+        StringBuilder key = new StringBuilder();
+        key.append(imageType.getPath())
+                .append("/")
+                .append(referenceId)
+                .append("/")
+                .append(subType.getPath());
+
+        if (subReferenceId != null) {
+            key.append("/").append(subReferenceId);
+        }
+
+        key.append("/").append(uuid).append("-").append(sanitizeFileName(originalFileName));
+
+        return key.toString();
+    }
+
+    private String sanitizeFileName(String originalFileName) {
+        return originalFileName.replaceAll("[\\\\/]", "_");
     }
 }
