@@ -43,8 +43,8 @@ public class ItemQueryRepository {
         JPAQuery<ItemPreviewResponse> query = queryFactory
                 .select(Projections.fields(ItemPreviewResponse.class,
                         item.id.as("itemId"),
+                        item.saleStatus.as("saleStatus"),
                         item.name.as("itemName"),
-                        item.description.as("itemDescription"),
                         item.price,
                         itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
@@ -80,8 +80,8 @@ public class ItemQueryRepository {
         JPAQuery<ItemPreviewResponse> query = queryFactory
                 .select(Projections.fields(ItemPreviewResponse.class,
                         item.id.as("itemId"),
+                        item.saleStatus.as("saleStatus"),
                         item.name.as("itemName"),
-                        item.description.as("itemDescription"),
                         item.price,
                         itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
@@ -153,8 +153,8 @@ public class ItemQueryRepository {
         JPAQuery<ItemPreviewResponse> query = queryFactory
                 .select(Projections.fields(ItemPreviewResponse.class,
                         item.id.as("itemId"),
+                        item.saleStatus.as("saleStatus"),
                         item.name.as("itemName"),
-                        item.description.as("itemDescription"),
                         item.price,
                         itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
