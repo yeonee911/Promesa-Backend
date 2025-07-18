@@ -27,9 +27,6 @@ public class Item extends BaseTimeEntity {
     @NotBlank
     private String name;
 
-    @NotBlank
-    private String description;
-
     private int price;
     private int stock;
 

@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.home.dto;
 
+import com.promesa.promesa.domain.item.domain.SaleStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ItemPreviewResponse {
     private Long itemId;
+    private SaleStatus saleStatus;
     private String itemName;
-    private String itemDescription;
     private int price;
     private String imageUrl;
     private String artistName;
@@ -20,8 +21,8 @@ public class ItemPreviewResponse {
     public static ItemPreviewResponse of(ItemPreviewResponse response, String imageUrl) {
         return new ItemPreviewResponse(
                 response.getItemId(),
+                response.getSaleStatus(),
                 response.getItemName(),
-                response.getItemDescription(),
                 response.getPrice(),
                 imageUrl,
                 response.getArtistName(),
