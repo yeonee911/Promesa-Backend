@@ -30,11 +30,11 @@ public class OrderController {
     public ResponseEntity<AddressResponse> addOrUpdateShippingAddress(
             @RequestBody @Valid AddressRequest request,
             @AuthenticationPrincipal CustomUserDetails user
-    )
-    {
+    ) {
         Member member = (user != null) ? user.getMember() : null;
         AddressResponse response = shippingAddressService.addOrUpdateShippingAddress(request, member);
         return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     @Operation(summary = "주문 생성")
