@@ -14,8 +14,6 @@ import com.promesa.promesa.domain.exhibition.exception.ExhibitionNotFoundExcepti
 import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
-import com.promesa.promesa.domain.member.exception.MemberNotFoundException;
-import com.promesa.promesa.domain.wish.domain.TargetType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
