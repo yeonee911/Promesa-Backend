@@ -1,6 +1,6 @@
 package com.promesa.promesa.domain.item.api;
 
-import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
+import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.item.application.ItemInfoService;
 import com.promesa.promesa.domain.item.application.ItemService;
 import com.promesa.promesa.domain.item.dto.ItemResponse;

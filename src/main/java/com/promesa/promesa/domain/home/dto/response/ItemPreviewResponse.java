@@ -1,4 +1,4 @@
-package com.promesa.promesa.domain.home.dto;
+package com.promesa.promesa.domain.home.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

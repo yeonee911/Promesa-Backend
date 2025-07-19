@@ -1,13 +1,12 @@
 package com.promesa.promesa.domain.home.application;
 
 import com.promesa.promesa.common.application.S3Service;
-import com.promesa.promesa.domain.home.dto.BrandInfoResponse;
+import com.promesa.promesa.domain.home.dto.response.BrandInfoResponse;
+import com.promesa.promesa.domain.home.dto.response.SearchResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,5 +29,13 @@ public class HomeService {
         String leftUrl = s3Service.createPresignedGetUrl(bucketName, LEFT_IMAGE);
         String rightUrl = s3Service.createPresignedGetUrl(bucketName, RIGHT_IMAGE);
         return BrandInfoResponse.of(mainUrl, leftUrl, rightUrl);
+    }
+
+    /**
+     * 작가/작품 통합 검색
+     * @param keyword
+     * @return
+     */
+    public ResponseEntity<SearchResponse> search(String keyword) {
     }
 }

@@ -1,23 +1,18 @@
 package com.promesa.promesa.domain.item.application;
 
-import com.promesa.promesa.common.advice.ItemLog;
 import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
-import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.item.query.ItemQueryRepository;
 import com.promesa.promesa.domain.category.dao.CategoryRepository;
 import com.promesa.promesa.domain.category.domain.Category;
 import com.promesa.promesa.domain.category.exception.CategoryNotFoundException;
-import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
-import com.promesa.promesa.domain.member.dao.MemberRepository;
+import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.domain.Member;
-import com.promesa.promesa.domain.member.exception.MemberNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

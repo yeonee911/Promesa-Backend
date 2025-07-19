@@ -1,6 +1,6 @@
 package com.promesa.promesa.domain.item.query;
 
-import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
+import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.wish.domain.TargetType;

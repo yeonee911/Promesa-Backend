@@ -2,7 +2,7 @@ package com.promesa.promesa.domain.exhibition.api;
 
 import com.promesa.promesa.domain.exhibition.application.ExhibitionService;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
-import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
+import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
