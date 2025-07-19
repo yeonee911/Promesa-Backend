@@ -3,10 +3,12 @@ package com.promesa.promesa.domain.wish.application;
 import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
+import com.promesa.promesa.domain.artist.dto.ArtistWish;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.item.domain.ItemImage;
+import com.promesa.promesa.domain.item.dto.ItemWish;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.wish.dao.WishRepository;
@@ -162,6 +164,32 @@ public class WishService {
                     }
                 })
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public ItemWish getItemWish(Long itemId, Member member) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> ItemNotFoundException.EXCEPTION);
+
+        boolean isWishlisted = false;
+        if (member != null) {
+            isWishlisted = wishRepository.existsByMemberAndTargetTypeAndTargetId(member, TargetType.ITEM, itemId);
+        }
+
+        return ItemWish.from(item, isWishlisted);
+    }
+
+    @Transactional(readOnly = true)
+    public ArtistWish getArtistWish(Long artistId, Member member) {
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+
+        boolean isWishlisted = false;
+        if (member != null) {
+            isWishlisted = wishRepository.existsByMemberAndTargetTypeAndTargetId(member, TargetType.ARTIST, artistId);
+        }
+
+        return ArtistWish.from(artist, isWishlisted);
     }
 
     // 실제 존재하는 target인지 검증
