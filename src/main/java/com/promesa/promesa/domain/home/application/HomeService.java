@@ -64,7 +64,8 @@ public class HomeService {
                 .toList();
 
         // 작품 검색
-        List<ItemPreviewResponse> itemResponses = itemQueryRepository.searchByItemName(keyword, member).stream()
+        String sanitizedKeyword = keyword.replaceAll("\\s+", "");
+        List<ItemPreviewResponse> itemResponses = itemQueryRepository.searchByItemName(sanitizedKeyword, member).stream()
                 .map(item -> {
                     String imageUrl = s3Service.createPresignedGetUrl(bucketName, item.getImageUrl());
                     return ItemPreviewResponse.of(item, imageUrl);

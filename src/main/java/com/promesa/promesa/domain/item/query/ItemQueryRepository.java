@@ -210,6 +210,12 @@ public class ItemQueryRepository {
         return wish.id.isNotNull();
     }
 
+    /**
+     * 작품 이름 검색
+     * @param keyword
+     * @param member
+     * @return
+     */
     public List<ItemPreviewResponse> searchByItemName(String keyword, Member member) {
         Expression<Boolean> isWished = isWishedExpression(member);
 
@@ -227,7 +233,11 @@ public class ItemQueryRepository {
                 .from(item)
                 .join(item.artist, artist)
                 .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue())
-                .where(item.name.containsIgnoreCase(keyword))
+                .where(
+                        Expressions.stringTemplate("REPLACE({0}, ' ', '')", item.name)
+                                .containsIgnoreCase(keyword)
+                )
+
                 .fetch();
     }
 }
