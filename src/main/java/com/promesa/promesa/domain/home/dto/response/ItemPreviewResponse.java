@@ -21,8 +21,8 @@ public class ItemPreviewResponse {
     public static ItemPreviewResponse of(ItemPreviewResponse response, String imageUrl) {
         return new ItemPreviewResponse(
                 response.getItemId(),
+                response.getSaleStatus(),
                 response.getItemName(),
-                response.getItemDescription(),
                 response.getPrice(),
                 imageUrl,
                 response.getArtistName(),
