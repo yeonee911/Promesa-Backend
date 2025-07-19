@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
     boolean existsByMemberAndTargetTypeAndTargetId(Member member, TargetType targetType, Long targetId);
-
     void deleteByMemberAndTargetTypeAndTargetId(Member member, TargetType targetType, Long targetId);
     List<Wish> findByMemberAndTargetType(Member member, TargetType targetType);
 }

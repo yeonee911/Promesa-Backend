@@ -1,5 +1,7 @@
 package com.promesa.promesa.domain.wish.api;
 
+import com.promesa.promesa.domain.artist.dto.ArtistWish;
+import com.promesa.promesa.domain.item.dto.ItemWish;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.wish.application.WishService;
 import com.promesa.promesa.domain.wish.domain.TargetType;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,6 +58,22 @@ public class WishController {
         Member member = (user != null) ? user.getMember() : null;
         List<WishResponse> wishes = wishService.getWishList(member, targetType);
         return ResponseEntity.ok(wishes);
+    }
+
+    @GetMapping("/item/{itemId}")
+    public ResponseEntity<ItemWish> getItemWish(
+            @PathVariable Long itemId,
+            @AuthenticationPrincipal CustomUserDetails user) {
+        Member member = (user != null) ? user.getMember() : null;
+        return ResponseEntity.ok(wishService.getItemWish(itemId, member));
+    }
+
+    @GetMapping("/artist/{artistId}")
+    public ResponseEntity<ArtistWish> getArtistWish(
+            @PathVariable Long artistId,
+            @AuthenticationPrincipal CustomUserDetails user) {
+        Member member = (user != null) ? user.getMember() : null;
+        return ResponseEntity.ok(wishService.getArtistWish(artistId, member));
     }
 }
 
