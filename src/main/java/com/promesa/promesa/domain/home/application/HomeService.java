@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -50,7 +51,16 @@ public class HomeService {
      * @return
      */
     public SearchResponse search(String keyword, Member member) {
-        List<Artist> matchedArtists = artistRepository.findByNameContainingIgnoreCase(keyword);
+        String sanitizedKeyword = keyword.replaceAll("\\s+", "");
+
+        if (sanitizedKeyword.isBlank()) {
+            return SearchResponse.builder()
+                    .artists(Collections.emptyList())
+                    .itemPreviews(Collections.emptyList())
+                    .build();
+        }
+
+        List<Artist> matchedArtists = artistRepository.findByNameContainingIgnoreCase(sanitizedKeyword);
 
         // 작가 검색
         List<ArtistResponse> artistResponses = matchedArtists.stream()
@@ -64,7 +74,6 @@ public class HomeService {
                 .toList();
 
         // 작품 검색
-        String sanitizedKeyword = keyword.replaceAll("\\s+", "");
         List<ItemPreviewResponse> itemResponses = itemQueryRepository.searchByItemName(sanitizedKeyword, member).stream()
                 .map(item -> {
                     String imageUrl = s3Service.createPresignedGetUrl(bucketName, item.getImageUrl());
