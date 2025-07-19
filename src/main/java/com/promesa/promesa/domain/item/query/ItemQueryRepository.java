@@ -1,7 +1,10 @@
 package com.promesa.promesa.domain.item.query;
 
+import com.promesa.promesa.domain.artist.domain.QArtist;
 import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.item.domain.Item;
+import com.promesa.promesa.domain.item.domain.QItem;
+import com.promesa.promesa.domain.item.domain.QItemImage;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.wish.domain.TargetType;
 import com.querydsl.core.types.*;
@@ -43,8 +46,8 @@ public class ItemQueryRepository {
         JPAQuery<ItemPreviewResponse> query = queryFactory
                 .select(Projections.fields(ItemPreviewResponse.class,
                         item.id.as("itemId"),
+                        item.saleStatus.as("saleStatus"),
                         item.name.as("itemName"),
-                        item.description.as("itemDescription"),
                         item.price,
                         itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
@@ -80,8 +83,8 @@ public class ItemQueryRepository {
         JPAQuery<ItemPreviewResponse> query = queryFactory
                 .select(Projections.fields(ItemPreviewResponse.class,
                         item.id.as("itemId"),
+                        item.saleStatus.as("saleStatus"),
                         item.name.as("itemName"),
-                        item.description.as("itemDescription"),
                         item.price,
                         itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
@@ -153,8 +156,8 @@ public class ItemQueryRepository {
         JPAQuery<ItemPreviewResponse> query = queryFactory
                 .select(Projections.fields(ItemPreviewResponse.class,
                         item.id.as("itemId"),
+                        item.saleStatus.as("saleStatus"),
                         item.name.as("itemName"),
-                        item.description.as("itemDescription"),
                         item.price,
                         itemImage.imageKey.as("imageUrl"),
                         artist.name.as("artistName"),
@@ -205,5 +208,26 @@ public class ItemQueryRepository {
         }
 
         return wish.id.isNotNull();
+    }
+
+    public List<ItemPreviewResponse> searchByItemName(String keyword, Member member) {
+        Expression<Boolean> isWished = isWishedExpression(member);
+
+        return queryFactory
+                .select(Projections.fields(ItemPreviewResponse.class,
+                        item.id.as("itemId"),
+                        item.saleStatus.as("saleStatus"),
+                        item.name.as("itemName"),
+                        item.price,
+                        itemImage.imageKey.as("imageUrl"),
+                        artist.name.as("artistName"),
+                        ExpressionUtils.as(isWished, "isWished"),
+                        item.wishCount.as("wishCount")
+                ))
+                .from(item)
+                .join(item.artist, artist)
+                .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue())
+                .where(item.name.containsIgnoreCase(keyword))
+                .fetch();
     }
 }

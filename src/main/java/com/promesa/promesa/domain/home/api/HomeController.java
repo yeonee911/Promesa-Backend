@@ -3,8 +3,11 @@ package com.promesa.promesa.domain.home.api;
 import com.promesa.promesa.domain.home.application.HomeService;
 import com.promesa.promesa.domain.home.dto.response.BrandInfoResponse;
 import com.promesa.promesa.domain.home.dto.response.SearchResponse;
+import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.security.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +23,11 @@ public class HomeController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<SearchResponse> getBrandInfo(@RequestParam String keyword) {
-        return homeService.search(keyword);
+    public ResponseEntity<SearchResponse> getBrandInfo(
+            @RequestParam String keyword,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        Member member = (user != null) ? user.getMember() : null;
+        return ResponseEntity.ok(homeService.search(keyword, member));
     }
 }

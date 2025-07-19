@@ -4,9 +4,11 @@ import com.promesa.promesa.domain.artist.dto.ArtistResponse;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @Builder
 public class SearchResponse {
-    ArtistResponse artist;
-    ItemPreviewResponse itemPreview;
+    List<ArtistResponse> artists;
+    List<ItemPreviewResponse> itemPreviews;
 }
