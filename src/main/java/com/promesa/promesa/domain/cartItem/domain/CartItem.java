@@ -1,4 +1,4 @@
-package com.promesa.promesa.domain.cart.domain;
+package com.promesa.promesa.domain.cartItem.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.item.domain.Item;
@@ -16,11 +16,11 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "cart")
-public class Cart extends BaseTimeEntity{
+@Table(name = "cart_item")
+public class CartItem extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_id")
+    @Column(name = "cart_item_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

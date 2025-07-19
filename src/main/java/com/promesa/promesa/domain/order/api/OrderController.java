@@ -39,7 +39,7 @@ public class OrderController {
     @PostMapping
     @Operation(summary = "주문 생성")
     public ResponseEntity<OrderResponse> createOrder(
-            @RequestBody OrderRequest request,
+            @RequestBody @Valid OrderRequest request,
             @AuthenticationPrincipal CustomUserDetails user) {
         Member member = user.getMember();
         return ResponseEntity.ok(orderService.createOrder(request, member));

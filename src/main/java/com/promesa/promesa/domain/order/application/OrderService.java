@@ -1,8 +1,8 @@
 package com.promesa.promesa.domain.order.application;
 
-import com.promesa.promesa.domain.cart.dao.CartRepository;
-import com.promesa.promesa.domain.cart.domain.Cart;
-import com.promesa.promesa.domain.cart.exception.CartNotFoundException;
+import com.promesa.promesa.domain.cartItem.dao.CartItemRepository;
+import com.promesa.promesa.domain.cartItem.domain.CartItem;
+import com.promesa.promesa.domain.cartItem.exception.CartItemNotFoundException;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
@@ -16,18 +16,22 @@ import com.promesa.promesa.domain.order.dto.OrderRequest;
 import com.promesa.promesa.domain.order.dto.OrderResponse;
 import com.promesa.promesa.domain.order.exception.UnknownOrderTypeException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
-    private final CartRepository cartRepository;
+    private final CartItemRepository cartRepository;
 
     @Transactional
     public OrderResponse createOrder(OrderRequest request, Member member) {
@@ -45,18 +49,27 @@ public class OrderService {
                     }).toList();
 
         } else if ("CART".equalsIgnoreCase(request.type())) {
-            List<Long> cartIds = request.items().stream()
+            List<Long> cartItemIds = request.items().stream()
                     .map(OrderItemRequest::itemId)
                     .toList();
 
-            List<Cart> cartItems = cartRepository.findAllByIdInAndMember(cartIds, member);
+            List<CartItem> cartItems = cartRepository.findAllByIdInAndMember(cartItemIds, member);
 
-            if (cartItems.size() != cartIds.size()) {
-                throw CartNotFoundException.EXCEPTION;
+            Set<Long> foundIds = cartItems.stream()
+                    .map(CartItem::getId)
+                    .collect(Collectors.toSet());
+
+            List<Long> notFound = cartItemIds.stream()
+                    .filter(id -> !foundIds.contains(id))
+                    .toList();
+
+            if (!notFound.isEmpty()) {
+                log.warn("존재하지 않는 cartItemId: {}", notFound);
+                throw CartItemNotFoundException.EXCEPTION;
             }
 
             orderItems = cartItems.stream()
-                    .map(cart -> OrderItem.of(order, cart.getItem(), cart.getQuantity(), cart.getItem().getPrice()))
+                    .map(cartItem -> OrderItem.of(order, cartItem.getItem(), cartItem.getQuantity(), cartItem.getItem().getPrice()))
                     .toList();
 
             cartRepository.deleteAll(cartItems);

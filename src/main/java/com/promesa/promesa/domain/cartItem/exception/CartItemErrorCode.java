@@ -1,4 +1,4 @@
-package com.promesa.promesa.domain.cart.exception;
+package com.promesa.promesa.domain.cartItem.exception;
 
 import com.promesa.promesa.common.dto.ErrorReason;
 import com.promesa.promesa.common.exception.BaseErrorCode;
@@ -9,8 +9,8 @@ import static com.promesa.promesa.common.consts.PromesaStatic.*;
 
 @Getter
 @AllArgsConstructor
-public enum CartErrorCode implements BaseErrorCode {
-    CART_NOT_FOUND(NOT_FOUND, "CART_404", "장바구니 항목을 찾을 수 없습니다.");
+public enum CartItemErrorCode implements BaseErrorCode {
+    CART_ITEM_NOT_FOUND(NOT_FOUND, "CART_404", "장바구니 항목을 찾을 수 없습니다.");
 
     private final Integer status;
     private final String code;
