@@ -584,3 +584,9 @@ insert into review_image (review_image_id, review_id, image_key, created_at, upd
 values (1, 1, 'member/1/review/1/불만.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
        (2, 3, 'member/6/review/1/최고.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
        (3, 3, 'member/6/review/1/엄지.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+insert into cart_item (member_id, item_id, quantity, created_at, updated_at)
+values
+    (1, 3, 2, current_timestamp, current_timestamp),
+    (1, 5, 1, current_timestamp, current_timestamp),
+    (1, 4, 1, current_timestamp, current_timestamp);
