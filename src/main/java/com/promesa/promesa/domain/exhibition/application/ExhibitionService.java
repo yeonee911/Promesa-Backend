@@ -11,7 +11,7 @@ import com.promesa.promesa.domain.exhibition.domain.Exhibition;
 import com.promesa.promesa.domain.exhibition.domain.ExhibitionStatus;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
 import com.promesa.promesa.domain.exhibition.exception.ExhibitionNotFoundException;
-import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
+import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
 import lombok.RequiredArgsConstructor;

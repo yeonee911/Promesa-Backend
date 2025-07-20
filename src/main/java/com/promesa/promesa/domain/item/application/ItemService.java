@@ -7,7 +7,7 @@ import com.promesa.promesa.domain.item.query.ItemQueryRepository;
 import com.promesa.promesa.domain.category.dao.CategoryRepository;
 import com.promesa.promesa.domain.category.domain.Category;
 import com.promesa.promesa.domain.category.exception.CategoryNotFoundException;
-import com.promesa.promesa.domain.home.dto.ItemPreviewResponse;
+import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.domain.Member;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
