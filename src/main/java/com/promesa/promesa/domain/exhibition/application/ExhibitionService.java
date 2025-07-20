@@ -4,12 +4,13 @@ import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
+import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
 import com.promesa.promesa.domain.exhibition.query.ExhibitionQueryRepository;
 import com.promesa.promesa.domain.item.query.ItemQueryRepository;
 import com.promesa.promesa.domain.exhibition.dao.ExhibitionRepository;
 import com.promesa.promesa.domain.exhibition.domain.Exhibition;
 import com.promesa.promesa.domain.exhibition.domain.ExhibitionStatus;
-import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
+import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummary;
 import com.promesa.promesa.domain.exhibition.exception.ExhibitionNotFoundException;
 import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,7 +28,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ExhibitionService {
     private final ExhibitionRepository exhibitionRepository;
-    private final MemberRepository memberRepository;
     private final ItemQueryRepository itemQueryRepository;
     private final S3Service s3Service;
     private final ExhibitionQueryRepository exhibitionQueryRepository;
@@ -60,13 +61,13 @@ public class ExhibitionService {
      * 현재 진행 중인 기획전 조회 : 이미지는 presignedUrl로 반환
      * @return
      */
-    public List<ExhibitionResponse> getOngoingExhibitions() {
+    public List<ExhibitionSummary> getOngoingExhibitions() {
         List<Exhibition> ongoing = exhibitionRepository.findAllByStatus(ExhibitionStatus.ONGOING);
 
         return ongoing.stream()
                 .map(exhibition -> {
                     String imageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getImageKey());
-                    return ExhibitionResponse.of(exhibition, imageUrl);
+                    return ExhibitionSummary.of(exhibition, imageUrl);
                 })
                 .toList();
     }
@@ -76,7 +77,7 @@ public class ExhibitionService {
      * @param artistId
      * @return
      */
-    public List<ExhibitionResponse> getExhibitionsByArtist(Long artistId) {
+    public List<ExhibitionSummary> getExhibitionsByArtist(Long artistId) {
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
 
@@ -85,8 +86,36 @@ public class ExhibitionService {
         return exhibitions.stream()
                 .map(exhibition -> {
                     String imageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getImageKey());
-                    return ExhibitionResponse.of(exhibition, imageUrl);
+                    return ExhibitionSummary.of(exhibition, imageUrl);
                 })
                 .toList();
+    }
+
+    public List<ExhibitionResponse> getExhibitions(ExhibitionStatus status, Member member) {
+        List<Exhibition> exhibitions;
+        if (status == null) {   // ALL
+            exhibitions = exhibitionRepository.findAll();
+        }
+        else {
+            exhibitions = exhibitionRepository.findAllByStatus(status);
+        }
+        List<ExhibitionResponse> responses = new ArrayList<>();
+
+        for (Exhibition exhibition : exhibitions) {
+            String imageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getImageKey());
+            ExhibitionSummary summary = ExhibitionSummary.of(exhibition, imageUrl);
+
+            List<ItemPreviewResponse> itemPreviews = itemQueryRepository.findExhibitionItem(member, exhibition.getId())
+                    .stream()
+                    .map(r -> {
+                        String itemImageUrl = s3Service.createPresignedGetUrl(bucketName, r.getImageUrl());
+                        return ItemPreviewResponse.of(r, itemImageUrl);
+                    })
+                    .toList();
+            ExhibitionResponse response = ExhibitionResponse.of(summary, itemPreviews);
+            responses.add(response);
+        }
+
+        return responses;
     }
 }

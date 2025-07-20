@@ -3,10 +3,12 @@ package com.promesa.promesa.domain.exhibition.domain;
 import com.promesa.promesa.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,13 @@ public class Exhibition extends BaseTimeEntity {
     @NotBlank
     @Column(nullable = false)
     private String description;
+
+    @NotNull
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
+    @Column(name = "end_date")
+    private LocalDate endDate;
 
     @NotBlank
     @Column(name = "image_key", nullable = false)
