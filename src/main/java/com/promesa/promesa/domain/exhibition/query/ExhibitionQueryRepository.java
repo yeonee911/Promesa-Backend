@@ -26,4 +26,12 @@ public class ExhibitionQueryRepository {
                 .where(artist.id.eq(artistId))
                 .fetch();
     }
+
+    public List<Exhibition> findByStatusOrderByStartDateDesc(ExhibitionStatus status) {
+        return queryFactory
+                .selectFrom(exhibition)
+                .where(status != null ? exhibition.status.eq(status) : null)
+                .orderBy(exhibition.startDate.desc())
+                .fetch();
+    }
 }

@@ -92,13 +92,7 @@ public class ExhibitionService {
     }
 
     public List<ExhibitionResponse> getExhibitions(ExhibitionStatus status, Member member) {
-        List<Exhibition> exhibitions;
-        if (status == null) {   // ALL
-            exhibitions = exhibitionRepository.findAll();
-        }
-        else {
-            exhibitions = exhibitionRepository.findAllByStatus(status);
-        }
+        List<Exhibition> exhibitions = exhibitionQueryRepository.findByStatusOrderByStartDateDesc(status);
         List<ExhibitionResponse> responses = new ArrayList<>();
 
         for (Exhibition exhibition : exhibitions) {
