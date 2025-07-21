@@ -16,6 +16,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +28,8 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "`order`") // order는 SQL 예약어여서 escape 처리
 public class Order extends BaseTimeEntity {
     @Id
@@ -37,13 +41,14 @@ public class Order extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    private LocalDateTime orderDate;      // 주문일시
+    private LocalDateTime orderDate;   // 주문일시
 
     // 무통장 입금 관련
     private String bankName; // 은행명
@@ -55,18 +60,16 @@ public class Order extends BaseTimeEntity {
     private int totalAmount; // 총 결제 금액
     private int totalQuantity; // 총 수량
 
-    public int getTotalPrice() {
-        return orderItems.stream().mapToInt(OrderItem::getTotalPrice).sum();
-    }
-
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
         orderItem.setOrder(this);
     }
 
-    public Order(Member member, OrderStatus orderStatus) {
-        this.member = member;
-        this.orderStatus = orderStatus;
-        this.orderItems = new ArrayList<>();
+    public void setTotalAmount(int totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public void setTotalQuantity(int totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
 }

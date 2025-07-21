@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,12 +46,27 @@ public class OrderService {
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
+    @Value("${order.deposit.bank-name}")
+    private String defaultBankName;
+    @Value("${order.deposit.account-number}")
+    private String defaultAccountNumber;
+    @Value("${order.deposit.depositor-name}")
+    private String defaultDepositorName;
+
     @Transactional
     public OrderResponse createOrder(OrderRequest request, Member member) {
-
-        Order order = new Order(member, OrderStatus.WAITING_FOR_PAYMENT);
-
+        LocalDateTime now = LocalDateTime.now();
         List<OrderItem> orderItems;
+
+        Order order = Order.builder()
+                .member(member)
+                .orderStatus(OrderStatus.WAITING_FOR_PAYMENT)
+                .orderDate(now)
+                .depositDeadline(now.plusDays(1))
+                .bankName(defaultBankName)
+                .accountNumber(defaultAccountNumber)
+                .depositorName(defaultDepositorName)
+                .build();
 
         if ("SINGLE".equalsIgnoreCase(request.type())) {
             orderItems = request.items().stream()
@@ -92,9 +108,20 @@ public class OrderService {
         // 연관관계 설정
         orderItems.forEach(order::addOrderItem);
 
+        // 총 금액 및 수량 계산
+        int totalAmount = orderItems.stream().mapToInt(OrderItem::getTotalPrice).sum();
+        int totalQuantity = orderItems.stream().mapToInt(OrderItem::getQuantity).sum();
+
+        // 필드 수동 설정
+        order.getOrderItems().clear();
+        orderItems.forEach(order::addOrderItem);
+        order.setTotalAmount(totalAmount);
+        order.setTotalQuantity(totalQuantity);
+
         orderRepository.save(order);
-        return OrderResponse.of(order.getId(), order.getTotalPrice());
+        return OrderResponse.of(order.getId(), totalAmount);
     }
+
 
     public List<OrderSummary> getOrderSummaries(Member member) {
         List<Order> orders = orderRepository.findByMember(member);

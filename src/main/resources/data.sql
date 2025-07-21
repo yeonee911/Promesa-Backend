@@ -617,6 +617,6 @@ insert into delivery (
     order_id, courier_name, receiver_name, receiver_phone, zip_code, address, address_detail,
     delivery_status, delivery_expected_date, delivery_start_date, delivery_completed_date
 ) values (
-             1, 'cj대한통운', '홍길동', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
+             1, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
              'SHIPPED', '2025-07-25', '2025-07-22', null
          );

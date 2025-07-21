@@ -53,3 +53,9 @@ management:
       exposure:
         include: health, info, metrics  # 노출할 엔드포인트 목록
         exclude: beans, env              # 제외할 엔드포인트 목록
+
+order:
+  deposit:
+    bank-name: 국민은행
+    account-number: 123456-78-901234
+    depositor-name: 프로메사
