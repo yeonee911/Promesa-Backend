@@ -1,6 +1,7 @@
 package com.promesa.promesa.domain.order.dto.response;
 
 import com.promesa.promesa.domain.delivery.domain.Delivery;
+import com.promesa.promesa.domain.delivery.domain.DeliveryStatus;
 import com.promesa.promesa.domain.order.domain.Order;
 import com.promesa.promesa.domain.order.domain.OrderStatus;
 
@@ -18,7 +19,8 @@ public record OrderSummary(
         String buyerPhone,    // 구매자 연락처
         LocalDateTime deliveryExpectedDate, // 배송 예정일
         LocalDateTime deliveryStartDate, // 배송 시작일
-        LocalDateTime deliveryCompletedDate // 배송 완료일
+        LocalDateTime deliveryCompletedDate, // 배송 완료일
+        DeliveryStatus deliveryStatus // 배송 상태
 ) {
     public static OrderSummary from(Order order, String itemThumbnailUrl, Delivery delivery) {
         return new OrderSummary(
@@ -33,7 +35,8 @@ public record OrderSummary(
                 order.getMember().getPhone(),
                 delivery.getDeliveryExpectedDate(),
                 delivery.getDeliveryStartDate(),
-                delivery.getDeliveryCompletedDate()
+                delivery.getDeliveryCompletedDate(),
+                delivery.getDeliveryStatus()
         );
     }
 }
