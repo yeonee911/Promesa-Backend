@@ -1,4 +1,4 @@
-package com.promesa.promesa.domain.order.dto;
+package com.promesa.promesa.domain.order.dto.response;
 
 import com.promesa.promesa.domain.delivery.domain.Delivery;
 import com.promesa.promesa.domain.delivery.domain.DeliveryStatus;

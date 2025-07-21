@@ -6,6 +6,7 @@ import com.promesa.promesa.domain.cartItem.domain.CartItem;
 import com.promesa.promesa.domain.cartItem.exception.CartItemNotFoundException;
 import com.promesa.promesa.domain.delivery.dao.DeliveryRepository;
 import com.promesa.promesa.domain.delivery.domain.Delivery;
+import com.promesa.promesa.domain.delivery.domain.DeliveryStatus;
 import com.promesa.promesa.domain.delivery.exception.DeliveryNotFoundException;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
@@ -15,11 +16,10 @@ import com.promesa.promesa.domain.order.dao.OrderRepository;
 import com.promesa.promesa.domain.order.domain.Order;
 import com.promesa.promesa.domain.order.domain.OrderItem;
 import com.promesa.promesa.domain.order.domain.OrderStatus;
-import com.promesa.promesa.domain.order.dto.OrderDetail;
-import com.promesa.promesa.domain.order.dto.OrderItemRequest;
-import com.promesa.promesa.domain.order.dto.OrderRequest;
-import com.promesa.promesa.domain.order.dto.OrderResponse;
-import com.promesa.promesa.domain.order.dto.OrderSummary;
+import com.promesa.promesa.domain.order.dto.response.OrderResponse;
+import com.promesa.promesa.domain.order.dto.request.OrderItemRequest;
+import com.promesa.promesa.domain.order.dto.request.OrderRequest;
+import com.promesa.promesa.domain.order.dto.response.OrderSummary;
 import com.promesa.promesa.domain.order.exception.OrderNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -119,9 +119,21 @@ public class OrderService {
         order.setTotalQuantity(totalQuantity);
 
         orderRepository.save(order);
-        return OrderResponse.of(order.getId(), totalAmount);
-    }
 
+        Delivery delivery = Delivery.builder()
+                .order(order)
+                .receiverName(request.receiverName())
+                .receiverPhone(request.receiverPhone())
+                .zipCode(request.zipCode())
+                .address(request.address())
+                .addressDetail(request.addressDetail())
+                .deliveryStatus(DeliveryStatus.READY)
+                .build();
+
+        deliveryRepository.save(delivery);
+
+        return OrderResponse.of(order, delivery, s3Service, bucketName);
+    }
 
     public List<OrderSummary> getOrderSummaries(Member member) {
         List<Order> orders = orderRepository.findByMember(member);
@@ -142,14 +154,14 @@ public class OrderService {
                 .toList();
     }
 
-    public OrderDetail getOrderDetail(Member member, Long orderId) {
+    public OrderResponse getOrderDetail(Member member, Long orderId) {
         Order order = orderRepository.findByIdAndMember(orderId, member)
                 .orElseThrow(() -> OrderNotFoundException.EXCEPTION);
 
         Delivery delivery = deliveryRepository.findByOrder(order)
                 .orElseThrow(() -> DeliveryNotFoundException.EXCEPTION);
 
-        return OrderDetail.of(order, delivery, s3Service, bucketName);
+        return OrderResponse.of(order, delivery, s3Service, bucketName);
     }
 
 }

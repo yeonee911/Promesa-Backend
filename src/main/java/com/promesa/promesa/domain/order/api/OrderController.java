@@ -2,10 +2,9 @@ package com.promesa.promesa.domain.order.api;
 
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.order.application.OrderService;
-import com.promesa.promesa.domain.order.dto.OrderDetail;
-import com.promesa.promesa.domain.order.dto.OrderRequest;
-import com.promesa.promesa.domain.order.dto.OrderResponse;
-import com.promesa.promesa.domain.order.dto.OrderSummary;
+import com.promesa.promesa.domain.order.dto.response.OrderResponse;
+import com.promesa.promesa.domain.order.dto.request.OrderRequest;
+import com.promesa.promesa.domain.order.dto.response.OrderSummary;
 import com.promesa.promesa.domain.shippingAddress.application.ShippingAddressService;
 import com.promesa.promesa.domain.shippingAddress.dto.request.AddressRequest;
 import com.promesa.promesa.domain.shippingAddress.dto.response.AddressResponse;
@@ -62,7 +61,7 @@ public class OrderController {
 
     @GetMapping("/{orderId}")
     @Operation(summary = "주문 상세 내역 조회")
-    public ResponseEntity<OrderDetail> getOrderDetail(
+    public ResponseEntity<OrderResponse> getOrderDetail(
             @PathVariable Long orderId,
             @AuthenticationPrincipal CustomUserDetails user) {
         Member member = user.getMember();
