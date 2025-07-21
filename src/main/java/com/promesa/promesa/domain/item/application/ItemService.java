@@ -66,6 +66,13 @@ public class ItemService {
         }
 
         List<ItemPreviewResponse> responses = itemQueryRepository.findItemsByArtistAndCategory(member, artistId, categoryId, pageable);
-        return responses;
+        List<ItemPreviewResponse> updated = responses.stream()
+                .map(r -> {
+                    String imageUrl = s3Service.createPresignedGetUrl(bucketName, r.getImageUrl());
+                    return ItemPreviewResponse.of(r, imageUrl);
+                })
+                .toList();
+
+        return updated;
     }
 }
