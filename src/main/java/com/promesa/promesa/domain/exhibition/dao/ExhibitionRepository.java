@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
     List<Exhibition> findAllByStatus(ExhibitionStatus status);
+
+    List<Exhibition> findAllByStatusIn(List<ExhibitionStatus> statuses);
 }

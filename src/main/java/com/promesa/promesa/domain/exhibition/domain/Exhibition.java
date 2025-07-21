@@ -50,4 +50,8 @@ public class Exhibition extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
     private List<ExhibitionArtist> exhibitionArtists = new ArrayList<>();
+
+    public void setStatus(ExhibitionStatus status) {
+        this.status = status;
+    }
 }
