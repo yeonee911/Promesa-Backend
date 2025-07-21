@@ -2,6 +2,7 @@ package com.promesa.promesa.domain.order.api;
 
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.order.application.OrderService;
+import com.promesa.promesa.domain.order.dto.OrderDetail;
 import com.promesa.promesa.domain.order.dto.OrderRequest;
 import com.promesa.promesa.domain.order.dto.OrderResponse;
 import com.promesa.promesa.domain.order.dto.OrderSummary;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +52,7 @@ public class OrderController {
     }
 
     @GetMapping
-    @Operation(summary = "주문 내역 조회")
+    @Operation(summary = "주문 내역 목록 조회")
     public ResponseEntity<List<OrderSummary>> getOrders(
             @AuthenticationPrincipal CustomUserDetails user
     ) {
@@ -58,4 +60,12 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrderSummaries(member));
     }
 
+    @GetMapping("/{orderId}")
+    @Operation(summary = "주문 상세 내역 조회")
+    public ResponseEntity<OrderDetail> getOrderDetail(
+            @PathVariable Long orderId,
+            @AuthenticationPrincipal CustomUserDetails user) {
+        Member member = user.getMember();
+        return ResponseEntity.ok(orderService.getOrderDetail(member, orderId));
+    }
 }
