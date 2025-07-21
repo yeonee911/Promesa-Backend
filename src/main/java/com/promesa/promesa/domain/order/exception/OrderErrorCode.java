@@ -10,7 +10,8 @@ import static com.promesa.promesa.common.consts.PromesaStatic.*;
 @Getter
 @AllArgsConstructor
 public enum OrderErrorCode implements BaseErrorCode {
-    ORDER_NOT_FOUND(NOT_FOUND, "ORDER_404", "해당 주문을 찾을 수 없습니다.");
+    ORDER_NOT_FOUND(NOT_FOUND, "ORDER_404", "해당 주문을 찾을 수 없습니다."),
+    INVALID_QUANTITY(BAD_REQUEST, "ORDER_400_1", "주문 수량은 1 이상이어야 합니다.");
 
     private final Integer status;
     private final String code;

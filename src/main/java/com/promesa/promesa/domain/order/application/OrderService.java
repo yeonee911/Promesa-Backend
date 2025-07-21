@@ -20,6 +20,7 @@ import com.promesa.promesa.domain.order.dto.response.OrderResponse;
 import com.promesa.promesa.domain.order.dto.request.OrderItemRequest;
 import com.promesa.promesa.domain.order.dto.request.OrderRequest;
 import com.promesa.promesa.domain.order.dto.response.OrderSummary;
+import com.promesa.promesa.domain.order.exception.InvalidOrderQuantityException;
 import com.promesa.promesa.domain.order.exception.OrderNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,6 +70,13 @@ public class OrderService {
                 .build();
 
         if ("SINGLE".equalsIgnoreCase(request.type())) {
+            // 수량 검증
+            for (OrderItemRequest item : request.items()) {
+                if (item.quantity() < 1) {
+                    throw InvalidOrderQuantityException.EXCEPTION;
+                }
+            }
+
             orderItems = request.items().stream()
                     .map(req -> {
                         Item item = itemRepository.findById(req.itemId())
