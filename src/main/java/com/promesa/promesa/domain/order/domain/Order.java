@@ -19,6 +19,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,18 @@ public class Order extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
+    private LocalDateTime orderDate;      // 주문일시
+
+    // 무통장 입금 관련
+    private String bankName; // 은행명
+    private String accountNumber; // 계좌번호
+    private String depositorName; // 입금자명
+    private LocalDateTime depositDeadline; // 입금 기한
+
+    // 주문 금액 계산용
+    private int totalAmount; // 총 결제 금액
+    private int totalQuantity; // 총 수량
 
     public int getTotalPrice() {
         return orderItems.stream().mapToInt(OrderItem::getTotalPrice).sum();

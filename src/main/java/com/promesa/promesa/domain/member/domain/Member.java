@@ -30,6 +30,8 @@ public class Member extends BaseTimeEntity {
 
     private String providerId;
 
+    private String phone;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Wish> wishes;
 
