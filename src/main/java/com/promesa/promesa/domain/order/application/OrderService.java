@@ -22,6 +22,7 @@ import com.promesa.promesa.domain.order.dto.request.OrderRequest;
 import com.promesa.promesa.domain.order.dto.response.OrderSummary;
 import com.promesa.promesa.domain.order.exception.InvalidOrderQuantityException;
 import com.promesa.promesa.domain.order.exception.OrderNotFoundException;
+import com.promesa.promesa.domain.shippingAddress.dto.request.AddressRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -128,13 +129,15 @@ public class OrderService {
 
         orderRepository.save(order);
 
+        AddressRequest addr = request.address();
+
         Delivery delivery = Delivery.builder()
                 .order(order)
-                .receiverName(request.receiverName())
-                .receiverPhone(request.receiverPhone())
-                .zipCode(request.zipCode())
-                .address(request.address())
-                .addressDetail(request.addressDetail())
+                .receiverName(addr.getRecipientName())
+                .receiverPhone(addr.getRecipientPhone())
+                .zipCode(addr.getZipCode())
+                .address(addr.getAddressMain())
+                .addressDetail(addr.getAddressDetails())
                 .deliveryStatus(DeliveryStatus.READY)
                 .build();
 

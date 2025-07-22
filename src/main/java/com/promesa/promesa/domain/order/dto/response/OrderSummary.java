@@ -5,6 +5,7 @@ import com.promesa.promesa.domain.delivery.domain.DeliveryStatus;
 import com.promesa.promesa.domain.order.domain.Order;
 import com.promesa.promesa.domain.order.domain.OrderStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record OrderSummary(
@@ -17,9 +18,9 @@ public record OrderSummary(
         String itemName,      // 대표 상품명
         String buyerName,     // 구매자 이름
         String buyerPhone,    // 구매자 연락처
-        LocalDateTime deliveryExpectedDate, // 배송 예정일
-        LocalDateTime deliveryStartDate, // 배송 시작일
-        LocalDateTime deliveryCompletedDate, // 배송 완료일
+        LocalDate deliveryExpectedDate, // 배송 예정일
+        LocalDate deliveryStartDate, // 배송 시작일
+        LocalDate deliveryCompletedDate, // 배송 완료일
         DeliveryStatus deliveryStatus // 배송 상태
 ) {
     public static OrderSummary from(Order order, String itemThumbnailUrl, Delivery delivery) {

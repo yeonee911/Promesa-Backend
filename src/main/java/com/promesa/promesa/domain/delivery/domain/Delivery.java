@@ -1,6 +1,7 @@
 package com.promesa.promesa.domain.delivery.domain;
 
 import com.promesa.promesa.domain.order.domain.Order;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,7 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Entity
@@ -23,9 +24,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Delivery {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "delivery_id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -43,8 +44,8 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    private LocalDateTime deliveryExpectedDate; // 배송 예정일
-    private LocalDateTime deliveryStartDate; // 배송 시작일
-    private LocalDateTime deliveryCompletedDate; // 배송 완료일
+    private LocalDate deliveryExpectedDate; // 배송 예정일
+    private LocalDate deliveryStartDate; // 배송 시작일
+    private LocalDate deliveryCompletedDate; // 배송 완료일
 }
 
