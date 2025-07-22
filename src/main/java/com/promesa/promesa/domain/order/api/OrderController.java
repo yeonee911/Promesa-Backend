@@ -2,8 +2,9 @@ package com.promesa.promesa.domain.order.api;
 
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.order.application.OrderService;
-import com.promesa.promesa.domain.order.dto.OrderRequest;
-import com.promesa.promesa.domain.order.dto.OrderResponse;
+import com.promesa.promesa.domain.order.dto.response.OrderResponse;
+import com.promesa.promesa.domain.order.dto.request.OrderRequest;
+import com.promesa.promesa.domain.order.dto.response.OrderSummary;
 import com.promesa.promesa.domain.shippingAddress.application.ShippingAddressService;
 import com.promesa.promesa.domain.shippingAddress.dto.request.AddressRequest;
 import com.promesa.promesa.domain.shippingAddress.dto.response.AddressResponse;
@@ -13,10 +14,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,5 +48,23 @@ public class OrderController {
             @AuthenticationPrincipal CustomUserDetails user) {
         Member member = user.getMember();
         return ResponseEntity.ok(orderService.createOrder(request, member));
+    }
+
+    @GetMapping
+    @Operation(summary = "주문 내역 목록 조회")
+    public ResponseEntity<List<OrderSummary>> getOrders(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        Member member = user.getMember();
+        return ResponseEntity.ok(orderService.getOrderSummaries(member));
+    }
+
+    @GetMapping("/{orderId}")
+    @Operation(summary = "주문 상세 내역 조회")
+    public ResponseEntity<OrderResponse> getOrderDetail(
+            @PathVariable Long orderId,
+            @AuthenticationPrincipal CustomUserDetails user) {
+        Member member = user.getMember();
+        return ResponseEntity.ok(orderService.getOrderDetail(member, orderId));
     }
 }

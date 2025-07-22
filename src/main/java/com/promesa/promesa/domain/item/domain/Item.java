@@ -3,6 +3,7 @@ package com.promesa.promesa.domain.item.domain;
 import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.exhibition.domain.ExhibitionItem;
+import com.promesa.promesa.domain.item.exception.InsufficientStockException;
 import com.promesa.promesa.domain.itemCategory.domain.ItemCategory;
 import com.promesa.promesa.domain.review.domain.Review;
 import jakarta.persistence.*;
@@ -108,7 +109,6 @@ public class Item extends BaseTimeEntity {
         }
     }
 
-
     public void increaseWishCount() {
         this.wishCount++;
     }
@@ -120,4 +120,12 @@ public class Item extends BaseTimeEntity {
             this.wishCount = 0; // wishCount가 음수가 되지 않도록 방지
         }
     }
+
+    public void decreaseStock(int quantity) {
+        if (this.stock < quantity) {
+            throw InsufficientStockException.EXCEPTION; // 새 예외 생성 필요
+        }
+        this.stock -= quantity;
+    }
+
 }
