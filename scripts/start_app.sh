@@ -37,7 +37,7 @@ docker run -d \
   --name ${CONTAINER_NAME} \
   -p ${TARGET_PORT}:8081 \
   -v /home/ubuntu/app/dumps:/tmp \
-  --memory="512m" \
+  --memory="768m" \
   -e SPRING_PROFILES_ACTIVE=prod \
   -e RDS_URL="jdbc:mysql://${DB_ENDPOINT}:${DB_PORT}/${DB_NAME}?characterEncoding=UTF-8&serverTimezone=Asia/Seoul" \
   -e RDS_USERNAME="${RDS_USERNAME}" \
