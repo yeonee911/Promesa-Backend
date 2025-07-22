@@ -1,6 +1,7 @@
 package com.promesa.promesa.domain.exhibition.query;
 
 import com.promesa.promesa.domain.exhibition.domain.Exhibition;
+import com.promesa.promesa.domain.exhibition.domain.ExhibitionStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,14 @@ public class ExhibitionQueryRepository {
                 .join(exhibitionArtist.exhibition, exhibition)
                 .join(exhibitionArtist.artist, artist)
                 .where(artist.id.eq(artistId))
+                .fetch();
+    }
+
+    public List<Exhibition> findByStatusOrderByStartDateDesc(ExhibitionStatus status) {
+        return queryFactory
+                .selectFrom(exhibition)
+                .where(status != null ? exhibition.status.eq(status) : null)
+                .orderBy(exhibition.startDate.desc())
                 .fetch();
     }
 }

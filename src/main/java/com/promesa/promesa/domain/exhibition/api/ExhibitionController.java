@@ -1,7 +1,9 @@
 package com.promesa.promesa.domain.exhibition.api;
 
 import com.promesa.promesa.domain.exhibition.application.ExhibitionService;
+import com.promesa.promesa.domain.exhibition.domain.ExhibitionStatus;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
+import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummary;
 import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
@@ -30,10 +32,21 @@ public class ExhibitionController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
+    @GetMapping("/ongoing")
     @Operation(summary = "진행 중인 전시 목록 조회")
-    public ResponseEntity<List<ExhibitionResponse>> getOngoingExhibition() {
-        List<ExhibitionResponse> response = exhibitionService.getOngoingExhibitions();
+    public ResponseEntity<List<ExhibitionSummary>> getOngoingExhibition() {
+        List<ExhibitionSummary> response = exhibitionService.getOngoingExhibitions();
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    @Operation(summary = "전시 상태 별 전시 목록 조회")
+    public ResponseEntity<List<ExhibitionResponse>> getExhibition(
+            @RequestParam(required = false) ExhibitionStatus status,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        Member member = (user != null) ? user.getMember() : null;
+        List<ExhibitionResponse> responses = exhibitionService.getExhibitions(status, member);
+        return  ResponseEntity.ok(responses);
     }
 }

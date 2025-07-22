@@ -8,7 +8,7 @@ import com.promesa.promesa.domain.item.application.ItemService;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
 import com.promesa.promesa.domain.exhibition.application.ExhibitionService;
-import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
+import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummary;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -39,7 +39,7 @@ public class ArtistController {
 
     @GetMapping("/{artistId}/exhibitions")
     @Operation(summary = "작가가 참여한 전시 목록 조회")
-    public ResponseEntity<List<ExhibitionResponse>> getExhibitionsByArtist(@PathVariable Long artistId) {
+    public ResponseEntity<List<ExhibitionSummary>> getExhibitionsByArtist(@PathVariable Long artistId) {
         return ResponseEntity.ok(exhibitionService.getExhibitionsByArtist(artistId));
     }
 
