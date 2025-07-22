@@ -36,6 +36,8 @@ fi
 docker run -d \
   --name ${CONTAINER_NAME} \
   -p ${TARGET_PORT}:8081 \
+  -v /home/ubuntu/app/dumps:/tmp \
+  --memory="512m" \
   -e SPRING_PROFILES_ACTIVE=prod \
   -e RDS_URL="jdbc:mysql://${DB_ENDPOINT}:${DB_PORT}/${DB_NAME}?characterEncoding=UTF-8&serverTimezone=Asia/Seoul" \
   -e RDS_USERNAME="${RDS_USERNAME}" \
@@ -44,3 +46,10 @@ docker run -d \
   -e REDIS_PORT="${REDIS_PORT}" \
   -e JWT_SECRET="${JWT_SECRET}" \
   ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
+  java \
+    -XX:+HeapDumpOnOutOfMemoryError \
+    -XX:HeapDumpPath=/tmp/heapdump.hprof \
+    -XX:NativeMemoryTracking=summary \
+    -Xmx512m -Xms128m \
+    -jar app.jar \
+    --spring.config.additional-location=classpath:/,file:/app/config/
