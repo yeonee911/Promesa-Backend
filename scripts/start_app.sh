@@ -46,10 +46,3 @@ docker run -d \
   -e REDIS_PORT="${REDIS_PORT}" \
   -e JWT_SECRET="${JWT_SECRET}" \
   ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
-  java \
-    -XX:+HeapDumpOnOutOfMemoryError \
-    -XX:HeapDumpPath=/tmp/heapdump.hprof \
-    -XX:NativeMemoryTracking=summary \
-    -Xmx512m -Xms128m \
-    -jar app.jar \
-    --spring.config.additional-location=classpath:/,file:/app/config/
