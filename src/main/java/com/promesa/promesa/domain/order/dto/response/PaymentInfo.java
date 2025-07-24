@@ -4,16 +4,14 @@ import com.promesa.promesa.domain.order.domain.Order;
 
 import java.time.LocalDateTime;
 
-public record DepositInfo(
+public record PaymentInfo(
         String bankName,
-        String accountNumber,
         String depositorName,
         LocalDateTime depositDeadline
 ) {
-    public static DepositInfo from(Order order) {
-        return new DepositInfo(
+    public static PaymentInfo from(Order order) {
+        return new PaymentInfo(
                 order.getBankName(),
-                order.getAccountNumber(),
                 order.getDepositorName(),
                 order.getDepositDeadline()
         );

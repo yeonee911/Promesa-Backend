@@ -9,7 +9,7 @@ import java.util.List;
 
 public record OrderResponse(
         OrderSummary summary,
-        DepositInfo deposit,
+        PaymentInfo deposit,
         DeliveryInfo delivery,
         List<OrderItemDetail> items
 ) {
@@ -23,7 +23,7 @@ public record OrderResponse(
 
         return new OrderResponse(
                 OrderSummary.from(order, thumbnailUrl, delivery),
-                DepositInfo.from(order),
+                PaymentInfo.from(order),
                 DeliveryInfo.from(delivery),
                 order.getOrderItems().stream()
                         .map(OrderItemDetail::from)
