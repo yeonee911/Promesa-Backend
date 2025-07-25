@@ -9,5 +9,6 @@ public record OrderRequest(
         String type,                       // "SINGLE" 또는 "CART"
         @Valid List<OrderItemRequest> items,      // 주문 항목 목록
 
-        AddressRequest address
+        AddressRequest address,
+        PaymentRequest payment
 ) {}

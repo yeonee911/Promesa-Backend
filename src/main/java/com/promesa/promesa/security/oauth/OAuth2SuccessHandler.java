@@ -79,6 +79,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         }
          */
         String stateParam = request.getParameter("state");
+        log.info("🌐 stateParam: {}", stateParam); // 추가된 로그
+
         String baseRedirectUri = "http://localhost:3000";
         String afterLogin = "";
 
@@ -101,6 +103,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                         }
                     }
                 }
+                log.info("➡️ afterLogin extracted: {}", afterLogin);
             } catch (URISyntaxException e) {
                 throw new IllegalArgumentException("리다이렉트 URI 파싱 실패: " + stateParam);
             }

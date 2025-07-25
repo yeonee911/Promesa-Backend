@@ -16,6 +16,7 @@ import com.promesa.promesa.domain.order.dao.OrderRepository;
 import com.promesa.promesa.domain.order.domain.Order;
 import com.promesa.promesa.domain.order.domain.OrderItem;
 import com.promesa.promesa.domain.order.domain.OrderStatus;
+import com.promesa.promesa.domain.order.dto.request.PaymentRequest;
 import com.promesa.promesa.domain.order.dto.response.OrderResponse;
 import com.promesa.promesa.domain.order.dto.request.OrderItemRequest;
 import com.promesa.promesa.domain.order.dto.request.OrderRequest;
@@ -48,26 +49,21 @@ public class OrderService {
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
-    @Value("${order.deposit.bank-name}")
-    private String defaultBankName;
-    @Value("${order.deposit.account-number}")
-    private String defaultAccountNumber;
-    @Value("${order.deposit.depositor-name}")
-    private String defaultDepositorName;
-
     @Transactional
     public OrderResponse createOrder(OrderRequest request, Member member) {
         LocalDateTime now = LocalDateTime.now();
         List<OrderItem> orderItems;
 
+        PaymentRequest payment = request.payment();
+
         Order order = Order.builder()
                 .member(member)
                 .orderStatus(OrderStatus.WAITING_FOR_PAYMENT)
                 .orderDate(now)
-                .depositDeadline(now.plusDays(1))
-                .bankName(defaultBankName)
-                .accountNumber(defaultAccountNumber)
-                .depositorName(defaultDepositorName)
+                .depositDeadline(now.plusDays(1)) // 입금 기한 = 주문 날짜 + 1일
+                .bankName(payment.bankName())
+                .accountNumber(null)
+                .depositorName(payment.depositorName())
                 .build();
 
         if ("SINGLE".equalsIgnoreCase(request.type())) {
@@ -118,7 +114,7 @@ public class OrderService {
             throw OrderNotFoundException.EXCEPTION;
         }
 
-        // 연관관계 설정
+        // 연관 관계 설정
         orderItems.forEach(order::addOrderItem);
 
         // 총 금액 및 수량 계산
