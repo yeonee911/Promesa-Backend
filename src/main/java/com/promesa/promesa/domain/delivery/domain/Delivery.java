@@ -47,5 +47,7 @@ public class Delivery {
     private LocalDate deliveryExpectedDate; // 배송 예정일
     private LocalDate deliveryStartDate; // 배송 시작일
     private LocalDate deliveryCompletedDate; // 배송 완료일
+
+    private int deliveryFee;
 }
 
