@@ -2,6 +2,7 @@ package com.promesa.promesa.domain.member.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.artist.domain.Artist;
+import com.promesa.promesa.domain.member.dto.MemberUpdateRequest;
 import com.promesa.promesa.domain.shippingAddress.domain.ShippingAddress;
 import com.promesa.promesa.domain.wish.domain.Wish;
 import jakarta.persistence.*;
@@ -31,6 +32,15 @@ public class Member extends BaseTimeEntity {
     private String providerId;
 
     private String phone;
+    private Boolean smsAgree;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private Integer birthYear;
+    private Integer birthMonth;
+    private Integer birthDay;
+    private Boolean isSolar;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Wish> wishes;
@@ -54,5 +64,16 @@ public class Member extends BaseTimeEntity {
      */
     public void updateShippingAddress(ShippingAddress shippingAddress){
         this.shippingAddress = shippingAddress;
+    }
+
+    public void updateProfile(MemberUpdateRequest memberUpdateRequest) {
+        this.name = memberUpdateRequest.name();
+        this.phone = memberUpdateRequest.phone();
+        this.smsAgree = memberUpdateRequest.smsAgree();
+        this.gender = memberUpdateRequest.gender();
+        this.birthYear = memberUpdateRequest.birth().year();
+        this.birthMonth = memberUpdateRequest.birth().month();
+        this.birthDay = memberUpdateRequest.birth().day();
+        this.isSolar = memberUpdateRequest.birth().solar();
     }
 }
