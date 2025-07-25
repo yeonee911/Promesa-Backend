@@ -592,14 +592,13 @@ values
     (1, 4, 1, current_timestamp, current_timestamp);
 
 insert into "order" (member_id, order_status, order_date,
-    bank_name, account_number, depositor_name, deposit_deadline,
+    bank_name, depositor_name, deposit_deadline,
     total_amount, total_quantity, created_at, updated_at
 ) values (
              1,
              'PAID',
              CURRENT_TIMESTAMP,
-             '국민은행',
-             '123456-78-901234',
+             '국민은행 123456-78-901234',
              '홍길동',
              CURRENT_TIMESTAMP + 1,
              120000,
@@ -615,8 +614,8 @@ values
 
 insert into delivery (
     order_id, courier_name, receiver_name, receiver_phone, zip_code, address, address_detail,
-    delivery_status, delivery_expected_date, delivery_start_date, delivery_completed_date
+    delivery_status, delivery_expected_date, delivery_start_date, delivery_completed_date,delivery_fee
 ) values (
              1, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
-             'SHIPPED', '2025-07-25', '2025-07-22', null
+             'SHIPPED', '2025-07-25', '2025-07-22', null,3000
          );
