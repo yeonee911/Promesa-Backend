@@ -42,6 +42,8 @@ public class Member extends BaseTimeEntity {
     private Integer birthDay;
     private Boolean isSolar;
 
+    private Boolean isDeleted = false;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Wish> wishes;
 
@@ -75,5 +77,9 @@ public class Member extends BaseTimeEntity {
         this.birthMonth = memberUpdateRequest.birth().month();
         this.birthDay = memberUpdateRequest.birth().day();
         this.isSolar = memberUpdateRequest.birth().solar();
+    }
+
+    public void withdraw() {
+        this.isDeleted = true;
     }
 }

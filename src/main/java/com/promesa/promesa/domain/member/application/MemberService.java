@@ -21,4 +21,10 @@ public class MemberService {
         memberRepository.save(member);
         return MemberProfile.from(member);
     }
+
+    public void withdraw(Member member) {
+        member.withdraw();
+        memberRepository.save(member);
+    }
+
 }

@@ -4,6 +4,7 @@ import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -38,6 +39,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                         .provider(provider)
                         .providerId(providerId)
                         .build()));
+
+        // 탈퇴한 사용자라면 로그인 거부
+        if (Boolean.TRUE.equals(member.getIsDeleted())) {
+            throw new DisabledException("탈퇴 처리된 사용자입니다.");
+        }
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),

@@ -43,5 +43,14 @@ public class MemberController {
         Member member = user.getMember();
         return ResponseEntity.ok(memberService.updateProfile(member, request));
     }
+
+    @PatchMapping("/withdraw")
+    @Operation(summary = "회원 탈퇴 처리 (논리 삭제)")
+    public ResponseEntity<Void> withdraw(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        memberService.withdraw(user.getMember());
+        return ResponseEntity.ok().build();
+    }
 }
 
