@@ -575,15 +575,6 @@ values
     (99, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (100, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-insert into review (review_id, item_id, member_id, rating, content, created_at, updated_at)
-values (1, 1, 1, 1, '도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ',CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-       (2, 1, 2, 5, '완전 굿굿굿굿짱짱짱짱이에욤', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-       (3, 1, 6, 5, '너무너무 마음에 들어요. 제가 찾아 헤맨 작품입니다.', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
-
-insert into review_image (review_image_id, review_id, image_key, created_at, updated_at)
-values (1, 1, 'member/1/review/1/불만.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-       (2, 3, 'member/6/review/1/최고.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-       (3, 3, 'member/6/review/1/엄지.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
 insert into cart_item (member_id, item_id, quantity, created_at, updated_at)
 values
@@ -605,12 +596,58 @@ insert into "order" (member_id, order_status, order_date,
              2,
              CURRENT_TIMESTAMP,
              CURRENT_TIMESTAMP
+         ),
+         (
+             2,
+             'DELIVERED',
+             CURRENT_TIMESTAMP,
+             '국민은행',
+             '123456-78-901234',
+             '홍길동',
+             CURRENT_TIMESTAMP + 1,
+             120000,
+             2,
+             CURRENT_TIMESTAMP,
+             CURRENT_TIMESTAMP
+         ),
+         (
+             2,
+             'WAITING_FOR_PAYMENT',
+             CURRENT_TIMESTAMP,
+             '국민은행',
+             '123456-78-901234',
+             '홍길동',
+             CURRENT_TIMESTAMP + 1,
+             120000,
+             2,
+             CURRENT_TIMESTAMP,
+             CURRENT_TIMESTAMP
+         ),
+         (
+             2,
+             'DELIVERED',
+             CURRENT_TIMESTAMP,
+             '국민은행',
+             '123456-78-901234',
+             '홍길동',
+             CURRENT_TIMESTAMP + 1,
+             120000,
+             2,
+             CURRENT_TIMESTAMP,
+             CURRENT_TIMESTAMP
          );
+
 
 insert into order_item (item_id, order_id, quantity, price, order_item_id)
 values
     (1, 1, 1, 70000, 1),  -- 상품 A: 70,000원
-    (2, 1, 1, 50000, 2);  -- 상품 B: 50,000원
+    (2, 1, 1, 50000, 2),  -- 상품 B: 50,000원
+    (1, 2, 1, 70000, 3),  -- 상품 A: 70,000원
+    (2, 2, 1, 50000, 4),  -- 상품 B: 50,000원
+    (1, 3, 1, 70000, 5),  -- 상품 A: 70,000원
+    (2, 3, 1, 50000, 6),  -- 상품 B: 50,000원
+    (1, 4, 1, 70000, 7),  -- 상품 A: 70,000원
+    (2, 4, 1, 50000, 8);  -- 상품 B: 50,000원
 
 insert into delivery (
     order_id, courier_name, receiver_name, receiver_phone, zip_code, address, address_detail,
@@ -619,3 +656,10 @@ insert into delivery (
              1, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
              'SHIPPED', '2025-07-25', '2025-07-22', null,3000
          );
+
+insert into review (review_id, order_item_id, item_id, member_id, rating, content, created_at, updated_at)
+values (1, 1, 1, 1, 1, '도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ',CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       (2, 2, 2, 1, 5, '완전 굿굿굿굿짱짱짱짱이에욤', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+insert into review_image (review_image_id, review_id, image_key, created_at, updated_at)
+values (1, 1, 'member/1/review/1/불만.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());

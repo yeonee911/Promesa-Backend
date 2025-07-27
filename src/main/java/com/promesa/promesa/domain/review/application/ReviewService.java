@@ -7,6 +7,12 @@ import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.order.dao.OrderItemRepository;
+import com.promesa.promesa.domain.order.dao.OrderRepository;
+import com.promesa.promesa.domain.order.domain.Order;
+import com.promesa.promesa.domain.order.domain.OrderItem;
+import com.promesa.promesa.domain.order.domain.OrderStatus;
+import com.promesa.promesa.domain.order.exception.OrderItemNotFoundException;
 import com.promesa.promesa.domain.review.dao.ReviewRepository;
 import com.promesa.promesa.domain.review.domain.Review;
 import com.promesa.promesa.domain.review.domain.ReviewImage;
@@ -37,6 +43,7 @@ public class ReviewService {
     private final ReviewImageService reviewImageService;
     private final ReviewQueryRepository reviewQueryRepository;
     private final S3Service s3Service;
+    private final OrderItemRepository orderItemRepository;
 
     @Value("${aws.s3.bucket}")  // application.yml 에 정의 필요
     private String bucketName;
@@ -57,9 +64,22 @@ public class ReviewService {
                 .orElseThrow(()-> ItemNotFoundException.EXCEPTION);
 
         // 실제 주문 내역이 있는지 검증
+        OrderItem orderItem = orderItemRepository.findById(request.getOrderItemId())
+                .orElseThrow(() -> OrderItemNotFoundException.EXCEPTION);
 
-        // 리뷰 중복 등록 검증
-        if (reviewRepository.existsByItemIdAndMemberId(itemId, member.getId())) {
+        if (!orderItem.getItem().getId().equals(itemId) ||
+                !orderItem.getOrder().getMember().getId().equals(member.getId())
+        ) {
+            throw ReviewOrderItemForbiddenException.EXCEPTION;
+        }
+
+        // 아직 배송되지 않은 상품인지 검증
+        if (orderItem.getOrder().getOrderStatus() != OrderStatus.DELIVERED) {
+            throw ReviewItemNotDeliveredException.EXCEPTION;
+        }
+
+        // 주문 상품에 이미 리뷰를 작성했는지 검증
+        if (reviewRepository.existsByOrderItem(orderItem)) {
             throw ReviewDuplicateException.EXCEPTION;
         }
 
@@ -69,6 +89,7 @@ public class ReviewService {
                 .rating(request.getRating())
                 .item(item)
                 .member(member)
+                .orderItem(orderItem)
                 .build();
 
         // DB에 저장
