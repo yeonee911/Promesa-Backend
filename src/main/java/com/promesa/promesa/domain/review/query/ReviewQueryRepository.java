@@ -50,7 +50,8 @@ public class ReviewQueryRepository {
                 .where(review.item.id.eq(itemId))
                 .orderBy(
                         review.rating.desc(),   // 리뷰 높은 순
-                        Expressions.stringTemplate("char_length({0})", review.content).desc()   // 글자 수 많은 순
+                        Expressions.stringTemplate("char_length({0})", review.content).desc(),   // 글자 수 많은 순
+                        review.createdAt.desc()
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
