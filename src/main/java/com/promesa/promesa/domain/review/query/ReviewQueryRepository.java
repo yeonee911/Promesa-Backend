@@ -82,4 +82,42 @@ public class ReviewQueryRepository {
 
         return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
     }
+
+    public Page<ReviewQueryDto> findMyReviews(Long memberId, Pageable pageable) {
+        List<Long> reviewIds = queryFactory
+                .select(review.id)
+                .from(review)
+                .where(review.member.id.eq(memberId))
+                .orderBy(
+                        review.createdAt.desc()
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        if (reviewIds.isEmpty()) {
+            return Page.empty(pageable);
+        }
+
+        Map<Long, Integer> idOrderMap = new HashMap<>();
+        for (int i = 0; i < reviewIds.size(); i++) {
+            idOrderMap.put(reviewIds.get(i), i);    // 리뷰 아이디, 정렬된 순서
+        }
+
+        List<ReviewQueryDto> results = queryFactory
+                .from(review)
+                .leftJoin(review.member)
+                .leftJoin(review.reviewImages, reviewImage)
+                .where(review.id.in(reviewIds))
+                .transform(REVIEW_TRANSFORMER);
+
+        results.sort(Comparator.comparingInt(dto -> idOrderMap.get(dto.getReviewId())));        // 정렬 순서로 복원
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(review.count())
+                .from(review)
+                .where(review.member.id.eq(memberId));
+
+        return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
+    }
 }

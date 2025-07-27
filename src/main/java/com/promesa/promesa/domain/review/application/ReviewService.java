@@ -198,4 +198,28 @@ public class ReviewService {
                 .map(ReviewImage::getKey)
                 .toList();
     }
+
+    /**
+     * 내가 작성한 리뷰 조회
+     * @param member 작성자
+     * @return
+     */
+    public Page<ReviewResponse> getMyReviews(Member member, Pageable pageable) {
+        Page<ReviewQueryDto> results = reviewQueryRepository.findMyReviews(member.getId(), pageable);
+        List<ReviewResponse> responseList = results.getContent().stream()
+                .map(dto -> {
+                    List<String> presignedUrls = dto.getReviewImages().stream()
+                            .map(key -> s3Service.createPresignedGetUrl(bucketName, key))
+                            .toList();
+
+                    return ReviewResponse.from(dto, presignedUrls);
+                })
+                .toList();
+
+        return PageableExecutionUtils.getPage(
+                responseList,
+                pageable,
+                results::getTotalElements
+        );
+    }
 }

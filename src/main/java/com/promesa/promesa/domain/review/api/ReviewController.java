@@ -94,4 +94,16 @@ public class ReviewController {
         Page<ReviewResponse> responses = reviewService.getReviews(itemId, pageable);
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("members/me/reviews")
+    @Operation(summary = "작성한 리뷰 조회")
+    public ResponseEntity<Page<ReviewResponse>> getMyReviews(
+            @ParameterObject Pageable pageable,
+            @AuthenticationPrincipal CustomUserDetails user
+    )
+    {
+        Member member = (user != null) ? user.getMember() : null;
+        Page<ReviewResponse> response = reviewService.getMyReviews(member, pageable);
+        return ResponseEntity.ok(response);
+    }
 }
