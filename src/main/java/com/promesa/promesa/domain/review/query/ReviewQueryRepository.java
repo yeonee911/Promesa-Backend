@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import com.querydsl.core.group.GroupExpression;
 
 import static com.promesa.promesa.domain.review.domain.QReview.review;
 import static com.promesa.promesa.domain.review.domain.QReviewImage.reviewImage;
@@ -36,6 +35,7 @@ public class ReviewQueryRepository {
                             review.content.as("content"),
                             review.item.id.as("itemId"),
                             review.member.id.as("reviewerId"),
+                            review.member.name.as("reviewerName"),
                             review.rating.as("rating"),
                             list(reviewImage.key).as("reviewImages"),
                             review.createdAt,
@@ -67,6 +67,7 @@ public class ReviewQueryRepository {
 
         List<ReviewQueryDto> results = queryFactory
                 .from(review)
+                .leftJoin(review.member)
                 .leftJoin(review.reviewImages, reviewImage)
                 .where(review.id.in(reviewIds))
                 .transform(REVIEW_TRANSFORMER);
