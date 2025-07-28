@@ -121,6 +121,9 @@ public class OrderService {
         int totalAmount = orderItems.stream().mapToInt(OrderItem::getTotalPrice).sum();
         int totalQuantity = orderItems.stream().mapToInt(OrderItem::getQuantity).sum();
 
+        // 배송비 계산 (총 금액이 70,000원 미만이면 3,000원 추가)
+        int deliveryFee = totalAmount < 70_000 ? 3000 : 0;
+
         // 필드 수동 설정
         order.getOrderItems().clear();
         orderItems.forEach(order::addOrderItem);
@@ -139,6 +142,7 @@ public class OrderService {
                 .address(addr.getAddressMain())
                 .addressDetail(addr.getAddressDetails())
                 .deliveryStatus(DeliveryStatus.READY)
+                .deliveryFee(deliveryFee)
                 .build();
 
         deliveryRepository.save(delivery);

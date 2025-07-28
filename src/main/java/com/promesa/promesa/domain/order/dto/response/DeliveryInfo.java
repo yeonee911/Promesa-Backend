@@ -7,7 +7,8 @@ public record DeliveryInfo(
         String receiverPhone,
         String zipCode,
         String address,
-        String addressDetail
+        String addressDetail,
+        int deliveryFee
 ) {
     public static DeliveryInfo from(Delivery delivery) {
         return new DeliveryInfo(
@@ -15,7 +16,8 @@ public record DeliveryInfo(
                 delivery.getReceiverPhone(),
                 delivery.getZipCode(),
                 delivery.getAddress(),
-                delivery.getAddressDetail()
+                delivery.getAddressDetail(),
+                delivery.getDeliveryFee()
         );
     }
 }
