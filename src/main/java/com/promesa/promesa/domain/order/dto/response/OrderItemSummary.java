@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class OrderItemSummary {
+    private Long orderId;
     private Long orderItemId;
     private String itemName;
     private String artistName;

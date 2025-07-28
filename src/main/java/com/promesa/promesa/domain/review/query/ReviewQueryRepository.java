@@ -124,6 +124,7 @@ public class ReviewQueryRepository {
     public List<OrderItemSummary> getMyEligibleReviews(Long memberId) {
         List<OrderItemSummary> results = queryFactory
                 .select(Projections.fields(OrderItemSummary.class,
+                        orderItem.order.id.as("orderId"),
                         orderItem.id.as("orderItemId"),
                         orderItem.item.name.as("itemName"),
                         orderItem.item.artist.name.as("artistName"),
