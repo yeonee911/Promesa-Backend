@@ -12,6 +12,7 @@ import com.promesa.promesa.domain.order.dao.OrderRepository;
 import com.promesa.promesa.domain.order.domain.Order;
 import com.promesa.promesa.domain.order.domain.OrderItem;
 import com.promesa.promesa.domain.order.domain.OrderStatus;
+import com.promesa.promesa.domain.order.dto.response.OrderItemSummary;
 import com.promesa.promesa.domain.order.exception.OrderItemNotFoundException;
 import com.promesa.promesa.domain.review.dao.ReviewRepository;
 import com.promesa.promesa.domain.review.domain.Review;
@@ -44,6 +45,7 @@ public class ReviewService {
     private final ReviewQueryRepository reviewQueryRepository;
     private final S3Service s3Service;
     private final OrderItemRepository orderItemRepository;
+    private final OrderRepository orderRepository;
 
     @Value("${aws.s3.bucket}")  // application.yml 에 정의 필요
     private String bucketName;
@@ -225,9 +227,9 @@ public class ReviewService {
      * @param member 작성자
      * @return
      */
-    public Page<ReviewResponse> getMyReviews(Member member, Pageable pageable) {
-        Page<ReviewQueryDto> results = reviewQueryRepository.findMyReviews(member.getId(), pageable);
-        List<ReviewResponse> responseList = results.getContent().stream()
+    public List<ReviewResponse> getMyReviews(Member member) {
+        List<ReviewQueryDto> results = reviewQueryRepository.findMyReviews(member.getId());
+       return results.stream()
                 .map(dto -> {
                     List<String> presignedUrls = dto.getReviewImages().stream()
                             .map(key -> s3Service.createPresignedGetUrl(bucketName, key))
@@ -236,11 +238,15 @@ public class ReviewService {
                     return ReviewResponse.from(dto, presignedUrls);
                 })
                 .toList();
+    }
 
-        return PageableExecutionUtils.getPage(
-                responseList,
-                pageable,
-                results::getTotalElements
-        );
+    /**
+     * 작성 가능한 리뷰 조회
+     * @param member
+     * @return
+     */
+    public List<OrderItemSummary> getMyEligibleReviews(Member member) {
+        List<OrderItemSummary> responses = reviewQueryRepository.getMyEligibleReviews(member.getId());
+        return responses;
     }
 }

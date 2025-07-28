@@ -1,5 +1,7 @@
 package com.promesa.promesa.domain.review.query;
 
+import com.promesa.promesa.domain.order.domain.OrderStatus;
+import com.promesa.promesa.domain.order.dto.response.OrderItemSummary;
 import com.promesa.promesa.domain.review.dto.response.ReviewQueryDto;
 import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.types.Projections;
@@ -8,6 +10,8 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import static com.promesa.promesa.domain.order.domain.QOrderItem.orderItem;
+import static com.promesa.promesa.domain.order.domain.QOrder.order;
 import static com.promesa.promesa.domain.review.domain.QReview.review;
 import static com.promesa.promesa.domain.review.domain.QReviewImage.reviewImage;
 import static com.querydsl.core.group.GroupBy.groupBy;
@@ -18,10 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -83,20 +84,19 @@ public class ReviewQueryRepository {
         return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
     }
 
-    public Page<ReviewQueryDto> findMyReviews(Long memberId, Pageable pageable) {
+    public List<ReviewQueryDto> findMyReviews(Long memberId) {
         List<Long> reviewIds = queryFactory
                 .select(review.id)
                 .from(review)
                 .where(review.member.id.eq(memberId))
                 .orderBy(
-                        review.createdAt.desc()
+                        review.createdAt.desc(),
+                        review.id.desc()
                 )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
                 .fetch();
 
         if (reviewIds.isEmpty()) {
-            return Page.empty(pageable);
+            return Collections.emptyList();
         }
 
         Map<Long, Integer> idOrderMap = new HashMap<>();
@@ -118,6 +118,44 @@ public class ReviewQueryRepository {
                 .from(review)
                 .where(review.member.id.eq(memberId));
 
-        return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
+        return results;
+    }
+
+    public List<OrderItemSummary> getMyEligibleReviews(Long memberId) {
+        List<OrderItemSummary> results = queryFactory
+                .select(Projections.fields(OrderItemSummary.class,
+                        orderItem.id.as("orderItemId"),
+                        orderItem.item.name.as("itemName"),
+                        orderItem.item.artist.name.as("artistName"),
+                        orderItem.order.orderDate.as("orderDate"),
+                        orderItem.order.orderStatus.as("orderStatus"),
+                        orderItem.quantity.as("quantity")
+                ))
+                .from(orderItem)
+                .join(orderItem.order, order)
+                .leftJoin(review).on(review.orderItem.id.eq(orderItem.id))
+                .where(
+                        order.member.id.eq(memberId),   // 현재 로그인한 회원
+                        order.orderStatus.eq(OrderStatus.DELIVERED),    // 배송 완료된 주문만 조회
+                        review.id.isNull()  // 리뷰가 존재하지 않는 orderItem만
+                )
+                .orderBy(
+                        order.orderDate.desc(), // 주문 최신순
+                        orderItem.id.asc()  // 같은 주문 안에서는 상품 ID 오름차순
+                )
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(orderItem.count())
+                .from(orderItem)
+                .join(orderItem.order, order)
+                .leftJoin(review).on(review.orderItem.id.eq(orderItem.id))
+                .where(
+                        order.member.id.eq(memberId),
+                        order.orderStatus.eq(OrderStatus.DELIVERED),
+                        review.id.isNull()
+                );
+
+        return results;
     }
 }
