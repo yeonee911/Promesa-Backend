@@ -2,7 +2,7 @@ package com.promesa.promesa.domain.exhibition.api;
 
 import com.promesa.promesa.domain.exhibition.application.ExhibitionService;
 import com.promesa.promesa.domain.exhibition.domain.ExhibitionStatus;
-import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
+import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummaryResponse;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummary;
 import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.domain.Member;
@@ -41,12 +41,12 @@ public class ExhibitionController {
 
     @GetMapping
     @Operation(summary = "전시 상태 별 전시 목록 조회")
-    public ResponseEntity<List<ExhibitionResponse>> getExhibition(
+    public ResponseEntity<List<ExhibitionSummaryResponse>> getExhibition(
             @RequestParam(required = false) ExhibitionStatus status,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Member member = (user != null) ? user.getMember() : null;
-        List<ExhibitionResponse> responses = exhibitionService.getExhibitions(status, member);
+        List<ExhibitionSummaryResponse> responses = exhibitionService.getExhibitions(status, member);
         return  ResponseEntity.ok(responses);
     }
 }

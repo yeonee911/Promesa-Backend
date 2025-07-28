@@ -4,7 +4,7 @@ import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
-import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
+import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummaryResponse;
 import com.promesa.promesa.domain.exhibition.query.ExhibitionQueryRepository;
 import com.promesa.promesa.domain.item.query.ItemQueryRepository;
 import com.promesa.promesa.domain.exhibition.dao.ExhibitionRepository;
@@ -13,7 +13,6 @@ import com.promesa.promesa.domain.exhibition.domain.ExhibitionStatus;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummary;
 import com.promesa.promesa.domain.exhibition.exception.ExhibitionNotFoundException;
 import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
-import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -91,9 +90,9 @@ public class ExhibitionService {
                 .toList();
     }
 
-    public List<ExhibitionResponse> getExhibitions(ExhibitionStatus status, Member member) {
+    public List<ExhibitionSummaryResponse> getExhibitions(ExhibitionStatus status, Member member) {
         List<Exhibition> exhibitions = exhibitionQueryRepository.findByStatusOrderByStartDateDesc(status);
-        List<ExhibitionResponse> responses = new ArrayList<>();
+        List<ExhibitionSummaryResponse> responses = new ArrayList<>();
 
         for (Exhibition exhibition : exhibitions) {
             String imageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getImageKey());
@@ -106,7 +105,7 @@ public class ExhibitionService {
                         return ItemPreviewResponse.of(r, itemImageUrl);
                     })
                     .toList();
-            ExhibitionResponse response = ExhibitionResponse.of(summary, itemPreviews);
+            ExhibitionSummaryResponse response = ExhibitionSummaryResponse.of(summary, itemPreviews);
             responses.add(response);
         }
 
