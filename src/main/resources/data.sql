@@ -476,7 +476,7 @@ values
     (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전', 'exhibition/1/thumbnail/spring.jpg', 'exhibition/1/detail/시안2.png', 'PAST', '2025-03-20', '2025-04-20'),
     (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전', 'exhibition/2/thumbnail/summer.jpg', 'exhibition/2/detail/시안2.png','ONGOING', '2025-06-20', '2025-07-20'),
     (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아', '토마토 기획전', 'exhibition/3/thumbnail/tomato.jpg', 'exhibition/3/detail/시안2.png','UPCOMING', '2025-12-20', null),
-    (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '현대적인 감각과 기능성이 돋보이는 모연도예 작가님의 예술 철학을 다양한 작품과 함게 살펴보세요.', '작품 가이드 Ep.01\n모언도예_차도구 소개', 'exhibition/4/thumbnail/Group 2147225106.png', 'exhibition/4/detail/시안2.png', 'PERMANENT', '2025-07-29', null)
+    (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '현대적인 감각과 기능성이 돋보이는 모연도예 작가님의 예술 철학을 다양한 작품과 함게 살펴보세요.', '작품 가이드 Ep.01\n모언도예_차도구 소개', 'exhibition/4/thumbnail/기획전 타이틀.png', 'exhibition/4/detail/기획전 상세페이지.png', 'PERMANENT', '2025-07-29', null)
 ;
 
 insert into exhibition_item (exhibition_item_id, exhibition_id, item_id)
