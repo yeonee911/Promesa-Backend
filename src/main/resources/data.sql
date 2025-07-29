@@ -471,9 +471,9 @@ values
 
 insert into exhibition (exhibition_id, created_at, updated_at, description, title, image_key, exhibition_status, start_date, end_date)
 values
-    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전', 'exhibition/1/thumnail/spring.jpg', 'PAST', '2025-03-20', '2025-04-20'),
-    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전', 'exhibition/2/thumnail/summer.jpg', 'ONGOING', '2025-06-20', '2025-07-20'),
-    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아', '토마토 기획전', 'exhibition/3/thumnail/tomato.jpg', 'ONGOING', '2025-07-20', null)
+    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전', 'exhibition/1/thumbnail/spring.jpg', 'PAST', '2025-03-20', '2025-04-20'),
+    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전', 'exhibition/2/thumbnail/summer.jpg', 'ONGOING', '2025-06-20', '2025-07-20'),
+    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아', '토마토 기획전', 'exhibition/3/thumbnail/tomato.jpg', 'ONGOING', '2025-07-20', null)
 ;
 
 insert into exhibition_item (exhibition_item_id, exhibition_id, item_id)
