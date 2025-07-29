@@ -32,7 +32,7 @@ public class Member extends BaseTimeEntity {
     private String providerId;
 
     private String phone;
-    private Boolean smsAgree;
+    private Boolean smsAgree = true;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -69,7 +69,6 @@ public class Member extends BaseTimeEntity {
     }
 
     public void updateProfile(MemberUpdateRequest memberUpdateRequest) {
-        this.name = memberUpdateRequest.name();
         this.phone = memberUpdateRequest.phone();
         this.smsAgree = memberUpdateRequest.smsAgree();
         this.gender = memberUpdateRequest.gender();
