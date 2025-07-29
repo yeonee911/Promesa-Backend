@@ -82,4 +82,9 @@ public class Member extends BaseTimeEntity {
     public void withdraw() {
         this.isDeleted = true;
     }
+
+    public void restore() {
+        this.isDeleted = false;
+    }
+
 }
