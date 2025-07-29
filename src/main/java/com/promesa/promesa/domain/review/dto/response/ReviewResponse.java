@@ -14,6 +14,7 @@ public class ReviewResponse {
     private final String content;
     private final Long itemId;
     private final Long reviewerId;
+    private final String reviewerName;
     private final int rating;
     private final List<String> reviewImages;
     private final LocalDateTime createdAt;
@@ -25,6 +26,7 @@ public class ReviewResponse {
                 .content(review.getContent())
                 .itemId(review.getItem().getId())
                 .reviewerId(review.getMember().getId())
+                .reviewerName(review.getMember().getName())
                 .rating(review.getRating())
                 .reviewImages(imageKeys)
                 .createdAt(review.getCreatedAt())
@@ -38,6 +40,7 @@ public class ReviewResponse {
                 .content(dto.getContent())
                 .itemId(dto.getItemId())
                 .reviewerId(dto.getReviewerId())
+                .reviewerName(dto.getReviewerName())
                 .rating(dto.getRating())
                 .reviewImages(imageKeys)
                 .createdAt(dto.getCreatedAt())

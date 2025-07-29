@@ -38,6 +38,8 @@ docker run -d \
   -p ${TARGET_PORT}:8081 \
   -v /home/ubuntu/app/dumps:/tmp \
   --memory="768m" \
+  --memory-swap="1536m" \
+  -e JAVA_TOOL_OPTIONS="-Xms128m -Xmx512m" \
   -e SPRING_PROFILES_ACTIVE=prod \
   -e RDS_URL="jdbc:mysql://${DB_ENDPOINT}:${DB_PORT}/${DB_NAME}?characterEncoding=UTF-8&serverTimezone=Asia/Seoul" \
   -e RDS_USERNAME="${RDS_USERNAME}" \

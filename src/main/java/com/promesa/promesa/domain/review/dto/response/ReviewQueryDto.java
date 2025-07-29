@@ -14,6 +14,7 @@ public class ReviewQueryDto {
     private String content;
     private Long itemId;
     private Long reviewerId;
+    private String reviewerName;
     private int rating;
     private List<String> reviewImages;
     private LocalDateTime createdAt;

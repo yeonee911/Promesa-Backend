@@ -5,6 +5,7 @@ import com.promesa.promesa.domain.artist.domain.Artist;
 public record ArtistProfile(
         Long artistId,
         String name,
+        String subname,
         String profileImageUrl,
         String bio,
         String instagramUrl
@@ -13,6 +14,7 @@ public record ArtistProfile(
         return new ArtistProfile(
                 artist.getId(),
                 artist.getName(),
+                artist.getSubname(),
                 presignedUrl,
                 artist.getDescription(),
                 "https://instagram.com/" + artist.getInsta()
