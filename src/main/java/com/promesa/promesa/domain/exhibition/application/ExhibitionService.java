@@ -49,7 +49,8 @@ public class ExhibitionService {
                 .orElseThrow(() -> ExhibitionNotFoundException.EXCEPTION);
 
         String thumbnailImageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getThumbnailImageKey());
-        ExhibitionSummary summary = ExhibitionSummary.of(exhibition, thumbnailImageUrl);
+        List<String> artistNames = exhibitionQueryRepository.findArtistNames(exhibitionId);
+        ExhibitionSummary summary = ExhibitionSummary.of(exhibition, artistNames, thumbnailImageUrl);
 
         String detailedImageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getDetailedImageKey());
         ExhibitionDetail detail = ExhibitionDetail.of(exhibition, detailedImageUrl);
@@ -75,7 +76,8 @@ public class ExhibitionService {
         return ongoing.stream()
                 .map(exhibition -> {
                     String imageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getThumbnailImageKey());
-                    return ExhibitionSummary.of(exhibition, imageUrl);
+                    List<String> artistNames = exhibitionQueryRepository.findArtistNames(exhibition.getId());
+                    return ExhibitionSummary.of(exhibition, artistNames, imageUrl);
                 })
                 .toList();
     }
@@ -94,7 +96,8 @@ public class ExhibitionService {
         return exhibitions.stream()
                 .map(exhibition -> {
                     String imageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getThumbnailImageKey());
-                    return ExhibitionSummary.of(exhibition, imageUrl);
+                    List<String> artistNames = exhibitionQueryRepository.findArtistNames(exhibition.getId());
+                    return ExhibitionSummary.of(exhibition, artistNames, imageUrl);
                 })
                 .toList();
     }
@@ -105,7 +108,8 @@ public class ExhibitionService {
 
         for (Exhibition exhibition : exhibitions) {
             String imageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getThumbnailImageKey());
-            ExhibitionSummary summary = ExhibitionSummary.of(exhibition, imageUrl);
+            List<String> artistNames = exhibitionQueryRepository.findArtistNames(exhibition.getId());
+            ExhibitionSummary summary = ExhibitionSummary.of(exhibition, artistNames, imageUrl);
 
             List<ItemPreviewResponse> itemPreviews = itemQueryRepository.findExhibitionItem(member, exhibition.getId())
                     .stream()
