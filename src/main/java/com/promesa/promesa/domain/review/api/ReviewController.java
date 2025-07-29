@@ -9,6 +9,7 @@ import com.promesa.promesa.domain.review.application.ReviewImageService;
 import com.promesa.promesa.domain.review.application.ReviewService;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
 import com.promesa.promesa.domain.review.dto.request.UpdateReviewRequest;
+import com.promesa.promesa.domain.review.dto.response.ReviewDetailResponse;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -98,12 +99,12 @@ public class ReviewController {
 
     @GetMapping("/members/me/reviews")
     @Operation(summary = "작성한 리뷰 조회")
-    public ResponseEntity<List<ReviewResponse>> getMyReviews(
+    public ResponseEntity<List<ReviewDetailResponse>> getMyReviews(
             @AuthenticationPrincipal CustomUserDetails user
     )
     {
         Member member = (user != null) ? user.getMember() : null;
-        List<ReviewResponse> response = reviewService.getMyReviews(member);
+        List<ReviewDetailResponse> response = reviewService.getMyReviews(member);
         return ResponseEntity.ok(response);
     }
 

@@ -2,14 +2,18 @@ package com.promesa.promesa.domain.review.query;
 
 import com.promesa.promesa.domain.order.domain.OrderStatus;
 import com.promesa.promesa.domain.order.dto.response.OrderItemSummary;
+import com.promesa.promesa.domain.review.dto.response.ReviewDetailResponse;
 import com.promesa.promesa.domain.review.dto.response.ReviewQueryDto;
+import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
 import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import static com.promesa.promesa.domain.item.domain.QItemImage.itemImage;
 import static com.promesa.promesa.domain.order.domain.QOrderItem.orderItem;
 import static com.promesa.promesa.domain.order.domain.QOrder.order;
 import static com.promesa.promesa.domain.review.domain.QReview.review;
@@ -35,6 +39,7 @@ public class ReviewQueryRepository {
                             review.id.as("reviewId"),
                             review.content.as("content"),
                             review.item.id.as("itemId"),
+                            review.orderItem.id.as("orderItemId"),
                             review.member.id.as("reviewerId"),
                             review.member.name.as("reviewerName"),
                             review.rating.as("rating"),
@@ -84,13 +89,18 @@ public class ReviewQueryRepository {
         return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
     }
 
-    public List<ReviewQueryDto> findMyReviews(Long memberId) {
+    /**
+     * 작성한 리뷰 조회
+     * @param memberId
+     * @return
+     */
+    public List<ReviewDetailResponse> findMyReviews(Long memberId) {
         List<Long> reviewIds = queryFactory
                 .select(review.id)
                 .from(review)
                 .where(review.member.id.eq(memberId))
                 .orderBy(
-                        review.createdAt.desc(),
+                        review.createdAt.desc(),    // 리뷰 최신순
                         review.id.desc()
                 )
                 .fetch();
@@ -104,23 +114,60 @@ public class ReviewQueryRepository {
             idOrderMap.put(reviewIds.get(i), i);    // 리뷰 아이디, 정렬된 순서
         }
 
-        List<ReviewQueryDto> results = queryFactory
+        List<ReviewDetailResponse> results = queryFactory
                 .from(review)
-                .leftJoin(review.member)
+                .join(review.orderItem, orderItem)
+                .join(orderItem.order, order)
+                .leftJoin(itemImage).on(
+                        itemImage.item.eq(orderItem.item)
+                                .and(itemImage.isThumbnail.eq(true))
+                )
                 .leftJoin(review.reviewImages, reviewImage)
                 .where(review.id.in(reviewIds))
-                .transform(REVIEW_TRANSFORMER);
+                .transform(
+                        groupBy(review.id).list(
+                                Projections.constructor(
+                                        ReviewDetailResponse.class,
+                                        // 첫 번째 인자: OrderItemSummary
+                                        Projections.fields(OrderItemSummary.class,
+                                                orderItem.order.id.as("orderId"),
+                                                orderItem.id.as("orderItemId"),
+                                                orderItem.item.id.as("itemId"),
+                                                orderItem.item.name.as("itemName"),
+                                                orderItem.item.artist.name.as("artistName"),
+                                                itemImage.imageKey.as("itemThumbnail"),
+                                                orderItem.order.orderDate.as("orderDate"),
+                                                orderItem.order.orderStatus.as("orderStatus"),
+                                                orderItem.quantity.as("quantity")
+                                        ),
+                                        // 두 번째 인자: ReviewResponse
+                                        Projections.constructor(ReviewResponse.class,
+                                                review.id,
+                                                review.content,
+                                                review.item.id,
+                                                review.orderItem.id,
+                                                review.member.id,
+                                                review.member.name,
+                                                review.rating,
+                                                list(reviewImage.key), // reviewImages
+                                                review.createdAt,
+                                                review.updatedAt
+                                        )
+                                )
+                        )
+                );
 
-        results.sort(Comparator.comparingInt(dto -> idOrderMap.get(dto.getReviewId())));        // 정렬 순서로 복원
-
-        JPAQuery<Long> countQuery = queryFactory
-                .select(review.count())
-                .from(review)
-                .where(review.member.id.eq(memberId));
+        // groupBy는 정렬을 무시하므로 원래 순서로 정렬 복원
+        results.sort(Comparator.comparingInt(r -> idOrderMap.get(r.getReviewResponse().getReviewId())));
 
         return results;
     }
 
+    /**
+     * 작성 가능한 리뷰 조회
+     * @param memberId
+     * @return
+     */
     public List<OrderItemSummary> getMyEligibleReviews(Long memberId) {
         List<OrderItemSummary> results = queryFactory
                 .select(Projections.fields(OrderItemSummary.class,
@@ -129,34 +176,28 @@ public class ReviewQueryRepository {
                         orderItem.item.id.as("itemId"),
                         orderItem.item.name.as("itemName"),
                         orderItem.item.artist.name.as("artistName"),
+                        itemImage.imageKey.as("itemThumbnail"),
                         orderItem.order.orderDate.as("orderDate"),
                         orderItem.order.orderStatus.as("orderStatus"),
                         orderItem.quantity.as("quantity")
                 ))
                 .from(orderItem)
                 .join(orderItem.order, order)
+                .leftJoin(itemImage).on(
+                        itemImage.item.eq(orderItem.item)
+                                .and(itemImage.isThumbnail.eq(true))
+                )
                 .leftJoin(review).on(review.orderItem.id.eq(orderItem.id))
                 .where(
                         order.member.id.eq(memberId),   // 현재 로그인한 회원
                         order.orderStatus.eq(OrderStatus.DELIVERED),    // 배송 완료된 주문만 조회
-                        review.id.isNull()  // 리뷰가 존재하지 않는 orderItem만
+                        review.orderItem.isNull()
                 )
                 .orderBy(
                         order.orderDate.desc(), // 주문 최신순
                         orderItem.id.asc()  // 같은 주문 안에서는 상품 ID 오름차순
                 )
                 .fetch();
-
-        JPAQuery<Long> countQuery = queryFactory
-                .select(orderItem.count())
-                .from(orderItem)
-                .join(orderItem.order, order)
-                .leftJoin(review).on(review.orderItem.id.eq(orderItem.id))
-                .where(
-                        order.member.id.eq(memberId),
-                        order.orderStatus.eq(OrderStatus.DELIVERED),
-                        review.id.isNull()
-                );
 
         return results;
     }

@@ -21,4 +21,8 @@ public class OrderItemSummary {
     private LocalDateTime orderDate;
     private OrderStatus orderStatus;
     private int quantity;
+
+    public void setItemThumbnail(String itemThumbnail) {
+        this.itemThumbnail = itemThumbnail;
+    }
 }
