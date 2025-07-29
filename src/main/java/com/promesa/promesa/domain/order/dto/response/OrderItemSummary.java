@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class OrderItemSummary {
     private Long orderId;
     private Long orderItemId;
+    private Long itemId;
     private String itemName;
     private String artistName;
     private String itemThumbnail;

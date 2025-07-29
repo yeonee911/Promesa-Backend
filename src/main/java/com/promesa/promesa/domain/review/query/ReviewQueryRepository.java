@@ -126,6 +126,7 @@ public class ReviewQueryRepository {
                 .select(Projections.fields(OrderItemSummary.class,
                         orderItem.order.id.as("orderId"),
                         orderItem.id.as("orderItemId"),
+                        orderItem.item.id.as("itemId"),
                         orderItem.item.name.as("itemName"),
                         orderItem.item.artist.name.as("artistName"),
                         orderItem.order.orderDate.as("orderDate"),
