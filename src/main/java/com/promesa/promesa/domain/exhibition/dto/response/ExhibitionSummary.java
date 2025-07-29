@@ -14,8 +14,8 @@ public record ExhibitionSummary(
         String description,
         LocalDate startDate,
         LocalDate endDate,
-        String imageKey,
-        String imageUrl,
+        String thumbnailImageKey,
+        String thumbnailImageUrl,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -28,7 +28,7 @@ public record ExhibitionSummary(
                 exhibition.getDescription(),
                 exhibition.getStartDate(),
                 exhibition.getEndDate(),
-                exhibition.getImageKey(),
+                exhibition.getThumbnailImageKey(),
                 imageUrl,
                 exhibition.getCreatedAt(),
                 exhibition.getUpdatedAt()

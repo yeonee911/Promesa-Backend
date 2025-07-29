@@ -4,8 +4,10 @@ values ('김회원', 'kakao', '1234'),
        ('김작가', 'kakao', '1011'),
        ('이작가', 'kakao', '1213'),
        ('박작가', 'kakao', '1415'),
-       ('남궁회원', 'kakao', '1617'),
-       ('정회원', 'kakao', '1819');
+       ('최작가', 'kakao', '1617'),
+       ('정작가', 'kakao', '1819'),
+       ('남궁회원', 'kakao', '2021'),
+       ('정회원', 'kakao', '2223')
 ;
 
 
@@ -46,8 +48,8 @@ values
     (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 4',  30000, 'ON_SALE', 14, 1, NULL, 1, 0.0, 'PRD004', 10, 20, 30, 5),
     (5, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 5',  10000, 'ON_SALE', 15, 2, 4.0, 2, 8.0, 'PRD005', 10, 20, 30, 1),
     (6, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 6',  15000, 'ON_SALE', 16, 0, 3.0, 0, 0.0, 'PRD006', 10, 20, 30, 2),
-    (7, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 7',  20000, 'ON_SALE', 17, 1, 3.5, 1, 3.5, 'PRD007', 10, 20, 30, 3),
-    (8, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 8',  25000, 'ON_SALE', 18, 2, NULL, 2, 0.0, 'PRD008', 10, 20, 30, 4),
+    (7, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '반짝반짝 도자기',  28000, 'ON_SALE', 17, 1, 3.5, 1, 3.5, 'PRD007', 10, 20, 30, 3),
+    (8, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '납작 머그',  25000, 'ON_SALE', 18, 2, NULL, 2, 0.0, 'PRD008', 10, 20, 30, 4),
     (9, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 9',  30000, 'ON_SALE', 19, 0, 3.0, 0, 0.0, 'PRD009', 10, 20, 30, 5),
     (10, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 10',  10000, 'ON_SALE', 10, 1, 3.5, 1, 3.5, 'PRD010', 10, 20, 30, 1),
     (11, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 11',  15000, 'ON_SALE', 11, 2, 4.0, 2, 8.0, 'PRD011', 10, 20, 30, 2),
@@ -162,9 +164,9 @@ values
     (10, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/5/main/2.png', FALSE, 5),
     (11, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/6/main/1.png', TRUE, 6),
     (12, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/6/main/2.png', FALSE, 6),
-    (13, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/7/main/1.png', TRUE, 7),
+    (13, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'exhibition/7/thumbnail/반짝반짝 도자기 썸네일.png', TRUE, 7),
     (14, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/7/main/2.png', FALSE, 7),
-    (15, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/8/main/1.png', TRUE, 8),
+    (15, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'exhibition/8/thumbnail/납작 머그 썸네일.png', TRUE, 8),
     (16, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/8/main/2.png', FALSE, 8),
     (17, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/9/main/1.png', TRUE, 9),
     (18, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/9/main/2.png', FALSE, 9),
@@ -469,11 +471,12 @@ values
     (100, 2, 100)
 ;
 
-insert into exhibition (exhibition_id, created_at, updated_at, description, title, image_key, exhibition_status, start_date, end_date)
+insert into exhibition (exhibition_id, created_at, updated_at, description, title, thumbnail_image_key, detailed_image_key, exhibition_status, start_date, end_date)
 values
-    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전', 'exhibition/1/thumnail/spring.jpg', 'PAST', '2025-03-20', '2025-04-20'),
-    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전', 'exhibition/2/thumnail/summer.jpg', 'ONGOING', '2025-06-20', '2025-07-20'),
-    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아', '토마토 기획전', 'exhibition/3/thumnail/tomato.jpg', 'ONGOING', '2025-07-20', null)
+    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전', 'exhibition/1/thumbnail/spring.jpg', 'exhibition/1/detail/시안2.png', 'PAST', '2025-03-20', '2025-04-20'),
+    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전', 'exhibition/2/thumbnail/summer.jpg', 'exhibition/2/detail/시안2.png','ONGOING', '2025-06-20', '2025-07-20'),
+    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아', '토마토 기획전', 'exhibition/3/thumbnail/tomato.jpg', 'exhibition/3/detail/시안2.png','UPCOMING', '2025-12-20', null),
+    (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '현대적인 감각과 기능성이 돋보이는 모연도예 작가님의 예술 철학을 다양한 작품과 함게 살펴보세요.', '작품 가이드 Ep.01\n모언도예_차도구 소개', 'exhibition/4/thumbnail/Group 2147225106.png', 'exhibition/4/detail/시안2.png', 'PERMANENT', '2025-07-29', null)
 ;
 
 insert into exhibition_item (exhibition_item_id, exhibition_id, item_id)
@@ -483,7 +486,9 @@ values
     (3, 3, 3),
     (4, 1, 4),
     (5, 2, 5),
-    (6, 3, 6)
+    (6, 3, 6),
+    (7, 4, 7),
+    (8, 4, 8)
 ;
 
 insert into exhibition_artist (exhibition_artist_id, artist_id, exhibition_id, created_at, updated_at)
@@ -493,7 +498,9 @@ values
     (3, 2, 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (4, 1, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (5, 2, 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (6, 2, 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())
+    (6, 2, 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (7, 3, 4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (8, 4, 4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())
 ;
 
 insert into inquiry (inquiry_id, question, answer, artist_id)
