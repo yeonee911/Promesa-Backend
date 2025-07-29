@@ -4,6 +4,7 @@ import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
+import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionDetail;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionDetailResponse;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummaryResponse;
 import com.promesa.promesa.domain.exhibition.query.ExhibitionQueryRepository;
@@ -49,16 +50,18 @@ public class ExhibitionService {
 
         String thumbnailImageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getThumbnailImageKey());
         ExhibitionSummary summary = ExhibitionSummary.of(exhibition, thumbnailImageUrl);
-        String detailedImageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getDetailedImageKey());
 
-        List<ItemPreviewResponse> itemPreviews = itemQueryRepository.findExhibitionItem(member, exhibitionId);
-        itemPreviews.stream()
+        String detailedImageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getDetailedImageKey());
+        ExhibitionDetail detail = ExhibitionDetail.of(exhibition, detailedImageUrl);
+
+        List<ItemPreviewResponse> itemPreviews = itemQueryRepository.findExhibitionItem(member, exhibitionId)
+                .stream()
                 .map(r -> {
                     String imageUrl = s3Service.createPresignedGetUrl(bucketName, r.getImageUrl());
                     return ItemPreviewResponse.of(r, imageUrl);
                 })
                 .toList();
-        ExhibitionDetailResponse response = ExhibitionDetailResponse.of(summary, detailedImageUrl, itemPreviews);
+        ExhibitionDetailResponse response = ExhibitionDetailResponse.of(summary, detail, itemPreviews);
         return response;
     }
 

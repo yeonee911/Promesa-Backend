@@ -10,16 +10,16 @@ import java.util.List;
 @NoArgsConstructor
 public class ExhibitionDetailResponse {
     ExhibitionSummary summary;
-    private String DetailedImageUrl;
+    ExhibitionDetail detail;
     List<ItemPreviewResponse> itemPreviews;
 
-    private ExhibitionDetailResponse(ExhibitionSummary summary, String detailedImageUrl, List<ItemPreviewResponse> itemPreviews) {
+    private ExhibitionDetailResponse(ExhibitionSummary summary, ExhibitionDetail detail, List<ItemPreviewResponse> itemPreviews) {
         this.summary = summary;
-        this.DetailedImageUrl = detailedImageUrl;
+        this.detail = detail;
         this.itemPreviews = itemPreviews;
     }
 
-    public static ExhibitionDetailResponse of(ExhibitionSummary summary, String detailedImageUrl, List<ItemPreviewResponse> itemPreviews) {
-        return new ExhibitionDetailResponse(summary, detailedImageUrl, itemPreviews);
+    public static ExhibitionDetailResponse of(ExhibitionSummary summary, ExhibitionDetail detail, List<ItemPreviewResponse> itemPreviews) {
+        return new ExhibitionDetailResponse(summary, detail, itemPreviews);
     }
 }

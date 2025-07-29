@@ -49,7 +49,7 @@
                             item.saleStatus.as("saleStatus"),
                             item.name.as("itemName"),
                             item.price,
-                            itemImage.imageKey.as("thumbnailImageUrl"),
+                            itemImage.imageKey.as("imageUrl"),
                             artist.name.as("artistName"),
                             ExpressionUtils.as(isWished, "isWished"),
                             item.wishCount.as("wishCount")
@@ -86,7 +86,7 @@
                             item.saleStatus.as("saleStatus"),
                             item.name.as("itemName"),
                             item.price,
-                            itemImage.imageKey.as("thumbnailImageUrl"),
+                            itemImage.imageKey.as("imageUrl"),
                             artist.name.as("artistName"),
                             ExpressionUtils.as(isWished, "isWished"),
                             item.wishCount.as("wishCount")
@@ -161,7 +161,7 @@
                             item.saleStatus.as("saleStatus"),
                             item.name.as("itemName"),
                             item.price,
-                            itemImage.imageKey.as("thumbnailImageUrl"),
+                            itemImage.imageKey.as("imageUrl"),
                             artist.name.as("artistName"),
                             ExpressionUtils.as(isWished, "isWished"),
                             item.wishCount.as("wishCount")
@@ -229,7 +229,7 @@
                             item.saleStatus.as("saleStatus"),
                             item.name.as("itemName"),
                             item.price,
-                            itemImage.imageKey.as("thumbnailImageUrl"),
+                            itemImage.imageKey.as("imageUrl"),
                             artist.name.as("artistName"),
                             ExpressionUtils.as(isWished, "isWished"),
                             item.wishCount.as("wishCount")
