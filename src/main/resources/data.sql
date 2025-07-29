@@ -635,6 +635,59 @@ values (
              CURRENT_TIMESTAMP,
              CURRENT_TIMESTAMP
          );
+insert into "order" (member_id, order_status, order_date, bank_name, account_number, depositor_name, deposit_deadline, total_amount, total_quantity, created_at, updated_at)
+values (
+           1,
+           'PAID',
+           CURRENT_TIMESTAMP,
+           '국민은행',
+           '123456-78-901234',
+           '홍길동',
+           CURRENT_TIMESTAMP + 1,
+           120000,
+           2,
+           CURRENT_TIMESTAMP,
+           CURRENT_TIMESTAMP
+       ),
+       (
+           2,
+           'DELIVERED',
+           CURRENT_TIMESTAMP,
+           '국민은행',
+           '123456-78-901234',
+           '홍길동',
+           CURRENT_TIMESTAMP + 1,
+           120000,
+           2,
+           CURRENT_TIMESTAMP,
+           CURRENT_TIMESTAMP
+       ),
+       (
+           2,
+           'DELIVERED',
+           CURRENT_TIMESTAMP,
+           '국민은행',
+           '123456-78-901234',
+           '홍길동',
+           CURRENT_TIMESTAMP + 1,
+           120000,
+           2,
+           CURRENT_TIMESTAMP,
+           CURRENT_TIMESTAMP
+       ),
+       (
+           2,
+           'DELIVERED',
+           CURRENT_TIMESTAMP,
+           '국민은행',
+           '123456-78-901234',
+           '홍길동',
+           CURRENT_TIMESTAMP + 1,
+           120000,
+           2,
+           CURRENT_TIMESTAMP,
+           CURRENT_TIMESTAMP
+       );
 
 
 insert into order_item (item_id, order_id, quantity, price, order_item_id)
@@ -656,6 +709,19 @@ values (
              2, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
              'DELIVERED', CURRENT_TIMESTAMP + 3, CURRENT_TIMESTAMP + 1, CURRENT_TIMESTAMP + 2,3000
          ),
+       (
+           3, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
+           'DELIVERED', '2025-07-25', '2025-07-22', null,3000
+       ),
+       (
+           4, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
+           'DELIVERED', '2025-07-25', '2025-07-22', null,3000
+       );
+)
+values (
+           2, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
+           'DELIVERED', CURRENT_TIMESTAMP + 3, CURRENT_TIMESTAMP + 1, CURRENT_TIMESTAMP + 2,3000
+       ),
        (
            3, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
            'DELIVERED', '2025-07-25', '2025-07-22', null,3000
