@@ -3,7 +3,7 @@ package com.promesa.promesa.common.application;
 import com.promesa.promesa.domain.member.OAuthAttributes;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
-import com.promesa.promesa.domain.member.dto.MemberProfile;
+import com.promesa.promesa.domain.member.dto.response.MemberProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

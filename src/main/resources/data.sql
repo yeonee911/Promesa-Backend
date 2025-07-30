@@ -589,59 +589,56 @@ values
     (1, 5, 1, current_timestamp, current_timestamp),
     (1, 4, 1, current_timestamp, current_timestamp);
 
-insert into "order" (member_id, order_status, order_date, bank_name, account_number, depositor_name, deposit_deadline, total_amount, total_quantity, created_at, updated_at)
+insert into "order" (member_id, order_status, order_date, bank_name, depositor_name, deposit_deadline, total_amount, total_quantity, created_at, updated_at)
 values (
-             1,
-             'PAID',
-             CURRENT_TIMESTAMP,
-             '국민은행',
-             '123456-78-901234',
-             '홍길동',
-             CURRENT_TIMESTAMP + 1,
-             120000,
-             2,
-             CURRENT_TIMESTAMP,
-             CURRENT_TIMESTAMP
-         ),
-         (
-             2,
-             'DELIVERED',
-             CURRENT_TIMESTAMP,
-             '국민은행',
-             '123456-78-901234',
-             '홍길동',
-             CURRENT_TIMESTAMP + 1,
-             120000,
-             2,
-             CURRENT_TIMESTAMP,
-             CURRENT_TIMESTAMP
-         ),
-         (
-             2,
-             'DELIVERED',
-             CURRENT_TIMESTAMP,
-             '국민은행',
-             '123456-78-901234',
-             '홍길동',
-             CURRENT_TIMESTAMP + 1,
-             120000,
-             2,
-             CURRENT_TIMESTAMP,
-             CURRENT_TIMESTAMP
-         ),
-         (
-             2,
-             'DELIVERED',
-             CURRENT_TIMESTAMP,
-             '국민은행',
-             '123456-78-901234',
-             '홍길동',
-             CURRENT_TIMESTAMP + 1,
-             120000,
-             2,
-             CURRENT_TIMESTAMP,
-             CURRENT_TIMESTAMP
-         );
+           1,
+           'PAID',
+           CURRENT_TIMESTAMP,
+           '국민은행 123456-78-901234',
+           '홍길동',
+           CURRENT_TIMESTAMP + 1,
+           120000,
+           2,
+           CURRENT_TIMESTAMP,
+           CURRENT_TIMESTAMP
+       ),
+       (
+           2,
+           'DELIVERED',
+           CURRENT_TIMESTAMP,
+           '국민은행 123456-78-901234',
+           '홍길동',
+           CURRENT_TIMESTAMP + 1,
+           120000,
+           2,
+           CURRENT_TIMESTAMP,
+           CURRENT_TIMESTAMP
+       ),
+       (
+           2,
+           'DELIVERED',
+           CURRENT_TIMESTAMP,
+           '국민은행 123456-78-901234',
+           '홍길동',
+           CURRENT_TIMESTAMP + 1,
+           120000,
+           2,
+           CURRENT_TIMESTAMP,
+           CURRENT_TIMESTAMP
+       ),
+       (
+           2,
+           'DELIVERED',
+           CURRENT_TIMESTAMP,
+           '국민은행 123456-78-901234',
+           '홍길동',
+           CURRENT_TIMESTAMP + 1,
+           120000,
+           2,
+           CURRENT_TIMESTAMP,
+           CURRENT_TIMESTAMP
+       );
+
 
 insert into order_item (item_id, order_id, quantity, price, order_item_id)
 values

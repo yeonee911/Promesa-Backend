@@ -4,6 +4,7 @@ import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -30,13 +31,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String providerId = extractProviderId(provider, attributes);
         String name = extractName(provider, attributes);
 
-        // DB 조회 또는 저장
+        // DB 기존 회원 조회 또는 신규 저장
         Member member = memberRepository
                 .findByProviderAndProviderId(provider, providerId)
+                .map(existing -> {
+                    if (Boolean.TRUE.equals(existing.getIsDeleted())) {
+                        // 탈퇴 회원 복구 처리
+                        existing.restore();
+                        return memberRepository.save(existing);
+                    }
+                    return existing;
+                })
                 .orElseGet(() -> memberRepository.save(Member.builder()
                         .name(name)
                         .provider(provider)
                         .providerId(providerId)
+                        .isDeleted(false)
                         .build()));
 
         return new DefaultOAuth2User(

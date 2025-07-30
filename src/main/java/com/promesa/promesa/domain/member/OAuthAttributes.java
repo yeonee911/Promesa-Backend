@@ -1,6 +1,6 @@
 package com.promesa.promesa.domain.member;
 
-import com.promesa.promesa.domain.member.dto.MemberProfile;
+import com.promesa.promesa.domain.member.dto.response.MemberProfile;
 
 import java.util.Arrays;
 import java.util.Map;
