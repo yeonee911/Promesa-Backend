@@ -1,517 +1,463 @@
-insert into member (name, provider, provider_id)
-values ('김회원', 'kakao', '1234'),
-       ('원회원', 'kakao', '5678'),
-       ('김작가', 'kakao', '1011'),
-       ('이작가', 'kakao', '1213'),
-       ('박작가', 'kakao', '1415'),
-       ('최작가', 'kakao', '1617'),
-       ('정작가', 'kakao', '1819'),
-       ('남궁회원', 'kakao', '2021'),
-       ('정회원', 'kakao', '2223')
-;
+-- 1. MEMBER
+INSERT INTO member (
+    member_id,
+    name,
+    provider,
+    provider_id
+) VALUES
+      (1, '김회원',   'kakao', '1234'),
+      (2, '원회원',   'kakao', '5678'),
+      (3, '김작가',   'kakao', '1011'),
+      (4, '이작가',   'kakao', '1213'),
+      (5, '박작가',   'kakao', '1415'),
+      (6, '최작가',   'kakao', '1617'),
+      (7, '정작가',   'kakao', '1819'),
+      (8, '남궁회원', 'kakao', '2021'),
+      (9, '정회원',   'kakao', '2223');
 
+-- 2. ARTIST
+INSERT INTO artist (
+    artist_id,
+    name,
+    subname,
+    description,
+    insta,
+    profile_image_key,
+    wish_count,
+    member_id,
+    created_at,
+    updated_at
+) VALUES
+      (
+          1,
+          '김작가',
+          'Kim-Artist',
+          '자연의 작은 파편들을 모아 새로운 생명을 불어넣는 김작가는, 깨진 도자기가 지닌 상처를 치유하듯 흙과 불꽃 속에서 시간의 흔적을 완성합니다. 그의 작품은 고요한 사유와 섬세한 질감을 통해 관객의 내면을 어루만집니다.',
+          'promesa_ceramic',
+          'artist/1/profile/꿀꺽이.jpg',
+          0,
+          3,
+          CURRENT_TIMESTAMP(),
+          CURRENT_TIMESTAMP()
+      ),
+      (
+          2,
+          '이작가',
+          'Lee-Artist',
+          '전통과 현대의 경계를 넘나드는 이작가는, 흙의 물성을 깊이 탐구하여 일상 속 물건에 예술적 생기를 부여합니다. 그의 유려한 곡선과 세련된 색감은 실용성과 미학의 조화를 선사합니다.',
+          'promesa_ceramic',
+          'artist/2/profile/profile.jpg',
+          0,
+          4,
+          CURRENT_TIMESTAMP(),
+          CURRENT_TIMESTAMP()
+      ),
+      (
+          3,
+          '박작가',
+          'Park-Artist',
+          '박작가는 절제된 형태 속에 감춰진 감성을 세밀히 드러냅니다. 그는 매만진 표면 위에 은은한 색층을 쌓아 올리며, 관객이 손끝으로 전해지는 온도와 질감을 상상하도록 초대합니다.',
+          'promesa_ceramic',
+          'artist/3/profile/profile.jpg',
+          0,
+          5,
+          CURRENT_TIMESTAMP(),
+          CURRENT_TIMESTAMP()
+      ),
+      (
+          4,
+          '최작가',
+          'Choi-Artist',
+          '최작가는 파도의 물결처럼 유동적인 선과 면을 흙 위에 펼칩니다. 그의 작품은 자유로운 제스처와 균형 잡힌 구조가 공존하며, 보는 이로 하여금 시간의 흐름을 시각적으로 체험하게 합니다.',
+          'promesa_ceramic',
+          'artist/4/profile/profile.jpg',
+          0,
+          6,
+          CURRENT_TIMESTAMP(),
+          CURRENT_TIMESTAMP()
+      ),
+      (
+          5,
+          '정작가',
+          'Jeong-Artist',
+          '정작가는 반복의 리듬 속에서 서서히 완성되는 형태를 선호합니다. 그의 오브제는 일상의 찰나를 포착하듯 소박하지만 균형감 있는 배열로, 내면의 고요함을 사유하게 만듭니다.',
+          'promesa_ceramic',
+          'artist/5/profile/profile.jpg',
+          0,
+          7,
+          CURRENT_TIMESTAMP(),
+          CURRENT_TIMESTAMP()
+      );
 
-insert into artist (artist_id, name, subname, description, insta, profile_image_key, wish_count, member_id)
-values
-    (1, '김작가', 'Kim-Artist', '000 작가는 오랜 시간 부서져 작은 알갱이가 된 돌의 조각들을 다시 하나의 덩어리로 만들고 고온의 불에 소성하여 원래의 성질로 환원시킵니다.' ||
-               '이 작은 입자들이 모여 이루는 형태를 통해, 자연과 일상 속에 깃든 시간의 흐름을 표현하고자 합니다. 작가의 작업은 일상 속에서 새로운 역할을 가지며 우리 삶의 한 부분이 됩니다.',
-     'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/1/profile/꿀꺽이.jpg', 0, 3),
-    (2, '이작가', 'Lee-Artist','000 작가는 오랜 시간 부서져 작은 알갱이가 된 돌의 조각들을 다시 하나의 덩어리로 만들고 고온의 불에 소성하여 원래의 성질로 환원시킵니다.' ||
-               '이 작은 입자들이 모여 이루는 형태를 통해, 자연과 일상 속에 깃든 시간의 흐름을 표현하고자 합니다. 작가의 작업은 일상 속에서 새로운 역할을 가지며 우리 삶의 한 부분이 됩니다.',
-     'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/2/profile/profile.jpg', 0, 4),
-    (3, '박작가', 'Park-Artist','000 작가는 오랜 시간 부서져 작은 알갱이가 된 돌의 조각들을 다시 하나의 덩어리로 만들고 고온의 불에 소성하여 원래의 성질로 환원시킵니다.' ||
-               '이 작은 입자들이 모여 이루는 형태를 통해, 자연과 일상 속에 깃든 시간의 흐름을 표현하고자 합니다. 작가의 작업은 일상 속에서 새로운 역할을 가지며 우리 삶의 한 부분이 됩니다.',
-     'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/3/profile/profile.jpg', 0, 5),
-    (4, '최작가', 'Choi-Artist','000 작가는 다양한 재료의 물성을 실험하며 삶의 흔적을 담는 작업을 합니다.' ||
-               '형태와 색감의 실험을 통해, 작품이 공간에 자연스럽게 스며드는 방식을 연구합니다.',
-     'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/4/profile/profile.jpg', 0, 6),
-    (5, '정작가', 'Jeong-Artist','000 작가는 반복과 축적의 과정을 통해 형태를 구성하며, 일상의 사물을 재해석합니다.' ||
-               '감정의 결을 담아낸 작업은 개인의 내면을 조용히 반영합니다.',
-     'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/5/profile/profile.jpg', 0, 7);
+-- 3. CATEGORY
+INSERT INTO category (
+    category_id,
+    category_name,
+    parent_category_id
+) VALUES
+      (1, '컵/잔',       NULL),
+      (2, '그릇/사기',   NULL),
+      (3, '커피/티용품', NULL),
+      (4, '화병',       NULL),
+      (5, '오브제',     NULL);
 
-update artist set created_at = current_timestamp() where created_at is null;
-update artist set updated_at = current_timestamp() where updated_at is null;
+-- 4. ITEM (1~50)
+INSERT INTO item (
+    item_id,
+    created_at,
+    updated_at,
+    name,
+    price,
+    sale_status,
+    stock,
+    wish_count,
+    average_rating,
+    review_count,
+    total_rating,
+    product_code,
+    width,
+    height,
+    depth,
+    artist_id
+) VALUES
+      (1,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '빈티지 블랙 높은잔 세트', 15000, 'ON_SALE', 11, 1,  3.5, 1,  3.5, 'PRD001', 10, 20, 30, 2),
+      (2,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 2',               20000, 'ON_SALE', 12, 2,  4.0, 2,  8.0, 'PRD002', 10, 20, 30, 3),
+      (3,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 3',               25000, 'ON_SALE', 13, 0,  3.0, 0,  0.0, 'PRD003', 10, 20, 30, 4),
+      (4,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 4',               30000, 'ON_SALE', 14, 1, NULL, 1,  0.0, 'PRD004', 10, 20, 30, 5),
+      (5,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 5',               10000, 'ON_SALE', 15, 2,  4.0, 2,  8.0, 'PRD005', 10, 20, 30, 1),
+      (6,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 6',               15000, 'ON_SALE', 16, 0,  3.0, 0,  0.0, 'PRD006', 10, 20, 30, 2),
+      (7,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '반짝반짝 도자기',       28000, 'ON_SALE', 17, 1,  3.5, 1,  3.5, 'PRD007', 10, 20, 30, 3),
+      (8,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '납작 머그',             25000, 'ON_SALE', 18, 2, NULL, 2,  0.0, 'PRD008', 10, 20, 30, 4),
+      (9,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 9',               30000, 'ON_SALE', 19, 0,  3.0, 0,  0.0, 'PRD009', 10, 20, 30, 5),
+      (10, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 10',              10000, 'ON_SALE', 10, 1,  3.5, 1,  3.5, 'PRD010', 10, 20, 30, 1),
+      (11, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 11',              15000, 'ON_SALE', 11, 2,  4.0, 2,  8.0, 'PRD011', 10, 20, 30, 2),
+      (12, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 12',              20000, 'ON_SALE', 12, 0, NULL, 0,  0.0, 'PRD012', 10, 20, 30, 3),
+      (13, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 13',              25000, 'ON_SALE', 13, 1,  3.5, 1,  3.5, 'PRD013', 10, 20, 30, 4),
+      (14, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 14',              30000, 'ON_SALE', 14, 2,  4.0, 2,  8.0, 'PRD014', 10, 20, 30, 5),
+      (15, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 15',              10000, 'ON_SALE', 15, 0,  3.0, 0,  0.0, 'PRD015', 10, 20, 30, 1),
+      (16, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 16',              15000, 'ON_SALE', 16, 1, NULL, 1,  0.0, 'PRD016', 10, 20, 30, 2),
+      (17, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 17',              20000, 'ON_SALE', 17, 2,  4.0, 2,  8.0, 'PRD017', 10, 20, 30, 3),
+      (18, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 18',              25000, 'ON_SALE', 18, 0,  3.0, 0,  0.0, 'PRD018', 10, 20, 30, 4),
+      (19, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 19',              30000, 'ON_SALE', 19, 1,  3.5, 1,  3.5, 'PRD019', 10, 20, 30, 5),
+      (20, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 20',              10000, 'ON_SALE', 10, 2, NULL, 2,  0.0, 'PRD020', 10, 20, 30, 1),
+      (21, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 21',              15000, 'ON_SALE', 11, 0,  3.0, 0,  0.0, 'PRD021', 10, 20, 30, 2),
+      (22, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 22',              20000, 'ON_SALE', 12, 1,  3.5, 1,  3.5, 'PRD022', 10, 20, 30, 3),
+      (23, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 23',              25000, 'ON_SALE', 13, 2,  4.0, 2,  8.0, 'PRD023', 10, 20, 30, 4),
+      (24, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 24',              30000, 'ON_SALE', 14, 0, NULL, 0,  0.0, 'PRD024', 10, 20, 30, 5),
+      (25, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 25',              10000, 'ON_SALE', 15, 1,  3.5, 1,  3.5, 'PRD025', 10, 20, 30, 1),
+      (26, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 26',              15000, 'ON_SALE', 16, 2,  4.0, 2,  8.0, 'PRD026', 10, 20, 30, 2),
+      (27, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 27',              20000, 'ON_SALE', 17, 0,  3.0, 0,  0.0, 'PRD027', 10, 20, 30, 3),
+      (28, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 28',              25000, 'ON_SALE', 18, 1, NULL, 1,  0.0, 'PRD028', 10, 20, 30, 4),
+      (29, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 29',              30000, 'ON_SALE', 19, 2,  4.0, 2,  8.0, 'PRD029', 10, 20, 30, 5),
+      (30, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 30',              10000, 'ON_SALE', 10, 0,  3.0, 0,  0.0, 'PRD030', 10, 20, 30, 1),
+      (31, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 31',              15000, 'ON_SALE', 11, 1,  3.5, 1,  3.5, 'PRD031', 10, 20, 30, 2),
+      (32, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 32',              20000, 'ON_SALE', 12, 2, NULL, 2,  0.0, 'PRD032', 10, 20, 30, 3),
+      (33, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 33',              25000, 'ON_SALE', 13, 0,  3.0, 0,  0.0, 'PRD033', 10, 20, 30, 4),
+      (34, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 34',              30000, 'ON_SALE', 14, 1,  3.5, 1,  3.5, 'PRD034', 10, 20, 30, 5),
+      (35, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 35',              10000, 'ON_SALE', 15, 2,  4.0, 2,  8.0, 'PRD035', 10, 20, 30, 1),
+      (36, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 36',              15000, 'ON_SALE', 16, 0, NULL, 0,  0.0, 'PRD036', 10, 20, 30, 2),
+      (37, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 37',              20000, 'ON_SALE', 17, 1,  3.5, 1,  3.5, 'PRD037', 10, 20, 30, 3),
+      (38, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 38',              25000, 'ON_SALE', 18, 2,  4.0, 2,  8.0, 'PRD038', 10, 20, 30, 4),
+      (39, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 39',              30000, 'ON_SALE', 19, 0,  3.0, 0,  0.0, 'PRD039', 10, 20, 30, 5),
+      (40, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 40',              10000, 'ON_SALE', 10, 1, NULL, 1,  0.0, 'PRD040', 10, 20, 30, 1),
+      (41, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 41',              15000, 'ON_SALE', 11, 2,  4.0, 2,  8.0, 'PRD041', 10, 20, 30, 2),
+      (42, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 42',              20000, 'ON_SALE', 12, 0,  3.0, 0,  0.0, 'PRD042', 10, 20, 30, 3),
+      (43, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 43',              25000, 'ON_SALE', 13, 1,  3.5, 1,  3.5, 'PRD043', 10, 20, 30, 4),
+      (44, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 44',              30000, 'ON_SALE', 14, 2, NULL, 2,  0.0, 'PRD044', 10, 20, 30, 5),
+      (45, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 45',              10000, 'ON_SALE', 15, 0,  3.0, 0,  0.0, 'PRD045', 10, 20, 30, 1),
+      (46, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 46',              15000, 'ON_SALE', 16, 1,  3.5, 1,  3.5, 'PRD046', 10, 20, 30, 2),
+      (47, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 47',              20000, 'ON_SALE', 17, 2,  4.0, 2,  8.0, 'PRD047', 10, 20, 30, 3),
+      (48, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 48',              25000, 'ON_SALE', 18, 0, NULL, 0,  0.0, 'PRD048', 10, 20, 30, 4),
+      (49, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 49',              30000, 'ON_SALE', 19, 1,  3.5, 1,  3.5, 'PRD049', 10, 20, 30, 5),
+      (50, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 50',              10000, 'ON_SALE', 10, 2,  4.0, 2,  8.0, 'PRD050', 10, 20, 30, 1),
+      (51, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 51',              70000, 'ON_SALE', 11, 0,  3.0, 0,  0.0, 'PRD051', 10, 20, 30, 2),
+      (52, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 52',              80000, 'ON_SALE', 12, 1, NULL, 1,  0.0, 'PRD052', 10, 20, 30, 3),
+      (53, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 53',              90000, 'ON_SALE', 13, 2,  4.0, 2,  8.0, 'PRD053', 10, 20, 30, 4),
+      (54, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 54',              30000, 'ON_SALE', 14, 0,  3.0, 0,  0.0, 'PRD054', 10, 20, 30, 5),
+      (55, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 55',              10000, 'ON_SALE', 15, 1,  3.5, 1,  3.5, 'PRD055', 10, 20, 30, 1),
+      (56, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 56',              15000, 'ON_SALE', 16, 2, NULL, 2,  0.0, 'PRD056', 10, 20, 30, 2),
+      (57, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 57',              20000, 'ON_SALE', 17, 0,  3.0, 0,  0.0, 'PRD057', 10, 20, 30, 3),
+      (58, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 58',              25000, 'ON_SALE', 18, 1,  3.5, 1,  3.5, 'PRD058', 10, 20, 30, 4),
+      (59, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 59',              30000, 'ON_SALE', 19, 2,  4.0, 2,  8.0, 'PRD059', 10, 20, 30, 5),
+      (60, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 60',              10000, 'ON_SALE', 10, 0, NULL, 0,  0.0, 'PRD060', 10, 20, 30, 1),
+      (61, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 61',              15000, 'ON_SALE', 11, 1,  3.5, 1,  3.5, 'PRD061', 10, 20, 30, 2),
+      (62, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 62',              20000, 'ON_SALE', 12, 2,  4.0, 2,  8.0, 'PRD062', 10, 20, 30, 3),
+      (63, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 63',              25000, 'ON_SALE', 13, 0,  3.0, 0,  0.0, 'PRD063', 10, 20, 30, 4),
+      (64, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 64',              30000, 'ON_SALE', 14, 1, NULL, 1,  0.0, 'PRD064', 10, 20, 30, 5),
+      (65, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 65',              10000, 'ON_SALE', 15, 2,  4.0, 2,  8.0, 'PRD065', 10, 20, 30, 1),
+      (66, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 66',              15000, 'ON_SALE', 16, 0,  3.0, 0,  0.0, 'PRD066', 10, 20, 30, 2),
+      (67, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 67',              20000, 'ON_SALE', 17, 1,  3.5, 1,  3.5, 'PRD067', 10, 20, 30, 3),
+      (68, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 68',              25000, 'ON_SALE', 18, 2, NULL, 2,  0.0, 'PRD068', 10, 20, 30, 4),
+      (69, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 69',              30000, 'ON_SALE', 19, 0,  3.0, 0,  0.0, 'PRD069', 10, 20, 30, 5),
+      (70, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 70',              10000, 'ON_SALE', 10, 1,  3.5, 1,  3.5, 'PRD070', 10, 20, 30, 1),
+      (71, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 71',              15000, 'ON_SALE', 11, 2,  4.0, 2,  8.0, 'PRD071', 10, 20, 30, 2),
+      (72, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 72',              20000, 'ON_SALE', 12, 0, NULL, 0,  0.0, 'PRD072', 10, 20, 30, 3),
+      (73, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 73',              25000, 'ON_SALE', 13, 1,  3.5, 1,  3.5, 'PRD073', 10, 20, 30, 4),
+      (74, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 74',              30000, 'ON_SALE', 14, 2,  4.0, 2,  8.0, 'PRD074', 10, 20, 30, 5),
+      (75, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 75',              10000, 'ON_SALE', 15, 0,  3.0, 0,  0.0, 'PRD075', 10, 20, 30, 1),
+      (76, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 76',              15000, 'ON_SALE', 16, 1, NULL, 1,  0.0, 'PRD076', 10, 20, 30, 2),
+      (77, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 77',              20000, 'ON_SALE', 17, 2,  4.0, 2,  8.0, 'PRD077', 10, 20, 30, 3),
+      (78, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 78',              25000, 'ON_SALE', 18, 0,  3.0, 0,  0.0, 'PRD078', 10, 20, 30, 4),
+      (79, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 79',              30000, 'ON_SALE', 19, 1,  3.5, 1,  3.5, 'PRD079', 10, 20, 30, 5),
+      (80, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 80',              10000, 'ON_SALE', 10, 2, NULL, 2,  0.0, 'PRD080', 10, 20, 30, 1),
+      (81, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 81',              15000, 'ON_SALE', 11, 0,  3.0, 0,  0.0, 'PRD081', 10, 20, 30, 2),
+      (82, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 82',              20000, 'ON_SALE', 12, 1,  3.5, 1,  3.5, 'PRD082', 10, 20, 30, 3),
+      (83, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 83',              25000, 'ON_SALE', 13, 2,  4.0, 2,  8.0, 'PRD083', 10, 20, 30, 4),
+      (84, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 84',              30000, 'ON_SALE', 14, 0, NULL, 0,  0.0, 'PRD084', 10, 20, 30, 5),
+      (85, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 85',              10000, 'ON_SALE', 15, 1,  3.5, 1,  3.5, 'PRD085', 10, 20, 30, 1),
+      (86, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 86',              15000, 'ON_SALE', 16, 2,  4.0, 2,  8.0, 'PRD086', 10, 20, 30, 2),
+      (87, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 87',              20000, 'ON_SALE', 17, 0,  3.0, 0,  0.0, 'PRD087', 10, 20, 30, 3),
+      (88, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 88',              25000, 'ON_SALE', 18, 1, NULL, 1,  0.0, 'PRD088', 10, 20, 30, 4),
+      (89, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 89',              30000, 'ON_SALE', 19, 2,  4.0, 2,  8.0, 'PRD089', 10, 20, 30, 5),
+      (90, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 90',              10000, 'ON_SALE', 10, 0,  3.0, 0,  0.0, 'PRD090', 10, 20, 30, 1),
+      (91, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 91',              15000, 'ON_SALE', 11, 1,  3.5, 1,  3.5, 'PRD091', 10, 20, 30, 2),
+      (92, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 92',              20000, 'ON_SALE', 12, 2, NULL, 2,  0.0, 'PRD092', 10, 20, 30, 3),
+      (93, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 93',              25000, 'ON_SALE', 13, 0,  3.0, 0,  0.0, 'PRD093', 10, 20, 30, 4),
+      (94, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 94',              30000, 'ON_SALE', 14, 1,  3.5, 1,  3.5, 'PRD094', 10, 20, 30, 5),
+      (95, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 95',              10000, 'ON_SALE', 15, 2,  4.0, 2,  8.0, 'PRD095', 10, 20, 30, 1),
+      (96, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 96',              15000, 'ON_SALE', 16, 0, NULL, 0,  0.0, 'PRD096', 10, 20, 30, 2),
+      (97, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 97',              20000, 'ON_SALE', 17, 1,  3.5, 1,  3.5, 'PRD097', 10, 20, 30, 3),
+      (98, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 98',              25000, 'ON_SALE', 18, 2,  4.0, 2,  8.0, 'PRD098', 10, 20, 30, 4),
+      (99, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 99',              30000, 'ON_SALE', 19, 0,  3.0, 0,  0.0, 'PRD099', 10, 20, 30, 5),
+      (100,CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 100',             10000, 'ON_SALE', 10, 1, NULL, 1,  0.0, 'PRD100', 10, 20, 30, 1);
 
-insert into category (category_id, category_name, parent_category_id)
-values
-    (1, '컵/잔', NULL),
-    (2, '그릇/사기', NULL),
-    (3, '커피/티용품', NULL),
-    (4, '화병', NULL),
-    (5, '오브제', NULL);
+-- 5. ITEM_IMAGE
+INSERT INTO item_image (
+    item_image_id,
+    created_at,
+    updated_at,
+    item_image_key,
+    is_thumbnail,
+    item_id
+) VALUES
+      (1,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/1/main/1.png',                    true,  1),
+      (2,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/1/main/2.png',                    false, 1),
+      (3,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/2/main/1.png',                    true,  2),
+      (4,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/2/main/2.png',                    false, 2),
+      (5,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/3/main/1.png',                    true,  3),
+      (6,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/3/main/2.png',                    false, 3),
+      (7,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/4/main/1.png',                    true,  4),
+      (8,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/4/main/2.png',                    false, 4),
+      (9,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/5/main/1.png',                    true,  5),
+      (10, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/5/main/2.png',                    false, 5),
+      (11, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/6/main/1.png',                    true,  6),
+      (12, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/6/main/2.png',                    false, 6),
+      (13, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/7/main/반짝반짝 도자기 썸네일.png', true,  7),
+      (14, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/7/main/2.png',                    false, 7),
+      (15, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/8/main/납작 머그 썸네일.png',      true,  8),
+      (16, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/8/main/2.png',                    false, 8),
+      (17, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/9/main/1.png',                    true,  9),
+      (18, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/9/main/2.png',                    false, 9),
+      (19, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/10/main/1.png',                   true,  10),
+      (20, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/10/main/2.png',                   false, 10),
+      (21, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/11/main/1.png',                   true,  11),
+      (22, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/11/main/2.png',                   false, 11),
+      (23, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/12/main/1.png',                   true,  12),
+      (24, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/12/main/2.png',                   false, 12),
+      (25, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/13/main/1.png',                   true,  13),
+      (26, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/13/main/2.png',                   false, 13),
+      (27, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/14/main/1.png',                   true,  14),
+      (28, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/14/main/2.png',                   false, 14),
+      (29, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/15/main/1.png',                   true,  15),
+      (30, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/15/main/2.png',                   false, 15),
+      (31, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/16/main/1.png',                   true,  16),
+      (32, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/16/main/2.png',                   false, 16),
+      (33, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/17/main/1.png',                   true,  17),
+      (34, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/17/main/2.png',                   false, 17),
+      (35, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/18/main/1.png',                   true,  18),
+      (36, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/18/main/2.png',                   false, 18),
+      (37, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/19/main/1.png',                   true,  19),
+      (38, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/19/main/2.png',                   false, 19),
+      (39, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/20/main/1.png',                   true,  20),
+      (40, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/20/main/2.png',                   false, 20),
+      (41, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/21/main/1.png',                   true,  21),
+      (42, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/21/main/2.png',                   false, 21),
+      (43, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/22/main/1.png',                   true,  22),
+      (44, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/22/main/2.png',                   false, 22),
+      (45, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/23/main/1.png',                   true,  23),
+      (46, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/23/main/2.png',                   false, 23),
+      (47, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/24/main/1.png',                   true,  24),
+      (48, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/24/main/2.png',                   false, 24),
+      (49, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/25/main/1.png',                   true,  25),
+      (50, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/25/main/2.png',                   false, 25),
+      (51, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/26/main/1.png',                   true,  26),
+      (52, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/26/main/2.png',                   false, 26),
+      (53, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/27/main/1.png',                   true,  27),
+      (54, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/27/main/2.png',                   false, 27),
+      (55, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/28/main/1.png',                   true,  28),
+      (56, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/28/main/2.png',                   false, 28),
+      (57, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/29/main/1.png',                   true,  29),
+      (58, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/29/main/2.png',                   false, 29),
+      (59, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/30/main/1.png',                   true,  30),
+      (60, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/30/main/2.png',                   false, 30),
+      (61, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/31/main/1.png',                   true,  31),
+      (62, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/31/main/2.png',                   false, 31),
+      (63, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/32/main/1.png',                   true,  32),
+      (64, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/32/main/2.png',                   false, 32),
+      (65, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/33/main/1.png',                   true,  33),
+      (66, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/33/main/2.png',                   false, 33),
+      (67, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/34/main/1.png',                   true,  34),
+      (68, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/34/main/2.png',                   false, 34),
+      (69, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/35/main/1.png',                   true,  35),
+      (70, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/35/main/2.png',                   false, 35),
+      (71, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/36/main/1.png',                   true,  36),
+      (72, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/36/main/2.png',                   false, 36),
+      (73, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/37/main/1.png',                   true,  37),
+      (74, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/37/main/2.png',                   false, 37),
+      (75, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/38/main/1.png',                   true,  38),
+      (76, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/38/main/2.png',                   false, 38),
+      (77, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/39/main/1.png',                   true,  39),
+      (78, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/39/main/2.png',                   false, 39),
+      (79, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/40/main/1.png',                   true,  40),
+      (80, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/40/main/2.png',                   false, 40),
+      (81, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/41/main/1.png',                   true,  41),
+      (82, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/41/main/2.png',                   false, 41),
+      (83, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/42/main/1.png',                   true,  42),
+      (84, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/42/main/2.png',                   false, 42),
+      (85, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/43/main/1.png',                   true,  43),
+      (86, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/43/main/2.png',                   false, 43),
+      (87, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/44/main/1.png',                   true,  44),
+      (88, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/44/main/2.png',                   false, 44),
+      (89, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/45/main/1.png',                   true,  45),
+      (90, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/45/main/2.png',                   false, 45),
+      (91, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/46/main/1.png',                   true,  46),
+      (92, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/46/main/2.png',                   false, 46),
+      (93, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/47/main/1.png',                   true,  47),
+      (94, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/47/main/2.png',                   false, 47),
+      (95, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/48/main/1.png',                   true,  48),
+      (96, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/48/main/2.png',                   false, 48),
+      (97, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/49/main/1.png',                   true,  49),
+      (98, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/49/main/2.png',                   false, 49),
+      (99, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/50/main/1.png',                   true,  50),
+      (100,CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/50/main/2.png',                   false, 50);
 
-insert into item (item_id, created_at, updated_at, name, price, sale_status, stock, wish_count, average_rating, review_count, total_rating, product_code, width, height, depth, artist_id)
-values
-    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '빈티지 블랙 높은잔 세트', 15000, 'ON_SALE', 11, 1, 3.5, 1, 3.5, 'PRD001', 10, 20, 30, 2),
-    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 2', 20000, 'ON_SALE', 12, 2, 4.0, 2, 8.0, 'PRD002', 10, 20, 30, 3),
-    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 3',  25000, 'ON_SALE', 13, 0, 3.0, 0, 0.0, 'PRD003', 10, 20, 30, 4),
-    (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 4',  30000, 'ON_SALE', 14, 1, NULL, 1, 0.0, 'PRD004', 10, 20, 30, 5),
-    (5, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 5',  10000, 'ON_SALE', 15, 2, 4.0, 2, 8.0, 'PRD005', 10, 20, 30, 1),
-    (6, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 6',  15000, 'ON_SALE', 16, 0, 3.0, 0, 0.0, 'PRD006', 10, 20, 30, 2),
-    (7, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '반짝반짝 도자기',  28000, 'ON_SALE', 17, 1, 3.5, 1, 3.5, 'PRD007', 10, 20, 30, 3),
-    (8, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '납작 머그',  25000, 'ON_SALE', 18, 2, NULL, 2, 0.0, 'PRD008', 10, 20, 30, 4),
-    (9, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 9',  30000, 'ON_SALE', 19, 0, 3.0, 0, 0.0, 'PRD009', 10, 20, 30, 5),
-    (10, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 10',  10000, 'ON_SALE', 10, 1, 3.5, 1, 3.5, 'PRD010', 10, 20, 30, 1),
-    (11, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 11',  15000, 'ON_SALE', 11, 2, 4.0, 2, 8.0, 'PRD011', 10, 20, 30, 2),
-    (12, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 12',  20000, 'ON_SALE', 12, 0, NULL, 0, 0.0, 'PRD012', 10, 20, 30, 3),
-    (13, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 13',  25000, 'ON_SALE', 13, 1, 3.5, 1, 3.5, 'PRD013', 10, 20, 30, 4),
-    (14, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 14',  30000, 'ON_SALE', 14, 2, 4.0, 2, 8.0, 'PRD014', 10, 20, 30, 5),
-    (15, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 15',  10000, 'ON_SALE', 15, 0, 3.0, 0, 0.0, 'PRD015', 10, 20, 30, 1),
-    (16, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 16',  15000, 'ON_SALE', 16, 1, NULL, 1, 0.0, 'PRD016', 10, 20, 30, 2),
-    (17, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 17',  20000, 'ON_SALE', 17, 2, 4.0, 2, 8.0, 'PRD017', 10, 20, 30, 3),
-    (18, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 18',  25000, 'ON_SALE', 18, 0, 3.0, 0, 0.0, 'PRD018', 10, 20, 30, 4),
-    (19, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 19',  30000, 'ON_SALE', 19, 1, 3.5, 1, 3.5, 'PRD019', 10, 20, 30, 5),
-    (20, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 20',  10000, 'ON_SALE', 10, 2, NULL, 2, 0.0, 'PRD020', 10, 20, 30, 1),
-    (21, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 21',  15000, 'ON_SALE', 11, 0, 3.0, 0, 0.0, 'PRD021', 10, 20, 30, 2),
-    (22, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 22',  20000, 'ON_SALE', 12, 1, 3.5, 1, 3.5, 'PRD022', 10, 20, 30, 3),
-    (23, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 23',  25000, 'ON_SALE', 13, 2, 4.0, 2, 8.0, 'PRD023', 10, 20, 30, 4),
-    (24, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 24',  30000, 'ON_SALE', 14, 0, NULL, 0, 0.0, 'PRD024', 10, 20, 30, 5),
-    (25, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 25',  10000, 'ON_SALE', 15, 1, 3.5, 1, 3.5, 'PRD025', 10, 20, 30, 1),
-    (26, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 26',  15000, 'ON_SALE', 16, 2, 4.0, 2, 8.0, 'PRD026', 10, 20, 30, 2),
-    (27, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 27',  20000, 'ON_SALE', 17, 0, 3.0, 0, 0.0, 'PRD027', 10, 20, 30, 3),
-    (28, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 28',  25000, 'ON_SALE', 18, 1, NULL, 1, 0.0, 'PRD028', 10, 20, 30, 4),
-    (29, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 29',  30000, 'ON_SALE', 19, 2, 4.0, 2, 8.0, 'PRD029', 10, 20, 30, 5),
-    (30, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 30',  10000, 'ON_SALE', 10, 0, 3.0, 0, 0.0, 'PRD030', 10, 20, 30, 1),
-    (31, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 31',  15000, 'ON_SALE', 11, 1, 3.5, 1, 3.5, 'PRD031', 10, 20, 30, 2),
-    (32, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 32',  20000, 'ON_SALE', 12, 2, NULL, 2, 0.0, 'PRD032', 10, 20, 30, 3),
-    (33, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 33',  25000, 'ON_SALE', 13, 0, 3.0, 0, 0.0, 'PRD033', 10, 20, 30, 4),
-    (34, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 34',  30000, 'ON_SALE', 14, 1, 3.5, 1, 3.5, 'PRD034', 10, 20, 30, 5),
-    (35, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 35',  10000, 'ON_SALE', 15, 2, 4.0, 2, 8.0, 'PRD035', 10, 20, 30, 1),
-    (36, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 36',  15000, 'ON_SALE', 16, 0, NULL, 0, 0.0, 'PRD036', 10, 20, 30, 2),
-    (37, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 37',  20000, 'ON_SALE', 17, 1, 3.5, 1, 3.5, 'PRD037', 10, 20, 30, 3),
-    (38, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 38',  25000, 'ON_SALE', 18, 2, 4.0, 2, 8.0, 'PRD038', 10, 20, 30, 4),
-    (39, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 39',  30000, 'ON_SALE', 19, 0, 3.0, 0, 0.0, 'PRD039', 10, 20, 30, 5),
-    (40, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 40',  10000, 'ON_SALE', 10, 1, NULL, 1, 0.0, 'PRD040', 10, 20, 30, 1),
-    (41, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 41',  15000, 'ON_SALE', 11, 2, 4.0, 2, 8.0, 'PRD041', 10, 20, 30, 2),
-    (42, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 42',  20000, 'ON_SALE', 12, 0, 3.0, 0, 0.0, 'PRD042', 10, 20, 30, 3),
-    (43, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 43',  25000, 'ON_SALE', 13, 1, 3.5, 1, 3.5, 'PRD043', 10, 20, 30, 4),
-    (44, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 44',  30000, 'ON_SALE', 14, 2, NULL, 2, 0.0, 'PRD044', 10, 20, 30, 5),
-    (45, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 45',  10000, 'ON_SALE', 15, 0, 3.0, 0, 0.0, 'PRD045', 10, 20, 30, 1),
-    (46, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 46',  15000, 'ON_SALE', 16, 1, 3.5, 1, 3.5, 'PRD046', 10, 20, 30, 2),
-    (47, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 47',  20000, 'ON_SALE', 17, 2, 4.0, 2, 8.0, 'PRD047', 10, 20, 30, 3),
-    (48, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 48',  25000, 'ON_SALE', 18, 0, NULL, 0, 0.0, 'PRD048', 10, 20, 30, 4),
-    (49, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 49',  30000, 'ON_SALE', 19, 1, 3.5, 1, 3.5, 'PRD049', 10, 20, 30, 5),
-    (50, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 50',  10000, 'ON_SALE', 10, 2, 4.0, 2, 8.0, 'PRD050', 10, 20, 30, 1);
+-- 6. ITEM_CATEGORY
+INSERT INTO item_category (
+    item_category_id,
+    category_id,
+    item_id
+) VALUES
+      (1,   1,   1),  (2,   4,   2),  (3,   2,   3),  (4,   5,   4),
+      (5,   4,   5),  (6,   5,   6),  (7,   5,   7),  (8,   5,   8),
+      (9,   5,   9),  (10,  2,   10), (11,  5,   11), (12,  2,   12),
+      (13,  4,   13), (14,  1,   14), (15,  4,   15), (16,  1,   16),
+      (17,  2,   17), (18,  5,   18), (19,  2,   19), (20,  4,   20),
+      (21,  5,   21), (22,  3,   22), (23,  1,   23), (24,  3,   24),
+      (25,  5,   25), (26,  5,   26), (27,  1,   27), (28,  2,   28),
+      (29,  5,   29), (30,  5,   30), (31,  2,   31), (32,  1,   32),
+      (33,  3,   33), (34,  4,   34), (35,  3,   35), (36,  4,   36),
+      (37,  1,   37), (38,  4,   38), (39,  5,   39), (40,  2,   40),
+      (41,  3,   41), (42,  4,   42), (43,  1,   43), (44,  2,   44),
+      (45,  3,   45), (46,  4,   46), (47,  4,   47), (48,  2,   48),
+      (49,  1,   49), (50,  2,   50), (51,  2,   51), (52,  3,   52),
+      (53,  1,   53), (54,  1,   54), (55,  2,   55), (56,  1,   56),
+      (57,  3,   57), (58,  3,   58), (59,  3,   59), (60,  4,   60),
+      (61,  2,   61), (62,  2,   62), (63,  2,   63), (64,  4,   64),
+      (65,  2,   65), (66,  3,   66), (67,  5,   67), (68,  1,   68),
+      (69,  2,   69), (70,  5,   70), (71,  3,   71), (72,  2,   72),
+      (73,  1,   73), (74,  2,   74), (75,  2,   75), (76,  5,   76),
+      (77,  2,   77), (78,  5,   78), (79,  5,   79), (80,  5,   80),
+      (81,  1,   81), (82,  1,   82), (83,  1,   83), (84,  2,   84),
+      (85,  5,   85), (86,  4,   86), (87,  5,   87), (88,  3,   88),
+      (89,  1,   89), (90,  2,   90), (91,  3,   91), (92,  3,   92),
+      (93,  5,   93), (94,  3,   94), (95,  2,   95), (96,  3,   96),
+      (97,  2,   97), (98,  5,   98), (99,  5,   99), (100, 2,  100);
 
-insert into item (
-    item_id, created_at, updated_at, name, price, sale_status, stock, wish_count, average_rating, review_count, total_rating, product_code, width, height, depth, artist_id)
-values
-    (51, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 51',  70000, 'ON_SALE', 11, 0, 3.0, 0, 0.0, 'PRD051', 10, 20, 30, 2),
-    (52, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 52',  80000, 'ON_SALE', 12, 1, NULL, 1, 0.0, 'PRD052', 10, 20, 30, 3),
-    (53, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 53',  90000, 'ON_SALE', 13, 2, 4.0, 2, 8.0, 'PRD053', 10, 20, 30, 4),
-    (54, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 54',  30000, 'ON_SALE', 14, 0, 3.0, 0, 0.0, 'PRD054', 10, 20, 30, 5),
-    (55, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 55',  10000, 'ON_SALE', 15, 1, 3.5, 1, 3.5, 'PRD055', 10, 20, 30, 1),
-    (56, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 56',  15000, 'ON_SALE', 16, 2, NULL, 2, 0.0, 'PRD056', 10, 20, 30, 2),
-    (57, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 57',  20000, 'ON_SALE', 17, 0, 3.0, 0, 0.0, 'PRD057', 10, 20, 30, 3),
-    (58, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 58',  25000, 'ON_SALE', 18, 1, 3.5, 1, 3.5, 'PRD058', 10, 20, 30, 4),
-    (59, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 59',  30000, 'ON_SALE', 19, 2, 4.0, 2, 8.0, 'PRD059', 10, 20, 30, 5),
-    (60, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 60',  10000, 'ON_SALE', 10, 0, NULL, 0, 0.0, 'PRD060', 10, 20, 30, 1),
-    (61, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 61',  15000, 'ON_SALE', 11, 1, 3.5, 1, 3.5, 'PRD061', 10, 20, 30, 2),
-    (62, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 62',  20000, 'ON_SALE', 12, 2, 4.0, 2, 8.0, 'PRD062', 10, 20, 30, 3),
-    (63, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 63',  25000, 'ON_SALE', 13, 0, 3.0, 0, 0.0, 'PRD063', 10, 20, 30, 4),
-    (64, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 64',  30000, 'ON_SALE', 14, 1, NULL, 1, 0.0, 'PRD064', 10, 20, 30, 5),
-    (65, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 65',  10000, 'ON_SALE', 15, 2, 4.0, 2, 8.0, 'PRD065', 10, 20, 30, 1),
-    (66, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 66',  15000, 'ON_SALE', 16, 0, 3.0, 0, 0.0, 'PRD066', 10, 20, 30, 2),
-    (67, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 67',  20000, 'ON_SALE', 17, 1, 3.5, 1, 3.5, 'PRD067', 10, 20, 30, 3),
-    (68, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 68',  25000, 'ON_SALE', 18, 2, NULL, 2, 0.0, 'PRD068', 10, 20, 30, 4),
-    (69, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 69',  30000, 'ON_SALE', 19, 0, 3.0, 0, 0.0, 'PRD069', 10, 20, 30, 5),
-    (70, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 70',  10000, 'ON_SALE', 10, 1, 3.5, 1, 3.5, 'PRD070', 10, 20, 30, 1),
-    (71, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 71',  15000, 'ON_SALE', 11, 2, 4.0, 2, 8.0, 'PRD071', 10, 20, 30, 2),
-    (72, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 72',  20000, 'ON_SALE', 12, 0, NULL, 0, 0.0, 'PRD072', 10, 20, 30, 3),
-    (73, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 73',  25000, 'ON_SALE', 13, 1, 3.5, 1, 3.5, 'PRD073', 10, 20, 30, 4),
-    (74, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 74',  30000, 'ON_SALE', 14, 2, 4.0, 2, 8.0, 'PRD074', 10, 20, 30, 5),
-    (75, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 75',  10000, 'ON_SALE', 15, 0, 3.0, 0, 0.0, 'PRD075', 10, 20, 30, 1),
-    (76, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 76',  15000, 'ON_SALE', 16, 1, NULL, 1, 0.0, 'PRD076', 10, 20, 30, 2),
-    (77, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 77',  20000, 'ON_SALE', 17, 2, 4.0, 2, 8.0, 'PRD077', 10, 20, 30, 3),
-    (78, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 78',  25000, 'ON_SALE', 18, 0, 3.0, 0, 0.0, 'PRD078', 10, 20, 30, 4),
-    (79, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 79',  30000, 'ON_SALE', 19, 1, 3.5, 1, 3.5, 'PRD079', 10, 20, 30, 5),
-    (80, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 80',  10000, 'ON_SALE', 10, 2, NULL, 2, 0.0, 'PRD080', 10, 20, 30, 1),
-    (81, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 81',  15000, 'ON_SALE', 11, 0, 3.0, 0, 0.0, 'PRD081', 10, 20, 30, 2),
-    (82, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 82',  20000, 'ON_SALE', 12, 1, 3.5, 1, 3.5, 'PRD082', 10, 20, 30, 3),
-    (83, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 83',  25000, 'ON_SALE', 13, 2, 4.0, 2, 8.0, 'PRD083', 10, 20, 30, 4),
-    (84, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 84',  30000, 'ON_SALE', 14, 0, NULL, 0, 0.0, 'PRD084', 10, 20, 30, 5),
-    (85, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 85',  10000, 'ON_SALE', 15, 1, 3.5, 1, 3.5, 'PRD085', 10, 20, 30, 1),
-    (86, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 86',  15000, 'ON_SALE', 16, 2, 4.0, 2, 8.0, 'PRD086', 10, 20, 30, 2),
-    (87, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 87',  20000, 'ON_SALE', 17, 0, 3.0, 0, 0.0, 'PRD087', 10, 20, 30, 3),
-    (88, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 88',  25000, 'ON_SALE', 18, 1, NULL, 1, 0.0, 'PRD088', 10, 20, 30, 4),
-    (89, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 89',  30000, 'ON_SALE', 19, 2, 4.0, 2, 8.0, 'PRD089', 10, 20, 30, 5),
-    (90, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 90',  10000, 'ON_SALE', 10, 0, 3.0, 0, 0.0, 'PRD090', 10, 20, 30, 1),
-    (91, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 91',  15000, 'ON_SALE', 11, 1, 3.5, 1, 3.5, 'PRD091', 10, 20, 30, 2),
-    (92, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 92',  20000, 'ON_SALE', 12, 2, NULL, 2, 0.0, 'PRD092', 10, 20, 30, 3),
-    (93, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 93',  25000, 'ON_SALE', 13, 0, 3.0, 0, 0.0, 'PRD093', 10, 20, 30, 4),
-    (94, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 94',  30000, 'ON_SALE', 14, 1, 3.5, 1, 3.5, 'PRD094', 10, 20, 30, 5),
-    (95, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 95',  10000, 'ON_SALE', 15, 2, 4.0, 2, 8.0, 'PRD095', 10, 20, 30, 1),
-    (96, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 96',  15000, 'ON_SALE', 16, 0, NULL, 0, 0.0, 'PRD096', 10, 20, 30, 2),
-    (97, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 97',  20000, 'ON_SALE', 17, 1, 3.5, 1, 3.5, 'PRD097', 10, 20, 30, 3),
-    (98, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 98',  25000, 'ON_SALE', 18, 2, 4.0, 2, 8.0, 'PRD098', 10, 20, 30, 4),
-    (99, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 99',  30000, 'ON_SALE', 19, 0, 3.0, 0, 0.0, 'PRD099', 10, 20, 30, 5),
-    (100, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 100',  10000, 'ON_SALE', 10, 1, NULL, 1, 0.0, 'PRD100', 10, 20, 30, 1);
+-- 7. EXHIBITION
+INSERT INTO exhibition (
+    exhibition_id,
+    created_at,
+    updated_at,
+    description,
+    title,
+    thumbnail_image_key,
+    detailed_image_key,
+    exhibition_status,
+    start_date,
+    end_date
+) VALUES
+      (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전',
+       'exhibition/1/thumbnail/spring.jpg', 'exhibition/1/detail/시안2.png', 'PAST',     '2025-03-20', '2025-04-20'),
+      (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전',
+       'exhibition/2/thumbnail/summer.jpg','exhibition/2/detail/시안2.png','ONGOING', '2025-06-20', '2025-07-20'),
+      (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아','토마토 기획전',
+       'exhibition/3/thumbnail/tomato.jpg','exhibition/3/detail/시안2.png','UPCOMING','2025-12-20', NULL),
+      (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(),
+       '현대적인 감각과 기능성이 돋보이는 모연도예 작가님의 예술 철학을 다양한 작품과 함게 살펴보세요.',
+       '작품 가이드 Ep.01\n모언도예_차도구 소개',
+       'exhibition/4/thumbnail/기획전 타이틀.png','exhibition/4/detail/기획전 상세페이지.png',
+       'PERMANENT','2025-07-29', NULL);
 
-update item set review_count = 0 where review_count is null;
-update item set total_rating = 0.0 where total_rating is null;
+-- 8. EXHIBITION_ITEM
+INSERT INTO exhibition_item (
+    exhibition_item_id,
+    exhibition_id,
+    item_id
+) VALUES
+      (1, 1, 1),
+      (2, 2, 2),
+      (3, 3, 3),
+      (4, 1, 4),
+      (5, 2, 5),
+      (6, 3, 6),
+      (7, 4, 7),
+      (8, 4, 8);
 
-insert into item_image (item_image_id, created_at, updated_at, item_image_key, is_thumbnail, item_id)
-values
-    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/1/main/1.png', TRUE, 1),
-    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/1/main/2.png', FALSE, 1),
-    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/2/main/1.png', TRUE, 2),
-    (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/2/main/2.png', FALSE, 2),
-    (5, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/3/main/1.png', TRUE, 3),
-    (6, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/3/main/2.png', FALSE, 3),
-    (7, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/4/main/1.png', TRUE, 4),
-    (8, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/4/main/2.png', FALSE, 4),
-    (9, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/5/main/1.png', TRUE, 5),
-    (10, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/5/main/2.png', FALSE, 5),
-    (11, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/6/main/1.png', TRUE, 6),
-    (12, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/6/main/2.png', FALSE, 6),
-    (13, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/7/main/반짝반짝 도자기 썸네일.png', TRUE, 7),
-    (14, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/7/main/2.png', FALSE, 7),
-    (15, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/8/main/납작 머그 썸네일.png', TRUE, 8),
-    (16, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/8/main/2.png', FALSE, 8),
-    (17, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/9/main/1.png', TRUE, 9),
-    (18, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/9/main/2.png', FALSE, 9),
-    (19, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/10/main/1.png', TRUE, 10),
-    (20, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/10/main/2.png', FALSE, 10),
-    (21, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/11/main/1.png', TRUE, 11),
-    (22, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/11/main/2.png', FALSE, 11),
-    (23, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/12/main/1.png', TRUE, 12),
-    (24, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/12/main/2.png', FALSE, 12),
-    (25, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/13/main/1.png', TRUE, 13),
-    (26, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/13/main/2.png', FALSE, 13),
-    (27, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/14/main/1.png', TRUE, 14),
-    (28, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/14/main/2.png', FALSE, 14),
-    (29, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/15/main/1.png', TRUE, 15),
-    (30, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/15/main/2.png', FALSE, 15),
-    (31, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/16/main/1.png', TRUE, 16),
-    (32, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/16/main/2.png', FALSE, 16),
-    (33, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/17/main/1.png', TRUE, 17),
-    (34, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/17/main/2.png', FALSE, 17),
-    (35, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/18/main/1.png', TRUE, 18),
-    (36, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/18/main/2.png', FALSE, 18),
-    (37, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/19/main/1.png', TRUE, 19),
-    (38, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/19/main/2.png', FALSE, 19),
-    (39, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/20/main/1.png', TRUE, 20),
-    (40, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/20/main/2.png', FALSE, 20),
-    (41, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/21/main/1.png', TRUE, 21),
-    (42, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/21/main/2.png', FALSE, 21),
-    (43, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/22/main/1.png', TRUE, 22),
-    (44, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/22/main/2.png', FALSE, 22),
-    (45, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/23/main/1.png', TRUE, 23),
-    (46, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/23/main/2.png', FALSE, 23),
-    (47, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/24/main/1.png', TRUE, 24),
-    (48, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/24/main/2.png', FALSE, 24),
-    (49, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/25/main/1.png', TRUE, 25),
-    (50, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/25/main/2.png', FALSE, 25);
+-- 9. EXHIBITION_ARTIST
+INSERT INTO exhibition_artist (
+    exhibition_artist_id,
+    artist_id,
+    exhibition_id,
+    created_at,
+    updated_at
+) VALUES
+      (1, 1, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (2, 1, 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (3, 2, 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (5, 2, 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (6, 2, 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (7, 3, 4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (8, 4, 4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-insert into item_image (item_image_id, created_at, updated_at, item_image_key, is_thumbnail, item_id)
-values
-    (51, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/26/main/1.png', TRUE, 26),
-    (52, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/26/main/2.png', FALSE, 26),
-    (53, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/27/main/1.png', TRUE, 27),
-    (54, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/27/main/2.png', FALSE, 27),
-    (55, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/28/main/1.png', TRUE, 28),
-    (56, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/28/main/2.png', FALSE, 28),
-    (57, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/29/main/1.png', TRUE, 29),
-    (58, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/29/main/2.png', FALSE, 29),
-    (59, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/30/main/1.png', TRUE, 30),
-    (60, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/30/main/2.png', FALSE, 30),
-    (61, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/31/main/1.png', TRUE, 31),
-    (62, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/31/main/2.png', FALSE, 31),
-    (63, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/32/main/1.png', TRUE, 32),
-    (64, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/32/main/2.png', FALSE, 32),
-    (65, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/33/main/1.png', TRUE, 33),
-    (66, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/33/main/2.png', FALSE, 33),
-    (67, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/34/main/1.png', TRUE, 34),
-    (68, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/34/main/2.png', FALSE, 34),
-    (69, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/35/main/1.png', TRUE, 35),
-    (70, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/35/main/2.png', FALSE, 35),
-    (71, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/36/main/1.png', TRUE, 36),
-    (72, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/36/main/2.png', FALSE, 36),
-    (73, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/37/main/1.png', TRUE, 37),
-    (74, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/37/main/2.png', FALSE, 37),
-    (75, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/38/main/1.png', TRUE, 38),
-    (76, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/38/main/2.png', FALSE, 38),
-    (77, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/39/main/1.png', TRUE, 39),
-    (78, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/39/main/2.png', FALSE, 39),
-    (79, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/40/main/1.png', TRUE, 40),
-    (80, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/40/main/2.png', FALSE, 40),
-    (81, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/41/main/1.png', TRUE, 41),
-    (82, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/41/main/2.png', FALSE, 41),
-    (83, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/42/main/1.png', TRUE, 42),
-    (84, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/42/main/2.png', FALSE, 42),
-    (85, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/43/main/1.png', TRUE, 43),
-    (86, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/43/main/2.png', FALSE, 43),
-    (87, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/44/main/1.png', TRUE, 44),
-    (88, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/44/main/2.png', FALSE, 44),
-    (89, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/45/main/1.png', TRUE, 45),
-    (90, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/45/main/2.png', FALSE, 45),
-    (91, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/46/main/1.png', TRUE, 46),
-    (92, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/46/main/2.png', FALSE, 46),
-    (93, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/47/main/1.png', TRUE, 47),
-    (94, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/47/main/2.png', FALSE, 47),
-    (95, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/48/main/1.png', TRUE, 48),
-    (96, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/48/main/2.png', FALSE, 48),
-    (97, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/49/main/1.png', TRUE, 49),
-    (98, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/49/main/2.png', FALSE, 49),
-    (99, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/50/main/1.png', TRUE, 50);
+-- 10. INQUIRY
+INSERT INTO inquiry (
+    inquiry_id,
+    question,
+    answer,
+    artist_id,
+    created_at,
+    updated_at
+) VALUES
+      -- 김작가 (artist_id = 1)
+      (1, '배송은 얼마나 걸리나요?',               '약 3~5일 소요됩니다.', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (2, '포장 상태는 어떤가요?',                 '두툼한 완충재와 박스 포장으로 안전하게 배송됩니다.', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (3, '맞춤 주문도 가능한가요?',               '네, 사전 상담 후 가능합니다.', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      -- 이작가 (artist_id = 2)
+      (4, '작품 색상이 화면과 달라 보입니다.',     '실제 상품은 모니터보다 고급스러운 톤으로 나옵니다.', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (5, '세척 시 주의사항이 있나요?',             '부드러운 스펀지와 중성 세제를 사용해주세요.', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      -- 박작가 (artist_id = 3)
+      (6, '유약이 벗겨질 우려가 있나요?',         '고온 소성 처리로 단단하게 마감되어 있습니다.', 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (7, '직접 수령이 가능한가요?',               '사전 예약 후 스튜디오 방문 수령 가능합니다.', 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      -- 최작가 (artist_id = 4)
+      (8, '대량 구매 시 할인 혜택이 있나요?',     '10개 이상 구매 시 5% 할인됩니다.', 4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (9, '작품 커스터마이징이 가능한가요?',       '네, 별도 상담 후 진행합니다.', 4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (10,'작품 보관 방법을 알려주세요.',          '습기 없는 곳에 보관하시되, 직사광선을 피해주세요.', 4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      -- 정작가 (artist_id = 5)
+      (11,'작품 크기 커스터마이징이 가능한가요?',   '소폭 사이즈 변경 가능합니다.', 5, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (12,'다른 색상 옵션이 있나요?',             '추가 요청 시 제작 가능합니다.', 5, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (13,'작업 기간은 얼마나 걸리나요?',           '평균 2주 소요됩니다.', 5, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-insert into item_image (item_image_id, created_at, updated_at, item_image_key, is_thumbnail, item_id)
-values
-    (100, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/50/main/2.png', FALSE, 50),
-    (101, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/51/main/1.png', TRUE, 51),
-    (102, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/51/main/2.png', FALSE, 51),
-    (103, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/52/main/1.png', TRUE, 52),
-    (104, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/52/main/2.png', FALSE, 52),
-    (105, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/53/main/1.png', TRUE, 53),
-    (106, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/53/main/2.png', FALSE, 53),
-    (107, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/54/main/1.png', TRUE, 54),
-    (108, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/54/main/2.png', FALSE, 54),
-    (109, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/55/main/1.png', TRUE, 55),
-    (110, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/55/main/2.png', FALSE, 55),
-    (111, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/56/main/1.png', TRUE, 56),
-    (112, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/56/main/2.png', FALSE, 56),
-    (113, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/57/main/1.png', TRUE, 57),
-    (114, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/57/main/2.png', FALSE, 57),
-    (115, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/58/main/1.png', TRUE, 58),
-    (116, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/58/main/2.png', FALSE, 58),
-    (117, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/59/main/1.png', TRUE, 59),
-    (118, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/59/main/2.png', FALSE, 59),
-    (119, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/60/main/1.png', TRUE, 60),
-    (120, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/60/main/2.png', FALSE, 60),
-    (121, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/61/main/1.png', TRUE, 61),
-    (122, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/61/main/2.png', FALSE, 61),
-    (123, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/62/main/1.png', TRUE, 62),
-    (124, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/62/main/2.png', FALSE, 62),
-    (125, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/63/main/1.png', TRUE, 63),
-    (126, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/63/main/2.png', FALSE, 63),
-    (127, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/64/main/1.png', TRUE, 64),
-    (128, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/64/main/2.png', FALSE, 64),
-    (129, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/65/main/1.png', TRUE, 65),
-    (130, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/65/main/2.png', FALSE, 65),
-    (131, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/66/main/1.png', TRUE, 66),
-    (132, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/66/main/2.png', FALSE, 66),
-    (133, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/67/main/1.png', TRUE, 67),
-    (134, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/67/main/2.png', FALSE, 67),
-    (135, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/68/main/1.png', TRUE, 68),
-    (136, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/68/main/2.png', FALSE, 68),
-    (137, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/69/main/1.png', TRUE, 69),
-    (138, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/69/main/2.png', FALSE, 69),
-    (139, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/70/main/1.png', TRUE, 70),
-    (140, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/70/main/2.png', FALSE, 70),
-    (141, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/71/main/1.png', TRUE, 71),
-    (142, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/71/main/2.png', FALSE, 71),
-    (143, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/72/main/1.png', TRUE, 72),
-    (144, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/72/main/2.png', FALSE, 72),
-    (145, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/73/main/1.png', TRUE, 73),
-    (146, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/73/main/2.png', FALSE, 73),
-    (147, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/74/main/1.png', TRUE, 74),
-    (148, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/74/main/2.png', FALSE, 74),
-    (149, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/75/main/1.png', TRUE, 75),
-    (150, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/75/main/2.png', FALSE, 75);
-
-insert into item_image (item_image_id, created_at, updated_at, item_image_key, is_thumbnail, item_id)
-values
-    (151, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/76/main/1.png', TRUE, 76),
-    (152, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/76/main/2.png', FALSE, 76),
-    (153, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/77/main/1.png', TRUE, 77),
-    (154, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/77/main/2.png', FALSE, 77),
-    (155, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/78/main/1.png', TRUE, 78),
-    (156, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/78/main/2.png', FALSE, 78),
-    (157, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/79/main/1.png', TRUE, 79),
-    (158, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/79/main/2.png', FALSE, 79),
-    (159, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/80/main/1.png', TRUE, 80),
-    (160, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/80/main/2.png', FALSE, 80),
-    (161, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/81/main/1.png', TRUE, 81),
-    (162, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/81/main/2.png', FALSE, 81),
-    (163, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/82/main/1.png', TRUE, 82),
-    (164, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/82/main/2.png', FALSE, 82),
-    (165, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/83/main/1.png', TRUE, 83),
-    (166, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/83/main/2.png', FALSE, 83),
-    (167, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/84/main/1.png', TRUE, 84),
-    (168, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/84/main/2.png', FALSE, 84),
-    (169, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/85/main/1.png', TRUE, 85),
-    (170, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/85/main/2.png', FALSE, 85),
-    (171, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/86/main/1.png', TRUE, 86),
-    (172, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/86/main/2.png', FALSE, 86),
-    (173, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/87/main/1.png', TRUE, 87),
-    (174, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/87/main/2.png', FALSE, 87),
-    (175, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/88/main/1.png', TRUE, 88),
-    (176, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/88/main/2.png', FALSE, 88),
-    (177, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/89/main/1.png', TRUE, 89),
-    (178, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/89/main/2.png', FALSE, 89),
-    (179, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/90/main/1.png', TRUE, 90),
-    (180, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/90/main/2.png', FALSE, 90),
-    (181, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/91/main/1.png', TRUE, 91),
-    (182, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/91/main/2.png', FALSE, 91),
-    (183, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/92/main/1.png', TRUE, 92),
-    (184, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/92/main/2.png', FALSE, 92),
-    (185, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/93/main/1.png', TRUE, 93),
-    (186, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/93/main/2.png', FALSE, 93),
-    (187, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/94/main/1.png', TRUE, 94),
-    (188, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/94/main/2.png', FALSE, 94),
-    (189, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/95/main/1.png', TRUE, 95),
-    (190, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/95/main/2.png', FALSE, 95),
-    (191, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/96/main/1.png', TRUE, 96),
-    (192, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/96/main/2.png', FALSE, 96),
-    (193, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/97/main/1.png', TRUE, 97),
-    (194, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/97/main/2.png', FALSE, 97),
-    (195, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/98/main/1.png', TRUE, 98),
-    (196, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/98/main/2.png', FALSE, 98),
-    (197, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/99/main/1.png', TRUE, 99),
-    (198, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/99/main/2.png', FALSE, 99),
-    (199, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/100/main/1.png', TRUE, 100),
-    (200, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 'item/100/main/2.png', FALSE, 100)
-;
-
-
-insert into item_category (item_category_id, category_id, item_id)
-values
-    (1, 1, 1),
-    (2, 4, 2),
-    (3, 2, 3),
-    (4, 5, 4),
-    (5, 4, 5),
-    (6, 5, 6),
-    (7, 5, 7),
-    (8, 5, 8),
-    (9, 5, 9),
-    (10, 2, 10),
-    (11, 5, 11),
-    (12, 2, 12),
-    (13, 4, 13),
-    (14, 1, 14),
-    (15, 4, 15),
-    (16, 1, 16),
-    (17, 2, 17),
-    (18, 5, 18),
-    (19, 2, 19),
-    (20, 4, 20),
-    (21, 5, 21),
-    (22, 3, 22),
-    (23, 1, 23),
-    (24, 3, 24),
-    (25, 5, 25),
-    (26, 5, 26),
-    (27, 1, 27),
-    (28, 2, 28),
-    (29, 5, 29),
-    (30, 5, 30),
-    (31, 2, 31),
-    (32, 1, 32),
-    (33, 3, 33),
-    (34, 4, 34),
-    (35, 3, 35),
-    (36, 4, 36),
-    (37, 1, 37),
-    (38, 4, 38),
-    (39, 5, 39),
-    (40, 2, 40),
-    (41, 3, 41),
-    (42, 4, 42),
-    (43, 1, 43),
-    (44, 2, 44),
-    (45, 3, 45),
-    (46, 4, 46),
-    (47, 4, 47),
-    (48, 2, 48),
-    (49, 1, 49),
-    (50, 2, 50);
-
-insert into item_category (item_category_id, category_id, item_id)
-values
-    (51, 2, 51),
-    (52, 3, 52),
-    (53, 1, 53),
-    (54, 1, 54),
-    (55, 2, 55),
-    (56, 1, 56),
-    (57, 3, 57),
-    (58, 3, 58),
-    (59, 3, 59),
-    (60, 4, 60),
-    (61, 2, 61),
-    (62, 2, 62),
-    (63, 2, 63),
-    (64, 4, 64),
-    (65, 2, 65),
-    (66, 3, 66),
-    (67, 5, 67),
-    (68, 1, 68),
-    (69, 2, 69),
-    (70, 5, 70),
-    (71, 3, 71),
-    (72, 2, 72),
-    (73, 1, 73),
-    (74, 2, 74),
-    (75, 2, 75),
-    (76, 5, 76),
-    (77, 2, 77),
-    (78, 5, 78),
-    (79, 5, 79),
-    (80, 5, 80),
-    (81, 1, 81),
-    (82, 1, 82),
-    (83, 1, 83),
-    (84, 2, 84),
-    (85, 5, 85),
-    (86, 4, 86),
-    (87, 5, 87),
-    (88, 3, 88),
-    (89, 1, 89),
-    (90, 2, 90),
-    (91, 3, 91),
-    (92, 3, 92),
-    (93, 5, 93),
-    (94, 3, 94),
-    (95, 2, 95),
-    (96, 3, 96),
-    (97, 2, 97),
-    (98, 5, 98),
-    (99, 5, 99),
-    (100, 2, 100)
-;
-
-insert into exhibition (exhibition_id, created_at, updated_at, description, title, thumbnail_image_key, detailed_image_key, exhibition_status, start_date, end_date)
-values
-    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전', 'exhibition/1/thumbnail/spring.jpg', 'exhibition/1/detail/시안2.png', 'PAST', '2025-03-20', '2025-04-20'),
-    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전', 'exhibition/2/thumbnail/summer.jpg', 'exhibition/2/detail/시안2.png','ONGOING', '2025-06-20', '2025-07-20'),
-    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아', '토마토 기획전', 'exhibition/3/thumbnail/tomato.jpg', 'exhibition/3/detail/시안2.png','UPCOMING', '2025-12-20', null),
-    (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '현대적인 감각과 기능성이 돋보이는 모연도예 작가님의 예술 철학을 다양한 작품과 함게 살펴보세요.', '작품 가이드 Ep.01\n모언도예_차도구 소개', 'exhibition/4/thumbnail/기획전 타이틀.png', 'exhibition/4/detail/기획전 상세페이지.png', 'PERMANENT', '2025-07-29', null)
-;
-
-insert into exhibition_item (exhibition_item_id, exhibition_id, item_id)
-values
-    (1, 1, 1),
-    (2, 2, 2),
-    (3, 3, 3),
-    (4, 1, 4),
-    (5, 2, 5),
-    (6, 3, 6),
-    (7, 4, 7),
-    (8, 4, 8)
-;
-
-insert into exhibition_artist (exhibition_artist_id, artist_id, exhibition_id, created_at, updated_at)
-values
-    (1, 1, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (2, 1, 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (3, 2, 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (4, 1, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (5, 2, 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (6, 2, 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (7, 3, 4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (8, 4, 4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())
-;
-
-insert into inquiry (inquiry_id, question, answer, artist_id)
-values (1, '배송은 얼마나 걸리나요?', '약 3~5일 소요됩니다.', 1),
-       (2, '포장 상태는 어떤가요?', NULL, 1);
-
-insert into wish (target_id, target_type, member_id, created_at, updated_at)
-values
-    (1, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (4, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (5, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+-- 11. WISH
+INSERT IGNORE INTO wish (
+    target_id,
+    target_type,
+    member_id,
+    created_at,
+    updated_at
+) VALUES
+    (1,  'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (4,  'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (5,  'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (10, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (11, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (12, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
@@ -580,101 +526,154 @@ values
     (96, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (98, 'ITEM', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (99, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (100, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+    (100,'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
+-- 12. CART_ITEM
+INSERT INTO cart_item (
+    member_id,
+    item_id,
+    quantity,
+    created_at,
+    updated_at
+) VALUES
+      (1, 3, 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (1, 5, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (1, 4, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-insert into cart_item (member_id, item_id, quantity, created_at, updated_at)
-values
-    (1, 3, 2, current_timestamp, current_timestamp),
-    (1, 5, 1, current_timestamp, current_timestamp),
-    (1, 4, 1, current_timestamp, current_timestamp);
-
-insert into "order" (member_id, order_status, order_date, bank_name, depositor_name, deposit_deadline, total_amount, total_quantity, created_at, updated_at)
-values (
-           1,
-           'PAID',
-           CURRENT_TIMESTAMP,
-           '국민은행 123456-78-901234',
-           '홍길동',
-           CURRENT_TIMESTAMP + 1,
-           120000,
-           2,
-           CURRENT_TIMESTAMP,
-           CURRENT_TIMESTAMP
-       ),
-       (
-           2,
-           'DELIVERED',
-           CURRENT_TIMESTAMP,
-           '국민은행 123456-78-901234',
-           '홍길동',
-           CURRENT_TIMESTAMP + 1,
-           120000,
-           2,
-           CURRENT_TIMESTAMP,
-           CURRENT_TIMESTAMP
-       ),
-       (
-           2,
-           'DELIVERED',
-           CURRENT_TIMESTAMP,
-           '국민은행 123456-78-901234',
-           '홍길동',
-           CURRENT_TIMESTAMP + 1,
-           120000,
-           2,
-           CURRENT_TIMESTAMP,
-           CURRENT_TIMESTAMP
-       ),
-       (
-           2,
-           'DELIVERED',
-           CURRENT_TIMESTAMP,
-           '국민은행 123456-78-901234',
-           '홍길동',
-           CURRENT_TIMESTAMP + 1,
-           120000,
-           2,
-           CURRENT_TIMESTAMP,
-           CURRENT_TIMESTAMP
-       );
-
-
-insert into order_item (item_id, order_id, quantity, price, order_item_id)
-values
-    (1, 1, 1, 70000, 1),  -- 상품 A: 70,000원
-    (2, 1, 1, 50000, 2),  -- 상품 B: 50,000원
-    (1, 2, 1, 70000, 3),  -- 상품 A: 70,000원
-    (2, 2, 1, 50000, 4),  -- 상품 B: 50,000원
-    (1, 3, 1, 70000, 5),  -- 상품 A: 70,000원
-    (2, 3, 1, 50000, 6),  -- 상품 B: 50,000원
-    (1, 4, 1, 70000, 7),  -- 상품 A: 70,000원
-    (2, 4, 1, 50000, 8);  -- 상품 B: 50,000원
-
-insert into delivery (
-    order_id, courier_name, receiver_name, receiver_phone, zip_code, address, address_detail,
-    delivery_status, delivery_expected_date, delivery_start_date, delivery_completed_date,delivery_fee
+-- 13. ORDER
+INSERT INTO "order"
+(
+    member_id,
+    order_status,
+    order_date,
+    bank_name,
+    depositor_name,
+    deposit_deadline,
+    total_amount,
+    total_quantity,
+    created_at,
+    updated_at
 )
-values (
-           1, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '103호',
-           'READY',  null, null, null,3000
-       ),
-       (
-             2, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
-             'DELIVERED', CURRENT_TIMESTAMP + 3, CURRENT_TIMESTAMP + 1, CURRENT_TIMESTAMP + 2,3000
-         ),
-       (
-           3, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
-           'DELIVERED', '2025-07-25', '2025-07-22', null,3000
-       ),
-       (
-           4, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
-           'DELIVERED', '2025-07-25', '2025-07-22', null,3000
-       );
+VALUES
+    (1, 'PAID',       CURRENT_TIMESTAMP, '국민은행 123456-78-901234', '김회원', DATEADD('DAY', 1, CURRENT_TIMESTAMP), 120000, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (2, 'DELIVERED',  CURRENT_TIMESTAMP, '국민은행 123456-78-901234', '원회원', DATEADD('DAY', 1, CURRENT_TIMESTAMP), 120000, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (2, 'DELIVERED',  CURRENT_TIMESTAMP, '국민은행 123456-78-901234', '원회원', DATEADD('DAY', 1, CURRENT_TIMESTAMP), 120000, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (2, 'DELIVERED',  CURRENT_TIMESTAMP, '국민은행 123456-78-901234', '원회원', DATEADD('DAY', 1, CURRENT_TIMESTAMP), 120000, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-insert into review (review_id, order_item_id, item_id, member_id, rating, content, created_at, updated_at)
-values (1, 1, 1, 2, 1, '도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ',CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-       (2, 2, 2, 2, 5, '완전 굿굿굿굿짱짱짱짱이에욤', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+-- 14. ORDER_ITEM
+INSERT INTO order_item (
+    item_id,
+    order_id,
+    quantity,
+    price,
+    order_item_id
+) VALUES
+      (1,1,1,70000,1),
+      (2,1,1,50000,2),
+      (1,2,1,70000,3),
+      (2,2,1,50000,4),
+      (1,3,1,70000,5),
+      (2,3,1,50000,6),
+      (1,4,1,70000,7),
+      (2,4,1,50000,8);
 
-insert into review_image (review_image_id, review_id, image_key, created_at, updated_at)
-values (1, 1, 'member/1/review/1/불만.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+-- 15. DELIVERY: expected/start/completed 날짜도 모두 DATEADD로 변경
+INSERT INTO delivery
+(
+    order_id,
+    courier_name,
+    receiver_name,
+    receiver_phone,
+    zip_code,
+    address,
+    address_detail,
+    delivery_status,
+    delivery_expected_date,
+    delivery_start_date,
+    delivery_completed_date,
+    delivery_fee
+)
+VALUES
+    -- 주문 1: READY
+    (
+        1,
+        'cj대한통운',
+        '프로메사',
+        '010-1234-5678',
+        '12345',
+        '서울특별시 종로구 세종대로',
+        '103호',
+        'READY',
+        DATEADD('DAY', 3, CURRENT_TIMESTAMP),
+        NULL,
+        NULL,
+        3000
+    ),
+    -- 주문 2: DELIVERED
+    (
+        2,
+        'cj대한통운',
+        '프로메사',
+        '010-1234-5678',
+        '12345',
+        '서울특별시 종로구 세종대로',
+        '101호',
+        'DELIVERED',
+        DATEADD('DAY', 3, CURRENT_TIMESTAMP),
+        DATEADD('DAY', 1, CURRENT_TIMESTAMP),
+        DATEADD('DAY', 2, CURRENT_TIMESTAMP),
+        3000
+    ),
+    -- 주문 3: DELIVERED (문자열 날짜 + DATEADD)
+    (
+        3,
+        'cj대한통운',
+        '프로메사',
+        '010-1234-5678',
+        '12345',
+        '서울특별시 종로구 세종대로',
+        '101호',
+        'DELIVERED',
+        DATE '2025-07-25',
+        DATE '2025-07-22',
+        DATEADD('DAY', 2, DATE '2025-07-22'),
+        3000
+    ),
+    -- 주문 4: DELIVERED
+    (
+        4,
+        'cj대한통운',
+        '프로메사',
+        '010-1234-5678',
+        '12345',
+        '서울특별시 종로구 세종대로',
+        '101호',
+        'DELIVERED',
+        DATE '2025-07-25',
+        DATE '2025-07-22',
+        DATEADD('DAY', 2, DATE '2025-07-22'),
+        3000
+    );
+-- 16. REVIEW
+INSERT INTO review (
+    review_id,
+    order_item_id,
+    item_id,
+    member_id,
+    rating,
+    content,
+    created_at,
+    updated_at
+) VALUES
+      (1,1,1,2,1,'도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ',CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+      (2,2,2,2,5,'완전 굿굿굿굿짱짱짱짱이에욤',          CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+-- 17. REVIEW_IMAGE
+INSERT INTO review_image (
+    review_image_id,
+    review_id,
+    image_key,
+    created_at,
+    updated_at
+) VALUES
+    (1,1,'member/1/review/1/불만.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
