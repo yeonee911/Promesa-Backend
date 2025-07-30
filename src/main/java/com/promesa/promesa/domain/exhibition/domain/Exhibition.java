@@ -37,8 +37,11 @@ public class Exhibition extends BaseTimeEntity {
     private LocalDate endDate;
 
     @NotBlank
-    @Column(name = "image_key", nullable = false)
-    private String imageKey;
+    @Column(name = "thumbnail_image_key", nullable = false)
+    private String thumbnailImageKey;
+
+    @Column(name = "detailed_image_key")    // UPCOMING일 경우 아직 상세페이지 제작 가능성 염두
+    private String detailedImageKey;
 
     @NotBlank
     @Enumerated(EnumType.STRING)
