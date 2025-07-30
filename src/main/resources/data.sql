@@ -11,21 +11,21 @@ values ('김회원', 'kakao', '1234'),
 ;
 
 
-insert into artist (artist_id, name, description, insta, profile_image_key, wish_count, member_id)
+insert into artist (artist_id, name, subname, description, insta, profile_image_key, wish_count, member_id)
 values
-    (1, '김작가', '000 작가는 오랜 시간 부서져 작은 알갱이가 된 돌의 조각들을 다시 하나의 덩어리로 만들고 고온의 불에 소성하여 원래의 성질로 환원시킵니다.' ||
+    (1, '김작가', 'Kim-Artist', '000 작가는 오랜 시간 부서져 작은 알갱이가 된 돌의 조각들을 다시 하나의 덩어리로 만들고 고온의 불에 소성하여 원래의 성질로 환원시킵니다.' ||
                '이 작은 입자들이 모여 이루는 형태를 통해, 자연과 일상 속에 깃든 시간의 흐름을 표현하고자 합니다. 작가의 작업은 일상 속에서 새로운 역할을 가지며 우리 삶의 한 부분이 됩니다.',
      'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/1/profile/꿀꺽이.jpg', 0, 3),
-    (2, '이작가', '000 작가는 오랜 시간 부서져 작은 알갱이가 된 돌의 조각들을 다시 하나의 덩어리로 만들고 고온의 불에 소성하여 원래의 성질로 환원시킵니다.' ||
+    (2, '이작가', 'Lee-Artist','000 작가는 오랜 시간 부서져 작은 알갱이가 된 돌의 조각들을 다시 하나의 덩어리로 만들고 고온의 불에 소성하여 원래의 성질로 환원시킵니다.' ||
                '이 작은 입자들이 모여 이루는 형태를 통해, 자연과 일상 속에 깃든 시간의 흐름을 표현하고자 합니다. 작가의 작업은 일상 속에서 새로운 역할을 가지며 우리 삶의 한 부분이 됩니다.',
      'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/2/profile/profile.jpg', 0, 4),
-    (3, '박작가', '000 작가는 오랜 시간 부서져 작은 알갱이가 된 돌의 조각들을 다시 하나의 덩어리로 만들고 고온의 불에 소성하여 원래의 성질로 환원시킵니다.' ||
+    (3, '박작가', 'Park-Artist','000 작가는 오랜 시간 부서져 작은 알갱이가 된 돌의 조각들을 다시 하나의 덩어리로 만들고 고온의 불에 소성하여 원래의 성질로 환원시킵니다.' ||
                '이 작은 입자들이 모여 이루는 형태를 통해, 자연과 일상 속에 깃든 시간의 흐름을 표현하고자 합니다. 작가의 작업은 일상 속에서 새로운 역할을 가지며 우리 삶의 한 부분이 됩니다.',
      'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/3/profile/profile.jpg', 0, 5),
-    (4, '최작가', '000 작가는 다양한 재료의 물성을 실험하며 삶의 흔적을 담는 작업을 합니다.' ||
+    (4, '최작가', 'Choi-Artist','000 작가는 다양한 재료의 물성을 실험하며 삶의 흔적을 담는 작업을 합니다.' ||
                '형태와 색감의 실험을 통해, 작품이 공간에 자연스럽게 스며드는 방식을 연구합니다.',
      'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/4/profile/profile.jpg', 0, 6),
-    (5, '정작가', '000 작가는 반복과 축적의 과정을 통해 형태를 구성하며, 일상의 사물을 재해석합니다.' ||
+    (5, '정작가', 'Jeong-Artist','000 작가는 반복과 축적의 과정을 통해 형태를 구성하며, 일상의 사물을 재해석합니다.' ||
                '감정의 결을 담아낸 작업은 개인의 내면을 조용히 반영합니다.',
      'https://www.instagram.com/promesa_ceramic?igsh=MXhxdGJkd3pkeGk5dg==', 'artist/5/profile/profile.jpg', 0, 7);
 
@@ -582,15 +582,6 @@ values
     (99, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
     (100, 'ITEM', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-insert into review (review_id, item_id, member_id, rating, content, created_at, updated_at)
-values (1, 1, 1, 1, '도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ',CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-       (2, 1, 2, 5, '완전 굿굿굿굿짱짱짱짱이에욤', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-       (3, 1, 6, 5, '너무너무 마음에 들어요. 제가 찾아 헤맨 작품입니다.', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
-
-insert into review_image (review_image_id, review_id, image_key, created_at, updated_at)
-values (1, 1, 'member/1/review/1/불만.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-       (2, 3, 'member/6/review/1/최고.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-       (3, 3, 'member/6/review/1/엄지.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
 insert into cart_item (member_id, item_id, quantity, created_at, updated_at)
 values
@@ -598,14 +589,52 @@ values
     (1, 5, 1, current_timestamp, current_timestamp),
     (1, 4, 1, current_timestamp, current_timestamp);
 
-insert into "order" (member_id, order_status, order_date,
-    bank_name, depositor_name, deposit_deadline,
-    total_amount, total_quantity, created_at, updated_at
-) values (
+insert into "order" (member_id, order_status, order_date, bank_name, account_number, depositor_name, deposit_deadline, total_amount, total_quantity, created_at, updated_at)
+values (
              1,
              'PAID',
              CURRENT_TIMESTAMP,
-             '국민은행 123456-78-901234',
+             '국민은행',
+             '123456-78-901234',
+             '홍길동',
+             CURRENT_TIMESTAMP + 1,
+             120000,
+             2,
+             CURRENT_TIMESTAMP,
+             CURRENT_TIMESTAMP
+         ),
+         (
+             2,
+             'DELIVERED',
+             CURRENT_TIMESTAMP,
+             '국민은행',
+             '123456-78-901234',
+             '홍길동',
+             CURRENT_TIMESTAMP + 1,
+             120000,
+             2,
+             CURRENT_TIMESTAMP,
+             CURRENT_TIMESTAMP
+         ),
+         (
+             2,
+             'DELIVERED',
+             CURRENT_TIMESTAMP,
+             '국민은행',
+             '123456-78-901234',
+             '홍길동',
+             CURRENT_TIMESTAMP + 1,
+             120000,
+             2,
+             CURRENT_TIMESTAMP,
+             CURRENT_TIMESTAMP
+         ),
+         (
+             2,
+             'DELIVERED',
+             CURRENT_TIMESTAMP,
+             '국민은행',
+             '123456-78-901234',
              '홍길동',
              CURRENT_TIMESTAMP + 1,
              120000,
@@ -617,12 +646,38 @@ insert into "order" (member_id, order_status, order_date,
 insert into order_item (item_id, order_id, quantity, price, order_item_id)
 values
     (1, 1, 1, 70000, 1),  -- 상품 A: 70,000원
-    (2, 1, 1, 50000, 2);  -- 상품 B: 50,000원
+    (2, 1, 1, 50000, 2),  -- 상품 B: 50,000원
+    (1, 2, 1, 70000, 3),  -- 상품 A: 70,000원
+    (2, 2, 1, 50000, 4),  -- 상품 B: 50,000원
+    (1, 3, 1, 70000, 5),  -- 상품 A: 70,000원
+    (2, 3, 1, 50000, 6),  -- 상품 B: 50,000원
+    (1, 4, 1, 70000, 7),  -- 상품 A: 70,000원
+    (2, 4, 1, 50000, 8);  -- 상품 B: 50,000원
 
 insert into delivery (
     order_id, courier_name, receiver_name, receiver_phone, zip_code, address, address_detail,
     delivery_status, delivery_expected_date, delivery_start_date, delivery_completed_date,delivery_fee
-) values (
-             1, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
-             'SHIPPED', '2025-07-25', '2025-07-22', null,3000
-         );
+)
+values (
+           1, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '103호',
+           'READY',  null, null, null,3000
+       ),
+       (
+             2, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
+             'DELIVERED', CURRENT_TIMESTAMP + 3, CURRENT_TIMESTAMP + 1, CURRENT_TIMESTAMP + 2,3000
+         ),
+       (
+           3, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
+           'DELIVERED', '2025-07-25', '2025-07-22', null,3000
+       ),
+       (
+           4, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
+           'DELIVERED', '2025-07-25', '2025-07-22', null,3000
+       );
+
+insert into review (review_id, order_item_id, item_id, member_id, rating, content, created_at, updated_at)
+values (1, 1, 1, 2, 1, '도자기가 다 깨져서 왔어요ㅠㅠㅠㅠㅠㅠㅠㅠㅠ',CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       (2, 2, 2, 2, 5, '완전 굿굿굿굿짱짱짱짱이에욤', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+insert into review_image (review_image_id, review_id, image_key, created_at, updated_at)
+values (1, 1, 'member/1/review/1/불만.jpg', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());

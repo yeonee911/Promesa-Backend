@@ -3,6 +3,7 @@ package com.promesa.promesa.domain.review.domain;
 import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.order.domain.OrderItem;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +32,10 @@ public class Review extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @OneToOne
+    @JoinColumn(name = "order_item_id", unique = true, nullable = false)
+    private OrderItem orderItem;
+
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewImage> reviewImages = new ArrayList<>();
 
@@ -56,10 +61,11 @@ public class Review extends BaseTimeEntity {
 
 
     @Builder
-    private Review(String content, int rating, Item item, Member member) {
+    private Review(String content, int rating, Item item, Member member, OrderItem orderItem) {
         this.content = content;
         this.rating = rating;
         this.item = item;
         this.member = member;
+        this.orderItem = orderItem;
     }
 }

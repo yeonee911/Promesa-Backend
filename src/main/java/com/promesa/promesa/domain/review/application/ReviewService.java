@@ -1,17 +1,22 @@
 package com.promesa.promesa.domain.review.application;
 
 import com.promesa.promesa.common.application.S3Service;
-import com.promesa.promesa.common.dto.s3.PresignedUrlRequest;
-import com.promesa.promesa.common.dto.s3.PresignedUrlResponse;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.order.dao.OrderItemRepository;
+import com.promesa.promesa.domain.order.dao.OrderRepository;
+import com.promesa.promesa.domain.order.domain.OrderItem;
+import com.promesa.promesa.domain.order.domain.OrderStatus;
+import com.promesa.promesa.domain.order.dto.response.OrderItemSummary;
+import com.promesa.promesa.domain.order.exception.OrderItemNotFoundException;
 import com.promesa.promesa.domain.review.dao.ReviewRepository;
 import com.promesa.promesa.domain.review.domain.Review;
 import com.promesa.promesa.domain.review.domain.ReviewImage;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
 import com.promesa.promesa.domain.review.dto.request.UpdateReviewRequest;
+import com.promesa.promesa.domain.review.dto.response.ReviewDetailResponse;
 import com.promesa.promesa.domain.review.dto.response.ReviewQueryDto;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
 import com.promesa.promesa.domain.review.exception.*;
@@ -24,7 +29,6 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +41,8 @@ public class ReviewService {
     private final ReviewImageService reviewImageService;
     private final ReviewQueryRepository reviewQueryRepository;
     private final S3Service s3Service;
+    private final OrderItemRepository orderItemRepository;
+    private final OrderRepository orderRepository;
 
     @Value("${aws.s3.bucket}")  // application.yml 에 정의 필요
     private String bucketName;
@@ -57,9 +63,22 @@ public class ReviewService {
                 .orElseThrow(()-> ItemNotFoundException.EXCEPTION);
 
         // 실제 주문 내역이 있는지 검증
+        OrderItem orderItem = orderItemRepository.findById(request.getOrderItemId())
+                .orElseThrow(() -> OrderItemNotFoundException.EXCEPTION);
 
-        // 리뷰 중복 등록 검증
-        if (reviewRepository.existsByItemIdAndMemberId(itemId, member.getId())) {
+        if (!orderItem.getItem().getId().equals(itemId) ||
+                !orderItem.getOrder().getMember().getId().equals(member.getId())
+        ) {
+            throw ReviewOrderItemForbiddenException.EXCEPTION;
+        }
+
+        // 아직 배송되지 않은 상품인지 검증
+        if (orderItem.getOrder().getOrderStatus() != OrderStatus.DELIVERED) {
+            throw ReviewItemNotDeliveredException.EXCEPTION;
+        }
+
+        // 주문 상품에 이미 리뷰를 작성했는지 검증
+        if (reviewRepository.existsByOrderItem(orderItem)) {
             throw ReviewDuplicateException.EXCEPTION;
         }
 
@@ -69,6 +88,7 @@ public class ReviewService {
                 .rating(request.getRating())
                 .item(item)
                 .member(member)
+                .orderItem(orderItem)
                 .build();
 
         // DB에 저장
@@ -197,5 +217,45 @@ public class ReviewService {
                 .stream()
                 .map(ReviewImage::getKey)
                 .toList();
+    }
+
+    /**
+     * 내가 작성한 리뷰 조회
+     * @param member 작성자
+     * @return
+     */
+    public List<ReviewDetailResponse> getMyReviews(Member member) {
+        List<ReviewDetailResponse> results = reviewQueryRepository.findMyReviews(member.getId());
+        results.forEach(r -> {
+            String itemThumbnailKey = r.getOrderItemSummary().getItemThumbnail();
+            if (itemThumbnailKey != null) {
+                String itemThumbnailUrl = s3Service.createPresignedGetUrl(bucketName, itemThumbnailKey);
+                r.getOrderItemSummary().setItemThumbnail(itemThumbnailUrl);
+            }
+
+            List<String> presignedUrls = r.getReviewResponse().getReviewImages().stream()
+                    .map(key -> s3Service.createPresignedGetUrl(bucketName, key))
+                    .toList();
+            r.getReviewResponse().setReviewImages(presignedUrls);
+        });
+
+        return results;
+    }
+
+    /**
+     * 작성 가능한 리뷰 조회
+     * @param member
+     * @return
+     */
+    public List<OrderItemSummary> getMyEligibleReviews(Member member) {
+        List<OrderItemSummary> results = reviewQueryRepository.getMyEligibleReviews(member.getId());
+        results.forEach(r -> {
+            String imageKey = r.getItemThumbnail();
+            if (imageKey != null) {
+                String imageUrl = s3Service.createPresignedGetUrl(bucketName, imageKey);
+                r.setItemThumbnail(imageUrl);
+            }
+        });
+        return results;
     }
 }
