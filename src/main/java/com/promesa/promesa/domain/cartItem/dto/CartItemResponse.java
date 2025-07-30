@@ -4,6 +4,7 @@ import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.cartItem.domain.CartItem;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.item.domain.ItemImage;
+import com.promesa.promesa.domain.item.domain.SaleStatus;
 
 public record CartItemResponse(
         Long cartItemId,
@@ -12,7 +13,9 @@ public record CartItemResponse(
         String name,
         String artistName,
         int price,
-        String thumbnailUrl
+        String thumbnailUrl,
+        int stock,
+        SaleStatus saleStatus
 ) {
     public static CartItemResponse of(CartItem cartItem, S3Service s3Service, String bucketName) {
         Item item = cartItem.getItem();
@@ -30,7 +33,9 @@ public record CartItemResponse(
                 item.getName(),
                 item.getArtist().getName(),
                 item.getPrice(),
-                thumbnailUrl
+                thumbnailUrl,
+                item.getStock(),
+                item.getSaleStatus()
         );
     }
 }
