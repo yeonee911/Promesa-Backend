@@ -62,7 +62,6 @@ public class OrderService {
                 .orderDate(now)
                 .depositDeadline(now.plusDays(1)) // 입금 기한 = 주문 날짜 + 1일
                 .bankName(payment.bankName())
-                .accountNumber(null)
                 .depositorName(payment.depositorName())
                 .build();
 

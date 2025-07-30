@@ -51,8 +51,7 @@ public class Order extends BaseTimeEntity {
     private LocalDateTime orderDate;   // 주문일시
 
     // 무통장 입금 관련
-    private String bankName; // 은행명
-    private String accountNumber; // 계좌번호
+    private String bankName; // 은행명 + 계좌번호
     private String depositorName; // 입금자명
     private LocalDateTime depositDeadline; // 입금 기한
 

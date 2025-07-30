@@ -582,13 +582,12 @@ values
     (1, 5, 1, current_timestamp, current_timestamp),
     (1, 4, 1, current_timestamp, current_timestamp);
 
-insert into "order" (member_id, order_status, order_date, bank_name, account_number, depositor_name, deposit_deadline, total_amount, total_quantity, created_at, updated_at)
+insert into "order" (member_id, order_status, order_date, bank_name, depositor_name, deposit_deadline, total_amount, total_quantity, created_at, updated_at)
 values (
            1,
            'PAID',
            CURRENT_TIMESTAMP,
-           '국민은행',
-           '123456-78-901234',
+           '국민은행 123456-78-901234',
            '홍길동',
            CURRENT_TIMESTAMP + 1,
            120000,
@@ -600,8 +599,7 @@ values (
            2,
            'DELIVERED',
            CURRENT_TIMESTAMP,
-           '국민은행',
-           '123456-78-901234',
+           '국민은행 123456-78-901234',
            '홍길동',
            CURRENT_TIMESTAMP + 1,
            120000,
@@ -613,8 +611,7 @@ values (
            2,
            'DELIVERED',
            CURRENT_TIMESTAMP,
-           '국민은행',
-           '123456-78-901234',
+           '국민은행 123456-78-901234',
            '홍길동',
            CURRENT_TIMESTAMP + 1,
            120000,
@@ -626,8 +623,7 @@ values (
            2,
            'DELIVERED',
            CURRENT_TIMESTAMP,
-           '국민은행',
-           '123456-78-901234',
+           '국민은행 123456-78-901234',
            '홍길동',
            CURRENT_TIMESTAMP + 1,
            120000,
@@ -653,6 +649,10 @@ insert into delivery (
     delivery_status, delivery_expected_date, delivery_start_date, delivery_completed_date,delivery_fee
 )
 values (
+           1, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
+           'DELIVERED', CURRENT_TIMESTAMP + 3, CURRENT_TIMESTAMP + 1, CURRENT_TIMESTAMP + 2,3000
+       ),
+       (
            2, 'cj대한통운', '프로메사', '010-1234-5678', '12345', '서울특별시 종로구 세종대로', '101호',
            'DELIVERED', CURRENT_TIMESTAMP + 3, CURRENT_TIMESTAMP + 1, CURRENT_TIMESTAMP + 2,3000
        ),
