@@ -5,13 +5,15 @@ import com.promesa.promesa.domain.order.domain.OrderItem;
 public record OrderItemDetail(
         Long itemId,
         String itemName,
+        String orderItemThumbnail,
         int price,
         int quantity
 ) {
-    public static OrderItemDetail from(OrderItem item) {
+    public static OrderItemDetail from(OrderItem item, String orderThumbnail) {
         return new OrderItemDetail(
                 item.getItem().getId(),
                 item.getItem().getName(),
+                orderThumbnail,
                 item.getPrice(),
                 item.getQuantity()
         );

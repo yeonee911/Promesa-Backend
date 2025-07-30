@@ -5,6 +5,7 @@ import com.promesa.promesa.domain.delivery.domain.Delivery;
 import com.promesa.promesa.domain.item.domain.ItemImage;
 import com.promesa.promesa.domain.order.domain.Order;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record OrderResponse(
@@ -15,19 +16,28 @@ public record OrderResponse(
 ) {
     public static OrderResponse of(Order order, Delivery delivery, S3Service s3Service, String bucketName) {
         // 대표 이미지 presigned URL 생성
-        String thumbnailUrl = order.getOrderItems().get(0).getItem().getItemImages().stream()
+        String orderThumbnail = order.getOrderItems().get(0).getItem().getItemImages().stream()
                 .filter(ItemImage::isThumbnail)
                 .map(img -> s3Service.createPresignedGetUrl(bucketName, img.getImageKey()))
                 .findFirst()
                 .orElse(null);
 
+        List<OrderItemDetail> items = order.getOrderItems().stream()
+                .map(orderItem -> {
+                    String orderItemThumbnail = orderItem.getItem().getItemImages().stream()
+                            .filter(ItemImage::isThumbnail)
+                            .map(img -> s3Service.createPresignedGetUrl(bucketName, img.getImageKey()))
+                            .findFirst()
+                            .orElse(null);
+                    return OrderItemDetail.from(orderItem, orderItemThumbnail);
+                })
+                .toList();
+
         return new OrderResponse(
-                OrderSummary.from(order, thumbnailUrl, delivery),
+                OrderSummary.from(order, orderThumbnail, delivery),
                 PaymentInfo.from(order),
                 DeliveryInfo.from(delivery),
-                order.getOrderItems().stream()
-                        .map(OrderItemDetail::from)
-                        .toList()
+                items
         );
     }
 }
