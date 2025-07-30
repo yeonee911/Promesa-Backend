@@ -34,4 +34,15 @@ public class ExhibitionQueryRepository {
                 .orderBy(exhibition.startDate.desc())
                 .fetch();
     }
+
+    public List<String> findArtistNames(Long exhibitionId) {
+        List<String> artistNames = queryFactory
+                .select(artist.name)
+                .distinct()
+                .from(exhibitionArtist)
+                .join(exhibitionArtist.artist, artist)
+                .where(exhibitionArtist.exhibition.id.eq(exhibitionId))
+                .fetch();
+        return artistNames;
+    }
 }

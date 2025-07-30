@@ -13,6 +13,7 @@ public class ReviewQueryDto {
     private Long reviewId;
     private String content;
     private Long itemId;
+    private Long orderItemId;
     private Long reviewerId;
     private String reviewerName;
     private int rating;

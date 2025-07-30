@@ -2,7 +2,8 @@ package com.promesa.promesa.domain.exhibition.api;
 
 import com.promesa.promesa.domain.exhibition.application.ExhibitionService;
 import com.promesa.promesa.domain.exhibition.domain.ExhibitionStatus;
-import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionResponse;
+import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionDetailResponse;
+import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummaryResponse;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummary;
 import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.domain.Member;
@@ -21,14 +22,14 @@ import java.util.List;
 public class ExhibitionController {
     private final ExhibitionService exhibitionService;
 
-    @GetMapping("/{exhibitionId}/items")
+    @GetMapping("/{exhibitionId}")
     @Operation(summary = "특정 전시 조회")
-    public ResponseEntity<List<ItemPreviewResponse>> getExhibitionItems(
+    public ResponseEntity<ExhibitionDetailResponse> getExhibitionInfo(
             @PathVariable Long exhibitionId,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Member member = (user != null) ? user.getMember() : null; // 로그인하지 않았을 경우, member = null로 전달
-        List<ItemPreviewResponse> response = exhibitionService.getExhibitionItems(member, exhibitionId);
+        ExhibitionDetailResponse response = exhibitionService.getExhibitionInfo(member, exhibitionId);
         return ResponseEntity.ok(response);
     }
 
@@ -41,12 +42,12 @@ public class ExhibitionController {
 
     @GetMapping
     @Operation(summary = "전시 상태 별 전시 목록 조회")
-    public ResponseEntity<List<ExhibitionResponse>> getExhibition(
+    public ResponseEntity<List<ExhibitionSummaryResponse>> getExhibition(
             @RequestParam(required = false) ExhibitionStatus status,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Member member = (user != null) ? user.getMember() : null;
-        List<ExhibitionResponse> responses = exhibitionService.getExhibitions(status, member);
+        List<ExhibitionSummaryResponse> responses = exhibitionService.getExhibitions(status, member);
         return  ResponseEntity.ok(responses);
     }
 }

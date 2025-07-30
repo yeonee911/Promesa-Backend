@@ -4,10 +4,12 @@ import com.promesa.promesa.common.dto.s3.PresignedUrlRequest;
 import com.promesa.promesa.common.dto.s3.PresignedUrlResponse;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.order.dto.response.OrderItemSummary;
 import com.promesa.promesa.domain.review.application.ReviewImageService;
 import com.promesa.promesa.domain.review.application.ReviewService;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
 import com.promesa.promesa.domain.review.dto.request.UpdateReviewRequest;
+import com.promesa.promesa.domain.review.dto.response.ReviewDetailResponse;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -93,5 +95,28 @@ public class ReviewController {
     ){
         Page<ReviewResponse> responses = reviewService.getReviews(itemId, pageable);
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/members/me/reviews")
+    @Operation(summary = "작성한 리뷰 조회")
+    public ResponseEntity<List<ReviewDetailResponse>> getMyReviews(
+            @AuthenticationPrincipal CustomUserDetails user
+    )
+    {
+        Member member = (user != null) ? user.getMember() : null;
+        List<ReviewDetailResponse> response = reviewService.getMyReviews(member);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/members/me/reviews/eligible")
+    @Operation(summary = "작성 가능한 리뷰 조회")
+    public ResponseEntity<List<OrderItemSummary>> getMyEligibleReviews(
+            @AuthenticationPrincipal CustomUserDetails user
+    )
+    {
+        Member member = (user != null) ? user.getMember() : null;
+        List<OrderItemSummary> response = reviewService.getMyEligibleReviews(member);
+        return ResponseEntity.ok(response);
     }
 }
