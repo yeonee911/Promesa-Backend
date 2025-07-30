@@ -8,7 +8,7 @@ import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.item.domain.ItemImage;
-import com.promesa.promesa.domain.item.dto.ItemWish;
+import com.promesa.promesa.domain.item.dto.response.ItemWish;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.wish.dao.WishRepository;
