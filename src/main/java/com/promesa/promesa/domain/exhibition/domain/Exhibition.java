@@ -33,7 +33,7 @@ public class Exhibition extends BaseTimeEntity {
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = true)
     private LocalDate endDate;
 
     @NotBlank
