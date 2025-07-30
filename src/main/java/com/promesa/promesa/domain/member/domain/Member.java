@@ -2,7 +2,7 @@ package com.promesa.promesa.domain.member.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.artist.domain.Artist;
-import com.promesa.promesa.domain.member.dto.MemberUpdateRequest;
+import com.promesa.promesa.domain.member.dto.request.MemberUpdateRequest;
 import com.promesa.promesa.domain.shippingAddress.domain.ShippingAddress;
 import com.promesa.promesa.domain.wish.domain.Wish;
 import jakarta.persistence.*;

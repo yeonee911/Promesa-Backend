@@ -1,4 +1,4 @@
-package com.promesa.promesa.domain.member.dto;
+package com.promesa.promesa.domain.member.dto.request;
 
 public record BirthRequest(
         int year,

@@ -49,11 +49,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                         .isDeleted(false)
                         .build()));
 
-        // 탈퇴한 사용자라면 로그인 거부
-        if (Boolean.TRUE.equals(member.getIsDeleted())) {
-            throw new DisabledException("탈퇴 처리된 사용자입니다.");
-        }
-
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                 attributes,

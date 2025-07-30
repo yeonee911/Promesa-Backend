@@ -1,4 +1,4 @@
-package com.promesa.promesa.domain.member.dto;
+package com.promesa.promesa.domain.member.dto.response;
 
 import com.promesa.promesa.domain.member.domain.Gender;
 import com.promesa.promesa.domain.member.domain.Member;
