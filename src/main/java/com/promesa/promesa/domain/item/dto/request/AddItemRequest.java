@@ -32,7 +32,7 @@ public class AddItemRequest {
     private Long categoryId;
 
     @NotNull
-    private List<String> imageKeys;
+    private List<ItemImageRequest> imageKeys;
 
     @NotNull
     private String thumbnailKey;

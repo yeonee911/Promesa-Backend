@@ -8,6 +8,7 @@ import com.promesa.promesa.domain.itemCategory.domain.ItemCategory;
 import com.promesa.promesa.domain.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.NotBlank;
@@ -72,6 +73,21 @@ public class Item extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
+
+    @Builder
+    public Item(String name, int price, int stock,
+                SaleStatus saleStatus, String productCode,
+                int width, int height, int depth, Artist artist) {
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.saleStatus = saleStatus;
+        this.productCode = productCode;
+        this.width = width;
+        this.height = height;
+        this.depth = depth;
+        this.artist = artist;
+    }
 
     public void increaseReviewCount() {
         this.reviewCount++;

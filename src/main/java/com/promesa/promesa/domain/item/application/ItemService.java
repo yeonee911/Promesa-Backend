@@ -3,6 +3,8 @@ package com.promesa.promesa.domain.item.application;
 import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
+import com.promesa.promesa.domain.item.dto.request.AddItemRequest;
+import com.promesa.promesa.domain.item.dto.response.ItemResponse;
 import com.promesa.promesa.domain.item.query.ItemQueryRepository;
 import com.promesa.promesa.domain.category.dao.CategoryRepository;
 import com.promesa.promesa.domain.category.domain.Category;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -74,5 +77,14 @@ public class ItemService {
                 .toList();
 
         return updated;
+    }
+
+    /**
+     * 작품 등록
+     * @param request
+     * @return
+     */
+    public ResponseEntity<ItemResponse> createItem(AddItemRequest request) {
+
     }
 }
