@@ -75,13 +75,17 @@ public class Item extends BaseTimeEntity {
     private List<Review> reviews = new ArrayList<>();
 
     @Builder
-    public Item(String name, int price, int stock,
-                SaleStatus saleStatus, String productCode,
-                int width, int height, int depth, Artist artist) {
+    public Item(String name, int price, int stock, SaleStatus saleStatus,
+                int wishCount, Double averageRating, int reviewCount, double totalRating,
+                String productCode, int width, int height, int depth, Artist artist) {
         this.name = name;
         this.price = price;
         this.stock = stock;
         this.saleStatus = saleStatus;
+        this.wishCount = wishCount;
+        this.averageRating = averageRating;
+        this.reviewCount = reviewCount;
+        this.totalRating = totalRating;
         this.productCode = productCode;
         this.width = width;
         this.height = height;
@@ -143,6 +147,20 @@ public class Item extends BaseTimeEntity {
             throw InsufficientStockException.EXCEPTION; // 새 예외 생성 필요
         }
         this.stock -= quantity;
+    }
+
+    public void addItemImage(ItemImage itemImage) {
+        itemImage.setItem(this);
+        if (!this.itemImages.contains(itemImage)) {
+            this.itemImages.add(itemImage);
+        }
+    }
+
+    public void addCategory(ItemCategory category) {
+        category.setItem(this);
+        if (!this.itemCategories.contains(category)) {
+            this.itemCategories.add(category);
+        }
     }
 
 }

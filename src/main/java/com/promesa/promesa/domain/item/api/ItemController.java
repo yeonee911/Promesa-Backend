@@ -8,6 +8,7 @@ import com.promesa.promesa.domain.item.dto.response.ItemResponse;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -46,10 +47,11 @@ public class ItemController {
     // 관리자 확인 절차 @PreAuthorize
     @PostMapping("/items")
     @Operation(summary = "작품 등록")
-    public ResponseEntity<ItemResponse> createItem(
-            @RequestBody AddItemRequest request
+    public ResponseEntity<String> createItem(
+            @RequestBody @Valid AddItemRequest request
     )
     {
-        return itemService.createItem(request);
+        String response = itemService.createItem(request);
+        return ResponseEntity.ok(response);
     }
 }
