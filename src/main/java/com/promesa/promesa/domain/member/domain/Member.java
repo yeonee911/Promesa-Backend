@@ -32,6 +32,8 @@ public class Member extends BaseTimeEntity {
     private String providerId;
 
     private String phone;
+
+    @Builder.Default
     private Boolean smsAgree = true;
 
     @Enumerated(EnumType.STRING)
@@ -42,6 +44,7 @@ public class Member extends BaseTimeEntity {
     private Integer birthDay;
     private Boolean isSolar;
 
+    @Builder.Default
     private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
