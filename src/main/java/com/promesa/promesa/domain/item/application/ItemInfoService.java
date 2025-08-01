@@ -4,16 +4,10 @@ import com.promesa.promesa.common.advice.ItemLog;
 import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
-import com.promesa.promesa.domain.artist.dto.ArtistProfile;
-import com.promesa.promesa.domain.artist.dto.ArtistWish;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
-import com.promesa.promesa.domain.item.dto.ItemDetail;
-import com.promesa.promesa.domain.item.dto.ItemResponse;
-import com.promesa.promesa.domain.item.dto.ItemSale;
-import com.promesa.promesa.domain.item.dto.ItemSummary;
-import com.promesa.promesa.domain.item.dto.ItemWish;
+import com.promesa.promesa.domain.item.dto.response.ItemResponse;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
 import com.promesa.promesa.domain.itemCategory.domain.ItemCategory;
 import com.promesa.promesa.domain.member.domain.Member;
@@ -24,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service

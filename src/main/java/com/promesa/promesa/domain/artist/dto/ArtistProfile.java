@@ -17,7 +17,7 @@ public record ArtistProfile(
                 artist.getSubname(),
                 presignedUrl,
                 artist.getDescription(),
-                "https://instagram.com/" + artist.getInsta()
+                "https://www.instagram.com/" + artist.getInsta()
         );
     }
 }

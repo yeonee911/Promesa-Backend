@@ -3,7 +3,7 @@ package com.promesa.promesa.domain.item.api;
 import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.item.application.ItemInfoService;
 import com.promesa.promesa.domain.item.application.ItemService;
-import com.promesa.promesa.domain.item.dto.ItemResponse;
+import com.promesa.promesa.domain.item.dto.response.ItemResponse;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor

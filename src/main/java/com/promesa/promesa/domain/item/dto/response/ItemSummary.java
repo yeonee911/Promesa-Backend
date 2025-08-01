@@ -1,4 +1,4 @@
-package com.promesa.promesa.domain.item.dto;
+package com.promesa.promesa.domain.item.dto.response;
 
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.category.domain.Category;
