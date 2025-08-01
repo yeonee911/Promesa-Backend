@@ -32,8 +32,8 @@ public class Item extends BaseTimeEntity {
     private int stock;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "sale_status")
-    private SaleStatus saleStatus;
+    @Column(name = "item_status")
+    private ItemStatus itemStatus;
 
     @NotNull
     @Column(name = "wish_count")
@@ -123,9 +123,12 @@ public class Item extends BaseTimeEntity {
 
     public void decreaseStock(int quantity) {
         if (this.stock < quantity) {
-            throw InsufficientStockException.EXCEPTION; // 새 예외 생성 필요
+            throw InsufficientStockException.EXCEPTION; // 재고 부족 예외
         }
         this.stock -= quantity;
-    }
 
+        if (this.stock == 0) {
+            this.itemStatus = ItemStatus.SOLD_OUT;
+        }
+    }
 }

@@ -40,7 +40,7 @@ values
     (4, '화병', NULL),
     (5, '오브제', NULL);
 
-insert into item (item_id, created_at, updated_at, name, price, sale_status, stock, wish_count, average_rating, review_count, total_rating, product_code, width, height, depth, artist_id)
+insert into item (item_id, created_at, updated_at, name, price, item_status, stock, wish_count, average_rating, review_count, total_rating, product_code, width, height, depth, artist_id)
 values
     (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '빈티지 블랙 높은잔 세트', 15000, 'ON_SALE', 11, 1, 3.5, 1, 3.5, 'PRD001', 10, 20, 30, 2),
     (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 2', 20000, 'ON_SALE', 12, 2, 4.0, 2, 8.0, 'PRD002', 10, 20, 30, 3),
