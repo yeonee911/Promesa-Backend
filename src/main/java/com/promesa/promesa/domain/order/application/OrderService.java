@@ -150,7 +150,7 @@ public class OrderService {
     }
 
     public List<OrderSummary> getOrderSummaries(Member member) {
-        List<Order> orders = orderRepository.findByMember(member);
+        List<Order> orders = orderRepository.findByMemberOrderByCreatedAtDesc(member);
 
         return orders.stream()
                 .map(order -> {
