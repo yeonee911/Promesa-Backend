@@ -12,8 +12,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -58,6 +61,15 @@ public class Member extends BaseTimeEntity {
     @JoinColumn(name = "shipping_address_id", unique = true)
     private ShippingAddress shippingAddress;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "member_roles",
+            joinColumns = @JoinColumn(name = "member_id")
+    )
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles = new HashSet<>();
+
     // 사용자의 이름 업데이트하는 메소드
     public Member updateMember(String name){
         this.name = name;
@@ -85,5 +97,24 @@ public class Member extends BaseTimeEntity {
     public void withdraw() {
         this.isDeleted = true;
         this.providerId = this.providerId + "_withdrawn_" + UUID.randomUUID(); // providerId로 기존 회원을 찾을 수 없게 만들기
+    }
+
+    public void restore() {
+        this.isDeleted = false;
+    }
+
+    public void setArtist(Artist artist) {
+        this.artist = artist;
+        if (artist.getMember() != this) {
+            artist.setMember(this);
+        }
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+
+    public Set<Role> getRoles() {
+        return Collections.unmodifiableSet(roles);
     }
 }

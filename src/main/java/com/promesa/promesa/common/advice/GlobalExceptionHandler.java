@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,6 +20,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 
 @Slf4j
 @RestControllerAdvice
@@ -31,6 +33,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorReason errorReason = code.getErrorReason();
         ErrorResponse errorResponse = ErrorResponse.from(errorReason, request.getRequestURL().toString());
         return ResponseEntity.status(HttpStatus.valueOf(errorReason.getStatus()))
+                .body(errorResponse);
+    }
+
+    /**
+     * 스프링 시큐리티 권한 거부 예외 처리
+     */
+    @ExceptionHandler({ AccessDeniedException.class, AuthorizationDeniedException.class })
+    public ResponseEntity<ErrorResponse> handleAccessDenied(Exception e, HttpServletRequest request) {
+        ErrorReason errorReason = ErrorReason.builder()
+                .status(HttpStatus.FORBIDDEN.value())
+                .code("FORBIDDEN_403")
+                .reason("권한이 없습니다.")
+                .build();
+        ErrorResponse errorResponse = ErrorResponse.from(errorReason, request.getRequestURL().toString());
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
                 .body(errorResponse);
     }
 

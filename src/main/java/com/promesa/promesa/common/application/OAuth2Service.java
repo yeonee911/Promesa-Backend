@@ -3,6 +3,7 @@ package com.promesa.promesa.common.application;
 import com.promesa.promesa.domain.member.OAuthAttributes;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.member.domain.Role;
 import com.promesa.promesa.domain.member.dto.response.MemberProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,15 +41,22 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         Map<String, Object> attributes = oAuth2User.getAttributes(); // 사용자가 가지고 있는 정보
         MemberProfile userProfile = OAuthAttributes.extract(registrationId, attributes);
 
-        updateOrSaveUser(userProfile);
+        Member member = updateOrSaveUser(userProfile);
+
+        // member.getRoles() 에 담긴 모든 ROLE_* 을 Authority 로 변환
+        Set<SimpleGrantedAuthority> authorities = member.getRoles().stream()
+                .map(Role::name)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
 
         Map<String, Object> customAttribute =
                 getCustomAttribute(registrationId, userNameAttributeName, attributes, userProfile);
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("USER")),
+                authorities,
                 customAttribute,
-                userNameAttributeName);
+                userNameAttributeName
+        );
     }
 
     public Map getCustomAttribute(String registrationId,
@@ -68,7 +78,12 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         Member member = memberRepository
                 .findByProviderAndProviderId(memberProfile.getProvider(), memberProfile.getProviderId())
                 .map(value -> value.updateMember(memberProfile.getName()))
-                .orElse(memberProfile.toEntity());
+                // 신규 유저일 경우
+                .orElseGet(() -> {
+                    Member m = memberProfile.toEntity();
+                    m.addRole(Role.ROLE_USER);  // 기본 유저 권한 부여
+                    return m;
+                });
 
         return memberRepository.save(member);
     }

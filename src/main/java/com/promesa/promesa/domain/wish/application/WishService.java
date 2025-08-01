@@ -3,7 +3,7 @@ package com.promesa.promesa.domain.wish.application;
 import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
-import com.promesa.promesa.domain.artist.dto.ArtistWish;
+import com.promesa.promesa.domain.artist.dto.response.ArtistWish;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
