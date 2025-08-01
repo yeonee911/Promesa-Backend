@@ -32,8 +32,8 @@ public class Item extends BaseTimeEntity {
     private int stock;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "item_status")
-    private ItemStatus itemStatus;
+    @Column(name = "sale_status")
+    private SaleStatus saleStatus;
 
     @NotNull
     @Column(name = "wish_count")
@@ -128,7 +128,7 @@ public class Item extends BaseTimeEntity {
         this.stock -= quantity;
 
         if (this.stock == 0) {
-            this.itemStatus = ItemStatus.SOLD_OUT;
+            this.saleStatus = SaleStatus.SOLD_OUT;
         }
     }
 }

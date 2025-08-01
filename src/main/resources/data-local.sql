@@ -3,18 +3,17 @@ INSERT INTO member (
     member_id,
     name,
     provider,
-    provider_id,
-    is_deleted
+    provider_id
 ) VALUES
-      (1, '김회원',   'kakao', '1234',false),
-      (2, '원회원',   'kakao', '5678',false),
-      (3, '김작가',   'kakao', '1011',false),
-      (4, '이작가',   'kakao', '1213',false),
-      (5, '박작가',   'kakao', '1415',false),
-      (6, '최작가',   'kakao', '1617',false),
-      (7, '정작가',   'kakao', '1819',false),
-      (8, '남궁회원', 'kakao', '2021',false),
-      (9, '정회원',   'kakao', '2223',false);
+      (1, '김회원',   'kakao', '1234'),
+      (2, '원회원',   'kakao', '5678'),
+      (3, '김작가',   'kakao', '1011'),
+      (4, '이작가',   'kakao', '1213'),
+      (5, '박작가',   'kakao', '1415'),
+      (6, '최작가',   'kakao', '1617'),
+      (7, '정작가',   'kakao', '1819'),
+      (8, '남궁회원', 'kakao', '2021'),
+      (9, '정회원',   'kakao', '2223');
 
 -- 2. ARTIST
 INSERT INTO artist (
@@ -498,133 +497,20 @@ INSERT INTO exhibition (
        'exhibition/4/thumbnail/기획전 타이틀.png','exhibition/4/detail/기획전 상세페이지.png',
        'PERMANENT','2025-07-29', NULL);
 
-
-insert into item_category (item_category_id, category_id, item_id)
-values
-    (1, 1, 1),
-    (2, 4, 2),
-    (3, 2, 3),
-    (4, 5, 4),
-    (5, 4, 5),
-    (6, 5, 6),
-    (7, 5, 7),
-    (8, 5, 8),
-    (9, 5, 9),
-    (10, 2, 10),
-    (11, 5, 11),
-    (12, 2, 12),
-    (13, 4, 13),
-    (14, 1, 14),
-    (15, 4, 15),
-    (16, 1, 16),
-    (17, 2, 17),
-    (18, 5, 18),
-    (19, 2, 19),
-    (20, 4, 20),
-    (21, 5, 21),
-    (22, 3, 22),
-    (23, 1, 23),
-    (24, 3, 24),
-    (25, 5, 25),
-    (26, 5, 26),
-    (27, 1, 27),
-    (28, 2, 28),
-    (29, 5, 29),
-    (30, 5, 30),
-    (31, 2, 31),
-    (32, 1, 32),
-    (33, 3, 33),
-    (34, 4, 34),
-    (35, 3, 35),
-    (36, 4, 36),
-    (37, 1, 37),
-    (38, 4, 38),
-    (39, 5, 39),
-    (40, 2, 40),
-    (41, 3, 41),
-    (42, 4, 42),
-    (43, 1, 43),
-    (44, 2, 44),
-    (45, 3, 45),
-    (46, 4, 46),
-    (47, 4, 47),
-    (48, 2, 48),
-    (49, 1, 49),
-    (50, 2, 50);
-
-insert into item_category (item_category_id, category_id, item_id)
-values
-    (51, 2, 51),
-    (52, 3, 52),
-    (53, 1, 53),
-    (54, 1, 54),
-    (55, 2, 55),
-    (56, 1, 56),
-    (57, 3, 57),
-    (58, 3, 58),
-    (59, 3, 59),
-    (60, 4, 60),
-    (61, 2, 61),
-    (62, 2, 62),
-    (63, 2, 63),
-    (64, 4, 64),
-    (65, 2, 65),
-    (66, 3, 66),
-    (67, 5, 67),
-    (68, 1, 68),
-    (69, 2, 69),
-    (70, 5, 70),
-    (71, 3, 71),
-    (72, 2, 72),
-    (73, 1, 73),
-    (74, 2, 74),
-    (75, 2, 75),
-    (76, 5, 76),
-    (77, 2, 77),
-    (78, 5, 78),
-    (79, 5, 79),
-    (80, 5, 80),
-    (81, 1, 81),
-    (82, 1, 82),
-    (83, 1, 83),
-    (84, 2, 84),
-    (85, 5, 85),
-    (86, 4, 86),
-    (87, 5, 87),
-    (88, 3, 88),
-    (89, 1, 89),
-    (90, 2, 90),
-    (91, 3, 91),
-    (92, 3, 92),
-    (93, 5, 93),
-    (94, 3, 94),
-    (95, 2, 95),
-    (96, 3, 96),
-    (97, 2, 97),
-    (98, 5, 98),
-    (99, 5, 99),
-    (100, 2, 100)
-;
-
-insert into exhibition (exhibition_id, created_at, updated_at, description, title, thumbnail_image_key, detailed_image_key, exhibition_status, start_date, end_date)
-values
-    (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전', 'exhibition/1/thumbnail/spring.jpg', 'exhibition/1/detail/시안2.png', 'PAST', '2025-03-20', '2025-04-20'),
-    (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전', 'exhibition/2/thumbnail/summer.jpg', 'exhibition/2/detail/시안2.png','ONGOING', '2025-06-20', '2025-07-20'),
-    (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아', '토마토 기획전', 'exhibition/3/thumbnail/tomato.jpg', 'exhibition/3/detail/시안2.png','UPCOMING', '2025-12-20', null),
-    (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '현대적인 감각과 기능성이 돋보이는 모연도예 작가님의 예술 철학을 다양한 작품과 함게 살펴보세요.', '작품 가이드 Ep.01\n모언도예_차도구 소개', 'exhibition/4/thumbnail/기획전 타이틀.png', 'exhibition/4/detail/기획전 상세페이지.png', 'PERMANENT', '2025-07-29', null)
-;
-
-insert into exhibition_item (exhibition_item_id, exhibition_id, item_id)
-values
-    (1, 1, 1),
-    (2, 2, 2),
-    (3, 3, 3),
-    (4, 1, 4),
-    (5, 2, 5),
-    (6, 3, 6),
-    (7, 4, 7),
-    (8, 4, 8)
-;
+-- 8. EXHIBITION_ITEM
+INSERT INTO exhibition_item (
+    exhibition_item_id,
+    exhibition_id,
+    item_id
+) VALUES
+      (1, 1, 1),
+      (2, 2, 2),
+      (3, 3, 3),
+      (4, 1, 4),
+      (5, 2, 5),
+      (6, 3, 6),
+      (7, 4, 7),
+      (8, 4, 8);
 
 -- 9. EXHIBITION_ARTIST
 INSERT INTO exhibition_artist (
