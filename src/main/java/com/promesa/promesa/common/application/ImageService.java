@@ -40,7 +40,18 @@ public class ImageService {
      * 이미지 삭제
      * @param key
      */
-    public void deleteReviewImage(String key) {
+    public void deleteImage(String key) {
         s3Service.deleteObject(bucketName, key);
+    }
+
+    public String transferImage(String sourceKey, Long referenceId) {
+        String targetKey = sourceKey.replaceFirst(  // 키 생성
+                "([^/]+/)tmp/",
+                "$1" + referenceId + "/"
+        );
+        s3Service.copyObject(bucketName, sourceKey, targetKey); // 객체 이동
+        s3Service.deleteObject(bucketName, sourceKey);  // 기존 객체 삭제
+
+        return targetKey;
     }
 }

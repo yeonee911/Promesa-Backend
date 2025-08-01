@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.artist.application;
 
+import com.promesa.promesa.common.application.ImageService;
 import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
@@ -33,6 +34,7 @@ public class ArtistService {
     private final MemberRepository memberRepository;
     private final WishRepository wishRepository;
     private final S3Service s3Service;
+    private final ImageService imageService;
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
@@ -107,14 +109,7 @@ public class ArtistService {
         memberRepository.save(member);
 
         Long artistId = newArtist.getId();
-        String sourceKey = newArtist.getProfileImageKey();  // 임시 키 가져오기
-        String targetKey = sourceKey.replaceFirst(  // 키 생성
-                "([^/]+/)tmp/",      // “어떤폴더/tmp/” 패턴 중 tmp/만
-                "$1" + artistId + "/" // 앞 그룹(artist/) + ID +
-        );
-
-        s3Service.copyObject(bucketName, sourceKey, targetKey); // 객체 이동
-        s3Service.deleteObject(bucketName, sourceKey);  // 기존 객체 삭제
+        String targetKey = imageService.transferImage(newArtist.getProfileImageKey(), artistId);
         newArtist.setProfileImageKey(targetKey);    // db에 키 없데이트
         artistRepository.save(newArtist);
 

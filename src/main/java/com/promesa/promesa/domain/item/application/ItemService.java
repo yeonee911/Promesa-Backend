@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.item.application;
 
+import com.promesa.promesa.common.application.ImageService;
 import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
@@ -36,6 +37,7 @@ public class ItemService {
     private final S3Service s3Service;
     private final ArtistRepository artistRepository;
     private final ItemRepository itemRepository;
+    private final ImageService imageService;
 
     @Value("${aws.s3.bucket}")  // application.yml 에 정의 필요
     private String bucketName;
@@ -129,13 +131,7 @@ public class ItemService {
             int sortOrder = itemImageRequest.sortOrder();
             boolean isThumbnail = itemImageRequest.key().equals(request.getThumbnailKey());
 
-            String sourceKey = itemImageRequest.key(); // 임시 키 가져오기
-            String targetKey = sourceKey.replaceFirst(  // 키 생성
-                    "([^/]+/)tmp/",      // “어떤폴더/tmp/” 패턴 중 tmp/만
-                    "$1" + itemId + "/" // 앞 그룹(artist/) + ID +
-            );
-            s3Service.copyObject(bucketName, sourceKey, targetKey); // 객체 이동
-            s3Service.deleteObject(bucketName, sourceKey);  // 기존 객체 삭제
+            String targetKey = imageService.transferImage(itemImageRequest.key(), itemId);
 
             ItemImage newItemImage = ItemImage.builder()
                     .imageKey(targetKey)
