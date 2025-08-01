@@ -1,6 +1,10 @@
 package com.promesa.promesa.security.jwt.refresh;
 
 import com.promesa.promesa.common.dto.SuccessResponse;
+import com.promesa.promesa.domain.member.dao.MemberRepository;
+import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.member.domain.Role;
+import com.promesa.promesa.domain.member.exception.MemberNotFoundException;
 import com.promesa.promesa.security.jwt.JwtProperties;
 import com.promesa.promesa.security.jwt.JwtUtil;
 import com.promesa.promesa.security.jwt.exception.ExpiredRefreshTokenException;
@@ -11,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -20,6 +25,7 @@ public class RefreshService {
     private final JwtUtil jwtUtil;
     private final RefreshRepository refreshRepository;
     private final JwtProperties jwtProperties;
+    private final MemberRepository memberRepository;
 
     public SuccessResponse<?> reissue(HttpServletRequest request, HttpServletResponse response) {
         // 1. refreshToken 추출 (쿼리 → 쿠키 순서)
@@ -39,8 +45,6 @@ public class RefreshService {
         }
 
         String nicknameFromToken = jwtUtil.getNickname(refreshToken);
-        String role = jwtUtil.getRole(refreshToken);
-
         if (!refreshRepository.exists(refreshToken)) {
             throw InvalidRefreshTokenException.EXCEPTION;
         }
@@ -50,9 +54,17 @@ public class RefreshService {
             throw InvalidRefreshTokenException.EXCEPTION;
         }
 
+        // 3) DB에서 Member 로드 & roles 리스트 생성
+        String[] parts = nicknameFromToken.split(":", 2);
+        Member member = memberRepository.findByProviderAndProviderId(parts[0], parts[1])
+                .orElseThrow(()-> MemberNotFoundException.EXCEPTION);
+        List<String> roles = member.getRoles().stream()
+                .map(Role::name)
+                .toList();
+
         // 3. 새 토큰 발급
-        String newAccessToken = jwtUtil.createAccessToken(nicknameFromToken, role);
-        String newRefreshToken = jwtUtil.createRefreshToken(nicknameFromToken, role);
+        String newAccessToken = jwtUtil.createAccessToken(nicknameFromToken, roles);
+        String newRefreshToken = jwtUtil.createRefreshToken(nicknameFromToken, roles);
 
         refreshRepository.delete(refreshToken);
         refreshRepository.save(newRefreshToken, nicknameFromToken, jwtProperties.getRefreshTokenExpiration());
