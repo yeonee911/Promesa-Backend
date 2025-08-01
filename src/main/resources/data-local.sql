@@ -3,17 +3,18 @@ INSERT INTO member (
     member_id,
     name,
     provider,
-    provider_id
+    provider_id,
+    is_deleted
 ) VALUES
-      (1, '김회원',   'kakao', '1234'),
-      (2, '원회원',   'kakao', '5678'),
-      (3, '김작가',   'kakao', '1011'),
-      (4, '이작가',   'kakao', '1213'),
-      (5, '박작가',   'kakao', '1415'),
-      (6, '최작가',   'kakao', '1617'),
-      (7, '정작가',   'kakao', '1819'),
-      (8, '남궁회원', 'kakao', '2021'),
-      (9, '정회원',   'kakao', '2223');
+      (1, '김회원',   'kakao', '1234',false),
+      (2, '원회원',   'kakao', '5678',false),
+      (3, '김작가',   'kakao', '1011',false),
+      (4, '이작가',   'kakao', '1213',false),
+      (5, '박작가',   'kakao', '1415',false),
+      (6, '최작가',   'kakao', '1617',false),
+      (7, '정작가',   'kakao', '1819',false),
+      (8, '남궁회원', 'kakao', '2021',false),
+      (9, '정회원',   'kakao', '2223',false);
 
 -- 2. ARTIST
 INSERT INTO artist (
