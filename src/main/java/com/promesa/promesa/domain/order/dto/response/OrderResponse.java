@@ -20,6 +20,8 @@ public record OrderResponse(
                 .filter(ItemImage::isThumbnail)
                 .map(img -> s3Service.createPresignedGetUrl(bucketName, img.getImageKey()))
                 .findFirst()
+
+
                 .orElse(null);
 
         List<OrderItemDetail> items = order.getOrderItems().stream()

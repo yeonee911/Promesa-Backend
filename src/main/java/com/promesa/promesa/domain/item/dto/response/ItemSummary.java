@@ -12,20 +12,26 @@ public record ItemSummary(
         Long categoryId,
         String categoryName,
         String title,
-        List<String> mainImageUrls,
-        List<String> detailImageUrls,
+        List<ItemImageResponse> mainImageUrls,
+        List<ItemImageResponse> detailImageUrls,
         double averageRating,
         int reviewCount,
         Long artistId
 ) {
-    public static ItemSummary from(Item item, Category category,  List<String> mainImageUrls, List<String> detailImageUrls, Artist artist) {
+    public static ItemSummary from(
+            Item item,
+            Category category,
+            List<ItemImageResponse> mainImages,
+            List<ItemImageResponse> detailImages,
+            Artist artist
+    ) {
         return new ItemSummary(
                 item.getId(),
                 category.getId(),
                 category.getName(),
                 item.getName(),
-                mainImageUrls,
-                detailImageUrls,
+                mainImages,
+                detailImages,
                 Optional.ofNullable(item.getAverageRating()).orElse(0.0),
                 item.getReviewCount(),
                 artist.getId()

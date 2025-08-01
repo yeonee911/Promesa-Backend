@@ -5,7 +5,6 @@ import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.member.dto.request.MemberUpdateRequest;
 import com.promesa.promesa.domain.shippingAddress.domain.ShippingAddress;
 import com.promesa.promesa.domain.wish.domain.Wish;
-import com.querydsl.core.Fetchable;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,6 +15,7 @@ import lombok.NoArgsConstructor;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.Set;
 
 @Entity
@@ -36,6 +36,8 @@ public class Member extends BaseTimeEntity {
     private String providerId;
 
     private String phone;
+
+    @Builder.Default
     private Boolean smsAgree = true;
 
     @Enumerated(EnumType.STRING)
@@ -46,6 +48,7 @@ public class Member extends BaseTimeEntity {
     private Integer birthDay;
     private Boolean isSolar;
 
+    @Builder.Default
     private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
@@ -93,6 +96,7 @@ public class Member extends BaseTimeEntity {
 
     public void withdraw() {
         this.isDeleted = true;
+        this.providerId = this.providerId + "_withdrawn_" + UUID.randomUUID(); // providerId로 기존 회원을 찾을 수 없게 만들기
     }
 
     public void restore() {

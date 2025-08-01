@@ -53,7 +53,10 @@ public class ReviewQueryRepository {
         List<Long> reviewIds = queryFactory
                 .select(review.id)
                 .from(review)
-                .where(review.item.id.eq(itemId))
+                .where(
+                        review.item.id.eq(itemId),
+                        review.member.isDeleted.eq(false) // 탈퇴 회원 리뷰 제외
+                )
                 .orderBy(
                         review.rating.desc(),   // 리뷰 높은 순
                         Expressions.stringTemplate("char_length({0})", review.content).desc(),   // 글자 수 많은 순

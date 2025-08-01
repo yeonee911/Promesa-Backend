@@ -34,17 +34,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String providerId = extractProviderId(provider, attributes);
         String name = extractName(provider, attributes);
 
-        // DB 기존 회원 조회 또는 신규 저장
+        //  1. 기존 회원 조회
         Member member = memberRepository
                 .findByProviderAndProviderId(provider, providerId)
-                .map(existing -> {
-                    if (Boolean.TRUE.equals(existing.getIsDeleted())) {
-                        // 탈퇴 회원 복구 처리
-                        existing.restore();
-                        return memberRepository.save(existing);
-                    }
-                    return existing;
-                })
                 .orElseGet(() -> {
                     Member m = Member.builder()
                             .name(name)
@@ -61,7 +53,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .map(Role::name)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
-
         return new DefaultOAuth2User(
                 authorities,
                 oAuth2User.getAttributes(),
