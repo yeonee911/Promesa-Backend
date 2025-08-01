@@ -22,7 +22,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(() -> "ROLE_USER");
+        return member.getRoles().stream()
+                .map(role -> (GrantedAuthority) () -> role.name())
+                .toList();
     }
 
     @Override public String getPassword() { return ""; }

@@ -11,7 +11,8 @@ import static com.promesa.promesa.common.consts.PromesaStatic.*;
 @AllArgsConstructor
 public enum ItemErrorCode implements BaseErrorCode {
     ITEM_NOT_FOUND(NOT_FOUND, "Item_404", "존재하지 않는 상품입니다."),
-    INSUFFICIENT_STOCK(BAD_REQUEST, "Item_400", "상품 재고가 부족합니다.");
+    INSUFFICIENT_STOCK(BAD_REQUEST, "Item_400", "상품 재고가 부족합니다."),
+    DUPLICATE_PRODUCT_CODE(CONFLICT, "Item_409", "이미 존재하는 상품 코드입니다.");
 
     private final Integer status;
     private final String code;
