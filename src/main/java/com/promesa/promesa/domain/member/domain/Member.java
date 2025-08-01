@@ -5,6 +5,7 @@ import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.member.dto.request.MemberUpdateRequest;
 import com.promesa.promesa.domain.shippingAddress.domain.ShippingAddress;
 import com.promesa.promesa.domain.wish.domain.Wish;
+import com.querydsl.core.Fetchable;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -54,6 +58,15 @@ public class Member extends BaseTimeEntity {
     @JoinColumn(name = "shipping_address_id", unique = true)
     private ShippingAddress shippingAddress;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "member_roles",
+            joinColumns = @JoinColumn(name = "member_id")
+    )
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles = new HashSet<>();
+
     // 사용자의 이름 업데이트하는 메소드
     public Member updateMember(String name){
         this.name = name;
@@ -91,5 +104,13 @@ public class Member extends BaseTimeEntity {
         if (artist.getMember() != this) {
             artist.setMember(this);
         }
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+
+    public Set<Role> getRoles() {
+        return Collections.unmodifiableSet(roles);
     }
 }

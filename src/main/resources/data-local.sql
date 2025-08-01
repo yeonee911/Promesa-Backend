@@ -13,7 +13,34 @@ INSERT INTO member (
       (6, '최작가',   'kakao', '1617'),
       (7, '정작가',   'kakao', '1819'),
       (8, '남궁회원', 'kakao', '2021'),
-      (9, '정회원',   'kakao', '2223');
+      (9, '정회원',   'kakao', '2223'),
+      (10, '관리자',   'kakao', '2425');
+
+INSERT INTO member_roles (
+    member_id,
+    role
+) VALUES
+       (1, 'ROLE_USER'),
+       (2, 'ROLE_USER'),
+       (3, 'ROLE_USER'),
+       (4, 'ROLE_USER'),
+       (5, 'ROLE_USER'),
+       (6, 'ROLE_USER'),
+       (7, 'ROLE_USER'),
+       (8, 'ROLE_USER'),
+       (9, 'ROLE_USER');
+
+-- 작가 계정에는 ARTIST 권한 추가
+INSERT INTO member_roles (
+    member_id,
+    role
+) VALUES
+       (3, 'ROLE_ARTIST'),
+       (4, 'ROLE_ARTIST'),
+       (5, 'ROLE_ARTIST'),
+       (6, 'ROLE_ARTIST'),
+       (7, 'ROLE_ARTIST'),
+       (10, 'ROLE_ADMIN');
 
 -- 2. ARTIST
 INSERT INTO artist (

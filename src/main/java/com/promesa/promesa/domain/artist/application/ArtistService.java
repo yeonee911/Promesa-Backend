@@ -11,6 +11,7 @@ import com.promesa.promesa.domain.artist.exception.DuplicateArtistForMemberExcep
 import com.promesa.promesa.domain.artist.exception.DuplicateArtistNameException;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.member.domain.Role;
 import com.promesa.promesa.domain.member.exception.MemberNotFoundException;
 import com.promesa.promesa.domain.wish.dao.WishRepository;
 import com.promesa.promesa.domain.wish.domain.TargetType;
@@ -18,7 +19,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -75,6 +78,8 @@ public class ArtistService {
      * @param request
      * @return
      */
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
     public String createArtist(@Valid AddArtistRequest request) {
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> MemberNotFoundException.EXCEPTION);
@@ -99,7 +104,8 @@ public class ArtistService {
         newArtist.setMember(member);
         artistRepository.save(newArtist);
 
-        // 작가 권한 등록
+        member.addRole(Role.ROLE_ARTIST); // 작가 권한 등록
+        memberRepository.save(member);
 
         String message = "성공적으로 등록되었습니다.";
         return message;
