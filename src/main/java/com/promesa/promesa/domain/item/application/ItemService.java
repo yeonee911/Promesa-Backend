@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -120,14 +121,24 @@ public class ItemService {
                 .depth(request.getDepth())
                 .artist(artist)
                 .build();
+        itemRepository.save(newItem);
+        Long itemId = newItem.getId();
 
         // 아이템 이미지 생성
         for (ItemImageRequest itemImageRequest : request.getImageKeys()) {
-            String key = itemImageRequest.key();
             int sortOrder = itemImageRequest.sortOrder();
             boolean isThumbnail = itemImageRequest.key().equals(request.getThumbnailKey());
+
+            String sourceKey = itemImageRequest.key(); // 임시 키 가져오기
+            String targetKey = sourceKey.replaceFirst(  // 키 생성
+                    "([^/]+/)tmp/",      // “어떤폴더/tmp/” 패턴 중 tmp/만
+                    "$1" + itemId + "/" // 앞 그룹(artist/) + ID +
+            );
+            s3Service.copyObject(bucketName, sourceKey, targetKey); // 객체 이동
+            s3Service.deleteObject(bucketName, sourceKey);  // 기존 객체 삭제
+
             ItemImage newItemImage = ItemImage.builder()
-                    .imageKey(key)
+                    .imageKey(targetKey)
                     .isThumbnail(isThumbnail)
                     .sortOrder(sortOrder)
                     .item(newItem)
@@ -142,7 +153,6 @@ public class ItemService {
                 .build();
         newItem.addCategory(newItemCategory);
 
-        itemRepository.save(newItem);
         String message = "성공적으로 등록되었습니다.";
         return message;
     }

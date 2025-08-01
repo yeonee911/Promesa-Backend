@@ -75,7 +75,7 @@ public class ArtistController {
 
     @PostMapping
     @Operation(summary = "작가 등록")
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> createArtist(
             @RequestBody @Valid AddArtistRequest request)
     {

@@ -14,6 +14,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,8 +45,8 @@ public class ItemController {
         return itemInfoService.getItemResponse(itemId, member);
     }
 
-    // 관리자 확인 절차 @PreAuthorize
     @PostMapping("/items")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "작품 등록")
     public ResponseEntity<String> createItem(
             @RequestBody @Valid AddItemRequest request
