@@ -86,4 +86,10 @@ public class Member extends BaseTimeEntity {
         this.isDeleted = false;
     }
 
+    public void setArtist(Artist artist) {
+        this.artist = artist;
+        if (artist.getMember() != this) {
+            artist.setMember(this);
+        }
+    }
 }

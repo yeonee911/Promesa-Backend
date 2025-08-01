@@ -1,6 +1,6 @@
 package com.promesa.promesa.domain.wish.api;
 
-import com.promesa.promesa.domain.artist.dto.ArtistWish;
+import com.promesa.promesa.domain.artist.dto.response.ArtistWish;
 import com.promesa.promesa.domain.item.dto.response.ItemWish;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.wish.application.WishService;
