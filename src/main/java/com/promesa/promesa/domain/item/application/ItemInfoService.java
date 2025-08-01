@@ -7,6 +7,8 @@ import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
+import com.promesa.promesa.domain.item.domain.ItemImage;
+import com.promesa.promesa.domain.item.dto.response.ItemImageResponse;
 import com.promesa.promesa.domain.item.dto.response.ItemResponse;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
 import com.promesa.promesa.domain.itemCategory.domain.ItemCategory;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,8 +46,8 @@ public class ItemInfoService {
         ItemCategory itemCategory = item.getItemCategories().get(0);
 
         // 이미지 Presigned URL
-        List<String> mainImageUrls = getPresignedImageUrlsByType(item, "main");
-        List<String> detailImageUrls = getPresignedImageUrlsByType(item, "detail");
+        List<ItemImageResponse> mainImageUrls = getPresignedImageUrlsByType(item, "main");
+        List<ItemImageResponse> detailImageUrls = getPresignedImageUrlsByType(item, "detail");
 
         // 작가 이미지 Presigned URL
         String artistImageUrl = getPresignedArtistImageUrl(artist);
@@ -67,7 +70,7 @@ public class ItemInfoService {
 
     }
 
-    private List<String> getPresignedImageUrlsByType(Item item, String type) {
+    private List<ItemImageResponse> getPresignedImageUrlsByType(Item item, String type) {
         return Optional.ofNullable(item.getItemImages())
                 .orElse(List.of())
                 .stream()
@@ -75,7 +78,11 @@ public class ItemInfoService {
                     String key = img.getImageKey();
                     return key != null && key.contains("/" + type + "/");
                 })
-                .map(img -> s3Service.createPresignedGetUrl(bucketName, img.getImageKey()))
+                .sorted(Comparator.comparing(ItemImage::getSortOrder))
+                .map(img -> new ItemImageResponse(
+                        s3Service.createPresignedGetUrl(bucketName, img.getImageKey()),
+                        img.getSortOrder()
+                ))
                 .toList();
     }
 

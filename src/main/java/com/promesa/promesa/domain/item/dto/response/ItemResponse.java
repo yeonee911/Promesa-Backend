@@ -5,6 +5,7 @@ import com.promesa.promesa.domain.artist.dto.ArtistProfile;
 import com.promesa.promesa.domain.artist.dto.ArtistWish;
 import com.promesa.promesa.domain.category.domain.Category;
 import com.promesa.promesa.domain.item.domain.Item;
+import com.promesa.promesa.domain.item.domain.ItemImage;
 
 import java.util.List;
 
@@ -20,8 +21,8 @@ public record ItemResponse(
     public static ItemResponse of(
             Item item,
             Category category,
-            List<String> mainImageUrls,
-            List<String> detailImageUrls,
+            List<ItemImageResponse> mainImageUrls,
+            List<ItemImageResponse> detailImageUrls,
             Artist artist,
             String artistImageUrl,
             boolean itemWished,

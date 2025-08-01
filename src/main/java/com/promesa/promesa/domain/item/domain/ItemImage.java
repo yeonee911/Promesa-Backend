@@ -23,6 +23,9 @@ public class ItemImage extends BaseTimeEntity {
     @NotNull
     private boolean isThumbnail;
 
+    @Column(name = "sort_order", nullable = false)
+    private Integer sortOrder;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;

@@ -64,6 +64,7 @@ public class Item extends BaseTimeEntity {
     private List<ExhibitionItem> exhibitionItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    @OrderBy("sortOrder ASC")
     private List<ItemImage> itemImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
