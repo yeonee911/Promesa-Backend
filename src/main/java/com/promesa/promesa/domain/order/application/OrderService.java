@@ -7,7 +7,6 @@ import com.promesa.promesa.domain.cartItem.exception.CartItemNotFoundException;
 import com.promesa.promesa.domain.delivery.dao.DeliveryRepository;
 import com.promesa.promesa.domain.delivery.domain.Delivery;
 import com.promesa.promesa.domain.delivery.domain.DeliveryStatus;
-import com.promesa.promesa.domain.delivery.exception.DeliveryNotFoundException;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
@@ -20,7 +19,6 @@ import com.promesa.promesa.domain.order.dto.request.PaymentRequest;
 import com.promesa.promesa.domain.order.dto.response.OrderResponse;
 import com.promesa.promesa.domain.order.dto.request.OrderItemRequest;
 import com.promesa.promesa.domain.order.dto.request.OrderRequest;
-import com.promesa.promesa.domain.order.dto.response.OrderSummary;
 import com.promesa.promesa.domain.order.exception.InvalidOrderQuantityException;
 import com.promesa.promesa.domain.order.exception.OrderNotFoundException;
 import com.promesa.promesa.domain.shippingAddress.dto.request.AddressRequest;
@@ -43,7 +41,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
     private final CartItemRepository cartRepository;
-    private final DeliveryRepository deliveryRepository;
     private final S3Service s3Service;
 
     @Value("${aws.s3.bucket}")
@@ -129,12 +126,9 @@ public class OrderService {
         order.setTotalAmount(totalAmount);
         order.setTotalQuantity(totalQuantity);
 
-        orderRepository.save(order);
-
         AddressRequest addr = request.address();
 
         Delivery delivery = Delivery.builder()
-                .order(order)
                 .receiverName(addr.getRecipientName())
                 .receiverPhone(addr.getRecipientPhone())
                 .zipCode(addr.getZipCode())
@@ -144,36 +138,29 @@ public class OrderService {
                 .deliveryFee(deliveryFee)
                 .build();
 
-        deliveryRepository.save(delivery);
+        order.setDelivery(delivery);
+        orderRepository.save(order);
 
         return OrderResponse.of(order, delivery, s3Service, bucketName);
     }
 
-    public List<OrderSummary> getOrderSummaries(Member member) {
+    public List<OrderResponse> getOrderSummaries(Member member) {
         List<Order> orders = orderRepository.findByMemberOrderByCreatedAtDesc(member);
 
         return orders.stream()
                 .map(order -> {
-                    Delivery delivery = deliveryRepository.findByOrder(order)
-                            .orElseThrow(() -> DeliveryNotFoundException.EXCEPTION);
-
-                    String thumbnailUrl = order.getOrderItems().get(0).getItem().getItemImages().stream()
-                            .filter(img -> img.isThumbnail())
-                            .map(img -> s3Service.createPresignedGetUrl(bucketName, img.getImageKey()))
-                            .findFirst()
-                            .orElse(null);
-
-                    return OrderSummary.from(order, thumbnailUrl, delivery);
+                    Delivery delivery = order.getDelivery();
+                    return OrderResponse.of(order, delivery, s3Service, bucketName);
                 })
                 .toList();
     }
+
 
     public OrderResponse getOrderDetail(Member member, Long orderId) {
         Order order = orderRepository.findByIdAndMember(orderId, member)
                 .orElseThrow(() -> OrderNotFoundException.EXCEPTION);
 
-        Delivery delivery = deliveryRepository.findByOrder(order)
-                .orElseThrow(() -> DeliveryNotFoundException.EXCEPTION);
+        Delivery delivery = order.getDelivery();
 
         return OrderResponse.of(order, delivery, s3Service, bucketName);
     }

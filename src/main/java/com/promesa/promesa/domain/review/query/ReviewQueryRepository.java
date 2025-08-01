@@ -1,5 +1,7 @@
 package com.promesa.promesa.domain.review.query;
 
+import com.promesa.promesa.domain.delivery.domain.Delivery;
+import com.promesa.promesa.domain.delivery.domain.DeliveryStatus;
 import com.promesa.promesa.domain.order.domain.OrderStatus;
 import com.promesa.promesa.domain.order.dto.response.OrderItemSummary;
 import com.promesa.promesa.domain.review.dto.response.ReviewDetailResponse;
@@ -13,6 +15,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import static com.promesa.promesa.domain.delivery.domain.QDelivery.*;
 import static com.promesa.promesa.domain.item.domain.QItemImage.itemImage;
 import static com.promesa.promesa.domain.order.domain.QOrderItem.orderItem;
 import static com.promesa.promesa.domain.order.domain.QOrder.order;
@@ -186,6 +189,7 @@ public class ReviewQueryRepository {
                 ))
                 .from(orderItem)
                 .join(orderItem.order, order)
+                .join(order.delivery, delivery)
                 .leftJoin(itemImage).on(
                         itemImage.item.eq(orderItem.item)
                                 .and(itemImage.isThumbnail.eq(true))
@@ -193,7 +197,7 @@ public class ReviewQueryRepository {
                 .leftJoin(review).on(review.orderItem.id.eq(orderItem.id))
                 .where(
                         order.member.id.eq(memberId),   // 현재 로그인한 회원
-                        order.orderStatus.eq(OrderStatus.DELIVERED),    // 배송 완료된 주문만 조회
+                        delivery.deliveryStatus.eq(DeliveryStatus.DELIVERED),    // 배송 완료된 주문만 조회
                         review.orderItem.isNull()
                 )
                 .orderBy(

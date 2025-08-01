@@ -52,7 +52,7 @@ public class OrderController {
 
     @GetMapping
     @Operation(summary = "주문 내역 목록 조회")
-    public ResponseEntity<List<OrderSummary>> getOrders(
+    public ResponseEntity<List<OrderResponse>> getOrders(
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Member member = user.getMember();
