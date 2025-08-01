@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findByMember(Member member);
+    List<Order> findByMemberOrderByCreatedAtDesc(Member member);
     Optional<Order> findByIdAndMember(Long id, Member member);
 
     List<Order> findByOrderStatus(OrderStatus orderStatus);

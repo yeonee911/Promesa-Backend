@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -83,10 +84,6 @@ public class Member extends BaseTimeEntity {
 
     public void withdraw() {
         this.isDeleted = true;
+        this.providerId = this.providerId + "_withdrawn_" + UUID.randomUUID(); // providerId로 기존 회원을 찾을 수 없게 만들기
     }
-
-    public void restore() {
-        this.isDeleted = false;
-    }
-
 }

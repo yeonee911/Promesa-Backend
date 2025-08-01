@@ -124,9 +124,12 @@ public class Item extends BaseTimeEntity {
 
     public void decreaseStock(int quantity) {
         if (this.stock < quantity) {
-            throw InsufficientStockException.EXCEPTION; // 새 예외 생성 필요
+            throw InsufficientStockException.EXCEPTION; // 재고 부족 예외
         }
         this.stock -= quantity;
-    }
 
+        if (this.stock == 0) {
+            this.saleStatus = SaleStatus.SOLD_OUT;
+        }
+    }
 }
