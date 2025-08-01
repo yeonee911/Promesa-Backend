@@ -77,4 +77,8 @@ public class Artist extends BaseTimeEntity {
             member.setArtist(this);
         }
     }
+
+    public void setProfileImageKey(String targetKey) {
+        this.profileImageKey = targetKey;
+    }
 }

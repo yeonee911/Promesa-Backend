@@ -78,7 +78,6 @@ public class ArtistService {
      * @param request
      * @return
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public String createArtist(@Valid AddArtistRequest request) {
         Member member = memberRepository.findById(request.getMemberId())
@@ -106,6 +105,18 @@ public class ArtistService {
 
         member.addRole(Role.ROLE_ARTIST); // 작가 권한 등록
         memberRepository.save(member);
+
+        Long artistId = newArtist.getId();
+        String sourceKey = newArtist.getProfileImageKey();  // 임시 키 가져오기
+        String targetKey = sourceKey.replaceFirst(  // 키 생성
+                "([^/]+/)tmp/",      // “어떤폴더/tmp/” 패턴 중 tmp/만
+                "$1" + artistId + "/" // 앞 그룹(artist/) + ID +
+        );
+
+        s3Service.copyObject(bucketName, sourceKey, targetKey); // 객체 이동
+        s3Service.deleteObject(bucketName, sourceKey);  // 기존 객체 삭제
+        newArtist.setProfileImageKey(targetKey);    // db에 키 없데이트
+        artistRepository.save(newArtist);
 
         String message = "성공적으로 등록되었습니다.";
         return message;
