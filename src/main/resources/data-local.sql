@@ -502,30 +502,53 @@ INSERT INTO item_category (
       (93,  5,   93), (94,  3,   94), (95,  2,   95), (96,  3,   96),
       (97,  2,   97), (98,  5,   98), (99,  5,   99), (100, 2,  100);
 
--- 7. EXHIBITION
 INSERT INTO exhibition (
     exhibition_id,
     created_at,
     updated_at,
     description,
     title,
-    thumbnail_image_key,
-    detailed_image_key,
     exhibition_status,
     start_date,
     end_date
 ) VALUES
-      (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '따뜻한 봄 작품들', '봄 기획전',
-       'exhibition/1/thumbnail/spring.jpg', 'exhibition/1/detail/시안2.png', 'PAST',     '2025-03-20', '2025-04-20'),
-      (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '무더운 여름 작품들', '여름 기획전',
-       'exhibition/2/thumbnail/summer.jpg','exhibition/2/detail/시안2.png','ONGOING', '2025-06-20', '2025-07-20'),
-      (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '상큼한 토마토가 좋아','토마토 기획전',
-       'exhibition/3/thumbnail/tomato.jpg','exhibition/3/detail/시안2.png','UPCOMING','2025-12-20', NULL),
+      (1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(),
+       '따뜻한 봄 작품들', '봄 기획전',
+       'PAST',     '2025-03-20', '2025-04-20'),
+      (2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(),
+       '무더운 여름 작품들', '여름 기획전',
+       'ONGOING',  '2025-06-20', '2025-07-20'),
+      (3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(),
+       '상큼한 토마토가 좋아', '토마토 기획전',
+       'UPCOMING', '2025-12-20', NULL),
       (4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(),
        '현대적인 감각과 기능성이 돋보이는 모연도예 작가님의 예술 철학을 다양한 작품과 함게 살펴보세요.',
        '작품 가이드 Ep.01\n모언도예_차도구 소개',
-       'exhibition/4/thumbnail/기획전 타이틀.png','exhibition/4/detail/기획전 상세페이지.png',
        'PERMANENT','2025-07-29', NULL);
+
+-- 2) EXHIBITION_IMAGE 테이블: 썸네일(is_thumbnail=1)과 상세 이미지(is_thumbnail=0)로 분리
+INSERT INTO exhibition_image (
+    exhibition_image_id,
+    exhibition_image_key,
+    is_thumbnail,
+    sort_order,
+    exhibition_id
+) VALUES
+      -- 전시 1
+      ( 1, 'exhibition/1/thumbnail/spring.jpg',  TRUE, 1, 1),
+      ( 2, 'exhibition/1/detail/시안2.png',       FALSE,2, 1),
+
+      -- 전시 2
+      ( 3, 'exhibition/2/thumbnail/summer.jpg',  TRUE, 1, 2),
+      ( 4, 'exhibition/2/detail/시안2.png',       FALSE,2, 2),
+
+      -- 전시 3
+      ( 5, 'exhibition/3/thumbnail/tomato.jpg',  TRUE, 1, 3),
+      ( 6, 'exhibition/3/detail/시안2.png',       FALSE,2, 3),
+
+      -- 전시 4
+      ( 7, 'exhibition/4/thumbnail/기획전 타이틀.png',  TRUE, 1, 4),
+      ( 8, 'exhibition/4/detail/기획전 상세페이지.png', FALSE,2, 4);
 
 -- 8. EXHIBITION_ITEM
 INSERT INTO exhibition_item (

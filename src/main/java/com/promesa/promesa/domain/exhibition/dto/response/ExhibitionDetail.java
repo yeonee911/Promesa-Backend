@@ -4,20 +4,17 @@ import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.exhibition.domain.Exhibition;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class ExhibitionDetail {
-    private String detailedImageKey;
-    private String detailedImageUrl;
+    private final List<ExhibitionImageResponse> images;
 
-    private ExhibitionDetail(String detailedImageKey, String detailedImageUrl) {
-        this.detailedImageKey = detailedImageKey;
-        this.detailedImageUrl = detailedImageUrl;
+    private ExhibitionDetail(List<ExhibitionImageResponse> images) {
+        this.images = images;
     }
 
-    public static ExhibitionDetail of(Exhibition exhibition, String imageUrl) {
-        return new ExhibitionDetail(
-                exhibition.getDetailedImageKey(),
-                imageUrl
-        );
+    public static ExhibitionDetail of(List<ExhibitionImageResponse> images) {
+        return new ExhibitionDetail(images);
     }
 }
