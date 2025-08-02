@@ -27,11 +27,15 @@ public class ExhibitionStatusScheduler {
         LocalDate today = LocalDate.now();
 
         for (Exhibition exhibition : exhibitions) {
-            if (exhibition.getStatus() == UPCOMING && today.isAfter(exhibition.getStartDate())) {
+            if (exhibition.getStatus() == UPCOMING
+                    && !today.isBefore(exhibition.getStartDate())) {
+                // today >= startDate
                 if (exhibition.getEndDate() == null) exhibition.setStatus(PERMANENT);
                 else exhibition.setStatus(ONGOING);
             }
-            else if (exhibition.getStatus() == ONGOING && today.isAfter(exhibition.getEndDate())) {
+            else if (exhibition.getStatus() == ONGOING
+                    && !today.isBefore(exhibition.getEndDate())) {
+                // today >= endDate
                 exhibition.setStatus(PAST);
             }
         }
