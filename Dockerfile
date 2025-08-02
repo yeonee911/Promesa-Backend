@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.10-jdk AS builder
+FROM eclipse-temurin:17-jdk AS builder
 WORKDIR /app
 
 COPY gradlew ./
@@ -10,7 +10,7 @@ COPY src ./src
 RUN chmod +x ./gradlew
 RUN ./gradlew clean bootJar --no-daemon -DskipTests
 
-FROM eclipse-temurin:17.0.10-jre
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 COPY --from=builder /app/build/libs/*.jar app.jar
