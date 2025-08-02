@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +30,16 @@ public class ExhibitionImage extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibition_id")
     private Exhibition exhibition;
+
+    @Builder
+    public ExhibitionImage(String imageKey, boolean isThumbnail, Integer sortOrder, Exhibition exhibition) {
+        this.imageKey = imageKey;
+        this.isThumbnail = isThumbnail;
+        this.sortOrder = sortOrder;
+        this.exhibition = exhibition;
+    }
+
+    public void setExhibition(Exhibition exhibition) {
+        this.exhibition = exhibition;
+    }
 }

@@ -3,6 +3,7 @@ package com.promesa.promesa.domain.exhibition.domain;
 import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
@@ -19,4 +20,14 @@ public class ExhibitionArtist extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id", nullable = false)
     private Artist artist;
+
+    @Builder
+    public ExhibitionArtist(Exhibition exhibition, Artist artist) {
+        this.exhibition = exhibition;
+        this.artist = artist;
+    }
+
+    public void setExhibition(Exhibition exhibition) {
+        this.exhibition = exhibition;
+    }
 }
