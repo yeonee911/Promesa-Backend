@@ -189,7 +189,7 @@ public class ReviewQueryRepository {
                 ))
                 .from(orderItem)
                 .join(orderItem.order, order)
-                .join(order.delivery, delivery)
+                .join(delivery).on(delivery.order.eq(order))
                 .leftJoin(itemImage).on(
                         itemImage.item.eq(orderItem.item)
                                 .and(itemImage.isThumbnail.eq(true))
@@ -198,7 +198,7 @@ public class ReviewQueryRepository {
                 .where(
                         order.member.id.eq(memberId),   // 현재 로그인한 회원
                         delivery.deliveryStatus.eq(DeliveryStatus.DELIVERED),    // 배송 완료된 주문만 조회
-                        review.orderItem.isNull()
+                        review.id.isNull()
                 )
                 .orderBy(
                         order.orderDate.desc(), // 주문 최신순

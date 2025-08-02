@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.order.dto.response;
 
+import com.promesa.promesa.domain.delivery.domain.DeliveryStatus;
 import com.promesa.promesa.domain.order.domain.OrderItem;
 import com.promesa.promesa.domain.order.domain.OrderStatus;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class OrderItemSummary {
     private String artistName;
     private String itemThumbnail;
     private LocalDateTime orderDate;
-    private OrderStatus orderStatus;
+    private DeliveryStatus deliveryStatus;
     private int quantity;
 
     public void setItemThumbnail(String itemThumbnail) {
