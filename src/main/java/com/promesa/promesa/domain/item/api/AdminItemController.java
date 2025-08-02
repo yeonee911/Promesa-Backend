@@ -18,13 +18,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@RequestMapping("/admin/items")
 @RestController
 @RequiredArgsConstructor
 public class AdminItemController {
 
     private final ItemService itemService;
 
-    @PostMapping("/items")
+    @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "작품 등록")
     public ResponseEntity<String> createItem(

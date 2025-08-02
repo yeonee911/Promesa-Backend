@@ -4,6 +4,7 @@ import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.item.domain.Item;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,4 +23,14 @@ public class ExhibitionItem extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
+
+    @Builder
+    public ExhibitionItem(Exhibition exhibition, Item item) {
+        this.exhibition = exhibition;
+        this.item = item;
+    }
+
+    public void setExhibition(Exhibition exhibition) {
+        this.exhibition = exhibition;
+    }
 }
