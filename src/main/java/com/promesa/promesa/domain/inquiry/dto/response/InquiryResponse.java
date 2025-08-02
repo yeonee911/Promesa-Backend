@@ -1,4 +1,4 @@
-package com.promesa.promesa.domain.inquiry.dto;
+package com.promesa.promesa.domain.inquiry.dto.response;
 
 import com.promesa.promesa.domain.inquiry.domain.Inquiry;
 

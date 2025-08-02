@@ -8,6 +8,7 @@ import com.promesa.promesa.domain.itemCategory.domain.ItemCategory;
 import com.promesa.promesa.domain.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.NotBlank;
@@ -64,6 +65,7 @@ public class Item extends BaseTimeEntity {
     private List<ExhibitionItem> exhibitionItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    @OrderBy("sortOrder ASC")
     private List<ItemImage> itemImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
@@ -71,6 +73,25 @@ public class Item extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
+
+    @Builder
+    public Item(String name, int price, int stock, SaleStatus saleStatus,
+                int wishCount, Double averageRating, int reviewCount, double totalRating,
+                String productCode, int width, int height, int depth, Artist artist) {
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.saleStatus = saleStatus;
+        this.wishCount = wishCount;
+        this.averageRating = averageRating;
+        this.reviewCount = reviewCount;
+        this.totalRating = totalRating;
+        this.productCode = productCode;
+        this.width = width;
+        this.height = height;
+        this.depth = depth;
+        this.artist = artist;
+    }
 
     public void increaseReviewCount() {
         this.reviewCount++;
@@ -131,4 +152,19 @@ public class Item extends BaseTimeEntity {
             this.saleStatus = SaleStatus.SOLD_OUT;
         }
     }
+
+    public void addItemImage(ItemImage itemImage) {
+        itemImage.setItem(this);
+        if (!this.itemImages.contains(itemImage)) {
+            this.itemImages.add(itemImage);
+        }
+    }
+
+    public void addCategory(ItemCategory category) {
+        category.setItem(this);
+        if (!this.itemCategories.contains(category)) {
+            this.itemCategories.add(category);
+        }
+    }
+
 }

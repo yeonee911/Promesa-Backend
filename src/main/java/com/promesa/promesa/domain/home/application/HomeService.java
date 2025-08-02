@@ -3,7 +3,7 @@ package com.promesa.promesa.domain.home.application;
 import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
-import com.promesa.promesa.domain.artist.dto.ArtistResponse;
+import com.promesa.promesa.domain.artist.dto.response.ArtistResponse;
 import com.promesa.promesa.domain.home.dto.response.BrandInfoResponse;
 import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.home.dto.response.SearchResponse;

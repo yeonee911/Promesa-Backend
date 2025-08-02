@@ -17,6 +17,8 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -121,13 +123,30 @@ public class S3Service {
         }
     }
 
+    public void copyObject(String bucketName, String sourceKey, String targetKey) {
+        try {
+            String encodedSource = URLEncoder.encode(bucketName + "/" + sourceKey, StandardCharsets.UTF_8);
+
+            s3Client.copyObject(builder -> builder
+                    .copySource(encodedSource)
+                    .destinationBucket(bucketName)
+                    .destinationKey(targetKey)
+                    .build()
+            );
+            log.info("S3 객체 복사 완료: {}/{} -> {}/{}", bucketName, sourceKey, bucketName, targetKey);
+        } catch (Exception e) {
+            log.error("S3 객체 복사 실패: {}/{} -> {}/{}", bucketName, sourceKey, bucketName, targetKey, e);
+            throw InternalServerError.EXCEPTION;
+        }
+    }
+
     private String generateKey(ImageType imageType, Long referenceId, SubType subType, Long subReferenceId , String originalFileName) {
         String uuid = UUID.randomUUID().toString();
 
         StringBuilder key = new StringBuilder();
         key.append(imageType.getPath())
                 .append("/")
-                .append(referenceId)
+                .append(referenceId == null ? "tmp" : referenceId)  // 등록 api인 경우 아직 id 값이 없으므로 임시 경로 제공
                 .append("/")
                 .append(subType.getPath());
 

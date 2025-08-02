@@ -10,7 +10,9 @@ import static com.promesa.promesa.common.consts.PromesaStatic.*;
 @Getter
 @AllArgsConstructor
 public enum ArtistErrorCode implements BaseErrorCode {
-    ARTIST_NOT_FOUND(NOT_FOUND, "Artist_404", "해당 작가를 찾을 수 없습니다.");
+    ARTIST_NOT_FOUND(NOT_FOUND, "Artist_404", "해당 작가를 찾을 수 없습니다."),
+    ALREADY_ARTIST(CONFLICT, "Artist_409", "이미 작가로 등록된 회원입니다."),
+    DUPLICATE_ARTIST_NAME(CONFLICT, "Artist_409", "이미 존재하는 작가명입니다.");
     /*
     이 중에 필요한 거만 사용 예정
     ARTIST_ALREADY_EXISTS(CONFLICT, "Artist_409", "이미 등록된 작가입니다."),

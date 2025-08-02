@@ -6,6 +6,7 @@ import com.promesa.promesa.domain.item.domain.Item;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,4 +28,17 @@ public class ItemCategory extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
+
+    @Builder
+    public ItemCategory(Category category, Item item) {
+        this.category = category;
+        this.item = item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+        if (!item.getItemCategories().contains(this)) {
+            item.getItemCategories().add(this);
+        }
+    }
 }

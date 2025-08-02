@@ -1,5 +1,8 @@
 package com.promesa.promesa.security.oauth;
 
+import com.promesa.promesa.domain.member.dao.MemberRepository;
+import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.member.domain.Role;
 import com.promesa.promesa.security.jwt.JwtProperties;
 import com.promesa.promesa.security.jwt.JwtUtil;
 import com.promesa.promesa.security.jwt.refresh.CookieUtil;
@@ -21,6 +24,7 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -31,6 +35,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final JwtUtil jwtUtil;
     private final RefreshRepository refreshRepository;
     private final JwtProperties jwtProperties;
+    private final MemberRepository memberRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -44,11 +49,18 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String providerId = extractProviderId(provider, oAuth2User.getAttributes());
 
         String nickname = provider + ":" + providerId;
-        String role = "USER";
+
+        Member member = memberRepository
+                .findByProviderAndProviderId(provider, providerId)
+                .orElseThrow(() -> new IllegalStateException("Member not found"));
+
+        List<String> roles = member.getRoles().stream()
+                .map(Role::name)
+                .toList();
 
         // 1. JWT 발급
-        String accessToken = jwtUtil.createAccessToken(nickname, role);
-        String refreshToken = jwtUtil.createRefreshToken(nickname, role);
+        String accessToken = jwtUtil.createAccessToken(nickname, roles);
+        String refreshToken = jwtUtil.createRefreshToken(nickname, roles);
 
         // 2. Redis에 Refresh Token 저장
         refreshRepository.save(refreshToken, nickname, jwtProperties.getRefreshTokenExpiration());

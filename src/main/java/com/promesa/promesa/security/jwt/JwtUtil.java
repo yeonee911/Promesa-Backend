@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -28,11 +29,11 @@ public class JwtUtil {
     }
 
     // ✅ 공통 JWT 생성 메서드
-    public String createJwt(String category, String nickname, String role, Long expiredMs) {
+    public String createJwt(String category, String nickname, List<String> roles, Long expiredMs) {
         Claims claims = Jwts.claims();
         claims.put("category", category); // access or refresh
         claims.put("nickname", nickname);
-        claims.put("role", role);
+        claims.put("role", roles);
 
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expiredMs);
@@ -46,12 +47,12 @@ public class JwtUtil {
     }
 
     // ✅ Access / Refresh 생성
-    public String createAccessToken(String nickname, String role) {
-        return createJwt("access", nickname, role, jwtProperties.getAccessTokenExpiration());
+    public String createAccessToken(String nickname, List<String> roles) {
+        return createJwt("access", nickname, roles, jwtProperties.getAccessTokenExpiration());
     }
 
-    public String createRefreshToken(String nickname, String role) {
-        return createJwt("refresh", nickname, role, jwtProperties.getRefreshTokenExpiration());
+    public String createRefreshToken(String nickname, List<String> roles) {
+        return createJwt("refresh", nickname, roles, jwtProperties.getRefreshTokenExpiration());
     }
 
     // ✅ 유효성 검사 (예외 발생 방식)

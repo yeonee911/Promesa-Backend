@@ -4,15 +4,12 @@ import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
-import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionDetail;
-import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionDetailResponse;
-import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummaryResponse;
+import com.promesa.promesa.domain.exhibition.dto.response.*;
 import com.promesa.promesa.domain.exhibition.query.ExhibitionQueryRepository;
 import com.promesa.promesa.domain.item.query.ItemQueryRepository;
 import com.promesa.promesa.domain.exhibition.dao.ExhibitionRepository;
 import com.promesa.promesa.domain.exhibition.domain.Exhibition;
 import com.promesa.promesa.domain.exhibition.domain.ExhibitionStatus;
-import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummary;
 import com.promesa.promesa.domain.exhibition.exception.ExhibitionNotFoundException;
 import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.member.domain.Member;
@@ -52,8 +49,14 @@ public class ExhibitionService {
         List<String> artistNames = exhibitionQueryRepository.findArtistNames(exhibitionId);
         ExhibitionSummary summary = ExhibitionSummary.of(exhibition, artistNames, thumbnailImageUrl);
 
-        String detailedImageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getDetailedImageKey());
-        ExhibitionDetail detail = ExhibitionDetail.of(exhibition, detailedImageUrl);
+        List<ExhibitionImageResponse> detailedImageUrls = exhibition.getDetailImages().stream()
+                .map(img -> {
+                    String url = s3Service.createPresignedGetUrl(bucketName, img.getImageKey());
+                    return new ExhibitionImageResponse(url, img.getSortOrder());
+                })
+                .toList();
+
+        ExhibitionDetail detail = ExhibitionDetail.of(detailedImageUrls);
 
         List<ItemPreviewResponse> itemPreviews = itemQueryRepository.findExhibitionItem(member, exhibitionId)
                 .stream()

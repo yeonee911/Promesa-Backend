@@ -2,6 +2,7 @@ package com.promesa.promesa.security.oauth;
 
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.member.domain.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.DisabledException;
@@ -14,6 +15,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,17 +37,26 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         //  1. 기존 회원 조회
         Member member = memberRepository
                 .findByProviderAndProviderId(provider, providerId)
-                .orElseGet(() -> memberRepository.save(Member.builder()
-                        .name(name)
-                        .provider(provider)
-                        .providerId(providerId)
-                        .isDeleted(false)
-                        .build()));
+                .orElseGet(() -> {
+                    Member m = Member.builder()
+                            .name(name)
+                            .provider(provider)
+                            .providerId(providerId)
+                            .isDeleted(false)
+                            .build();
+                    m.addRole(Role.ROLE_USER);
+                    return memberRepository.save(m);
+                });
 
+        // 로그인 시점에도 멤버 엔티티에서 권한을 꺼내 쓰도록
+        Set<SimpleGrantedAuthority> authorities = member.getRoles().stream()
+                .map(Role::name)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-                attributes,
-                "name" // default key
+                authorities,
+                oAuth2User.getAttributes(),
+                "name"
         );
     }
 
