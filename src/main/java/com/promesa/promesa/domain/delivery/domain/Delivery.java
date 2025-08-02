@@ -29,10 +29,6 @@ public class Delivery {
     @Column(name = "delivery_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    private Order order;
-
     private String courierName; // 택배사
 
     private String receiverName;          // 수령인 이름
@@ -49,5 +45,13 @@ public class Delivery {
     private LocalDate deliveryCompletedDate; // 배송 완료일
 
     private int deliveryFee;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 }
 

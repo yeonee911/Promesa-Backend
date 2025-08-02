@@ -5,7 +5,6 @@ import com.promesa.promesa.domain.delivery.domain.Delivery;
 import com.promesa.promesa.domain.item.domain.ItemImage;
 import com.promesa.promesa.domain.order.domain.Order;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public record OrderResponse(

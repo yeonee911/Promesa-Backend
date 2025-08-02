@@ -3,6 +3,8 @@ package com.promesa.promesa.domain.order.domain;
 import com.promesa.promesa.domain.item.domain.Item;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,6 +38,9 @@ public class OrderItem {
 
     private int quantity;
     private int price;
+
+    @Enumerated(EnumType.STRING)
+    private OrderItemStatus orderItemStatus;
 
     public int getTotalPrice() {
         return quantity * price;

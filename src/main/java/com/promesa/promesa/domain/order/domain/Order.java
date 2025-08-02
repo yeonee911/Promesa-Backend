@@ -1,6 +1,7 @@
 package com.promesa.promesa.domain.order.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
+import com.promesa.promesa.domain.delivery.domain.Delivery;
 import com.promesa.promesa.domain.member.domain.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -58,6 +60,14 @@ public class Order extends BaseTimeEntity {
     // 주문 금액 계산용
     private int totalAmount; // 총 결제 금액
     private int totalQuantity; // 총 수량
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Delivery delivery;
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+        delivery.setOrder(this); // 양방향 연관관계 설정
+    }
 
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);

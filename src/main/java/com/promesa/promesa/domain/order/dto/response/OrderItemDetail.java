@@ -1,13 +1,15 @@
 package com.promesa.promesa.domain.order.dto.response;
 
 import com.promesa.promesa.domain.order.domain.OrderItem;
+import com.promesa.promesa.domain.order.domain.OrderItemStatus;
 
 public record OrderItemDetail(
         Long itemId,
         String itemName,
         String orderItemThumbnail,
         int price,
-        int quantity
+        int quantity,
+        OrderItemStatus itemStatus
 ) {
     public static OrderItemDetail from(OrderItem item, String orderThumbnail) {
         return new OrderItemDetail(
@@ -15,7 +17,8 @@ public record OrderItemDetail(
                 item.getItem().getName(),
                 orderThumbnail,
                 item.getPrice(),
-                item.getQuantity()
+                item.getQuantity(),
+                item.getOrderItemStatus()
         );
     }
 }

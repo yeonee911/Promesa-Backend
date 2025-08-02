@@ -17,11 +17,7 @@ public record OrderSummary(
         String itemThumbnail, // 대표 이미지 URL
         String itemName,      // 대표 상품명
         String buyerName,     // 구매자 이름
-        String buyerPhone,    // 구매자 연락처
-        LocalDate deliveryExpectedDate, // 배송 예정일
-        LocalDate deliveryStartDate, // 배송 시작일
-        LocalDate deliveryCompletedDate, // 배송 완료일
-        DeliveryStatus deliveryStatus // 배송 상태
+        String buyerPhone    // 구매자 연락처
 ) {
     public static OrderSummary from(Order order, String itemThumbnailUrl, Delivery delivery) {
         return new OrderSummary(
@@ -33,11 +29,7 @@ public record OrderSummary(
                 itemThumbnailUrl,
                 order.getOrderItems().get(0).getItem().getName(),
                 order.getMember().getName(),
-                order.getMember().getPhone(),
-                delivery.getDeliveryExpectedDate(),
-                delivery.getDeliveryStartDate(),
-                delivery.getDeliveryCompletedDate(),
-                delivery.getDeliveryStatus()
+                order.getMember().getPhone()
         );
     }
 }

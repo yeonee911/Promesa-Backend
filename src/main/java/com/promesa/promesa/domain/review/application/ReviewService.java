@@ -1,6 +1,7 @@
 package com.promesa.promesa.domain.review.application;
 
 import com.promesa.promesa.common.application.S3Service;
+import com.promesa.promesa.domain.delivery.domain.DeliveryStatus;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
@@ -73,7 +74,7 @@ public class ReviewService {
         }
 
         // 아직 배송되지 않은 상품인지 검증
-        if (orderItem.getOrder().getOrderStatus() != OrderStatus.DELIVERED) {
+        if (orderItem.getOrder().getDelivery().getDeliveryStatus() != DeliveryStatus.DELIVERED) {
             throw ReviewItemNotDeliveredException.EXCEPTION;
         }
 
