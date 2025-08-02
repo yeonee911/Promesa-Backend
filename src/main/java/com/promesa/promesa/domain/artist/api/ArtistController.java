@@ -72,13 +72,4 @@ public class ArtistController {
     public ResponseEntity<List<ArtistNameResponse>> getArtistNames() {
         return ResponseEntity.ok(artistService.getArtistNames());
     }
-
-    @PostMapping
-    @Operation(summary = "작가 등록")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> createArtist(
-            @RequestBody @Valid AddArtistRequest request)
-    {
-        return ResponseEntity.ok(artistService.createArtist(request));
-    }
 }
