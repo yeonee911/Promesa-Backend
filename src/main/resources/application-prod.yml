@@ -34,14 +34,6 @@ logging:
     org.hibernate.SQL: WARN
 
 management:
-  metrics:
-    binders:
-      system:
-        enabled: false      # ProcessorMetrics, DiskSpaceMetrics 등 OS 레벨 메트릭 전체
-      processor:
-        enabled: false      # CPU 바인더 (별도)
-      tomcat:
-        enabled: false      # TomcatMetrics 빈 비활성화
   endpoints:
     web:
       exposure:
