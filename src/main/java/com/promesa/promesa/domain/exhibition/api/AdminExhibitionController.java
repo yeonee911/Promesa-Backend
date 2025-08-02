@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/exhibitions")
+@RequestMapping("/admin/exhibitions")
 public class AdminExhibitionController {
     private final ExhibitionService exhibitionService;
 

@@ -24,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/artists")
+@RequestMapping("/admin/artists")
 public class AdminArtistController {
     private final ArtistService artistService;
 
