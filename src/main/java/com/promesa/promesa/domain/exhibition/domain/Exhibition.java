@@ -1,12 +1,11 @@
 package com.promesa.promesa.domain.exhibition.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
-import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionImageResponse;
-import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummaryResponse;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -39,7 +38,7 @@ public class Exhibition extends BaseTimeEntity {
     @Column(name = "end_date", nullable = true)
     private LocalDate endDate;
 
-    @NotBlank
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "exhibition_status", nullable = false)
     private ExhibitionStatus status;
@@ -71,5 +70,29 @@ public class Exhibition extends BaseTimeEntity {
                 .filter(img -> !img.isThumbnail())
                 .sorted(Comparator.comparingInt(ExhibitionImage::getSortOrder))
                 .toList();
+    }
+
+    @Builder
+    public Exhibition(String title, String description, LocalDate startDate, LocalDate endDate, ExhibitionStatus status) {
+        this.title = title;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
+    }
+
+    public void addExhibitionImage(ExhibitionImage exhibitionImage) {
+        exhibitionImage.setExhibition(this);
+        this.exhibitionImages.add(exhibitionImage);
+    }
+
+    public void addExhibitionItem(ExhibitionItem exhibitionItem) {
+        exhibitionItem.setExhibition(this);
+        this.exhibitionItems.add(exhibitionItem);
+    }
+
+    public void addExhibitionArtist(ExhibitionArtist exhibitionArtist) {
+        exhibitionArtist.setExhibition(this);
+        this.exhibitionArtists.add(exhibitionArtist);
     }
 }
