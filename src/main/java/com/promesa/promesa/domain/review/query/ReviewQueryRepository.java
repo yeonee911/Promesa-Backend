@@ -184,7 +184,7 @@ public class ReviewQueryRepository {
                         orderItem.item.artist.name.as("artistName"),
                         itemImage.imageKey.as("itemThumbnail"),
                         orderItem.order.orderDate.as("orderDate"),
-                        orderItem.order.orderStatus.as("orderStatus"),
+                        delivery.deliveryStatus.as("deliveryStatus"),
                         orderItem.quantity.as("quantity")
                 ))
                 .from(orderItem)
