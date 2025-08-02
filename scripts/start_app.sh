@@ -35,8 +35,6 @@ fi
 # 4) 새 컨테이너 실행
 docker run -d \
   --name ${CONTAINER_NAME} \
-  --cgroupns=host \
-  -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
   -p ${TARGET_PORT}:8081 \
   -v /home/ubuntu/app/dumps:/tmp \
   --memory="768m" \
