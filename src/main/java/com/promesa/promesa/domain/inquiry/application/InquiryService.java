@@ -5,7 +5,10 @@ import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.category.domain.Category;
 import com.promesa.promesa.domain.category.exception.CategoryNotFoundException;
 import com.promesa.promesa.domain.inquiry.dao.InquiryRepository;
+import com.promesa.promesa.domain.inquiry.domain.Inquiry;
+import com.promesa.promesa.domain.inquiry.dto.InquiryRequest;
 import com.promesa.promesa.domain.inquiry.dto.InquiryResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +31,27 @@ public class InquiryService {
         return inquiryRepository.findAllByArtistId(artistId).stream()
                 .map(InquiryResponse::of)
                 .toList();
+    }
+
+    /**
+     * 관리자가 문의 등록
+     * @param request
+     * @return
+     */
+    @Transactional
+    public String createInquiry(@Valid InquiryRequest request) {
+        Artist artist = artistRepository.findById(request.artistId())
+                .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+
+        Inquiry newInquiry = Inquiry.builder()
+                .artist(artist)
+                .question(request.question())
+                .answer(request.answer())
+                .build();
+        inquiryRepository.save(newInquiry);
+
+        String message = "성공적으로 등록되었습니다.";
+        return message;
     }
 }
 
