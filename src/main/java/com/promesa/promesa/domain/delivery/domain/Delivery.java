@@ -1,5 +1,6 @@
 package com.promesa.promesa.domain.delivery.domain;
 
+import com.promesa.promesa.domain.delivery.dto.request.DeliveryRequest;
 import com.promesa.promesa.domain.order.domain.Order;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,5 +54,20 @@ public class Delivery {
     public void setOrder(Order order) {
         this.order = order;
     }
+
+    public void updateFrom(DeliveryRequest request) {
+        this.courierName = request.courierName();
+        this.receiverName = request.receiverName();
+        this.receiverPhone = request.receiverPhone();
+        this.zipCode = request.zipCode();
+        this.address = request.address();
+        this.addressDetail = request.addressDetail();
+        this.deliveryStatus = request.deliveryStatus();
+        this.deliveryExpectedDate = request.deliveryExpectedDate();
+        this.deliveryStartDate = request.deliveryStartDate();
+        this.deliveryCompletedDate = request.deliveryCompletedDate();
+        this.deliveryFee = request.deliveryFee();
+    }
+
 }
 
