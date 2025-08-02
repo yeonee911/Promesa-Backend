@@ -61,6 +61,7 @@ public class Member extends BaseTimeEntity {
     @JoinColumn(name = "shipping_address_id", unique = true)
     private ShippingAddress shippingAddress;
 
+    @Builder.Default
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "member_roles",
