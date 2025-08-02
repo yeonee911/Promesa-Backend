@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @EnableJpaAuditing
-@SpringBootApplication
+@SpringBootApplication(exclude = SystemMetricsAutoConfiguration.class)
 @EnableConfigurationProperties(JwtProperties.class)
 public class PromesaApplication {
 
