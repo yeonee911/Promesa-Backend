@@ -32,4 +32,11 @@ public class InquiryController {
     ) {
         return ResponseEntity.ok(inquiryService.createInquiry(request));
     }
+
+    @Operation(summary = "문의 삭제")
+    @DeleteMapping("/{inquiryId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ARTIST')")
+    public ResponseEntity<String> deleteInquiry (@PathVariable Long inquiryId) {
+        return ResponseEntity.ok(inquiryService.deleteInquiry(inquiryId));
+    }
 }

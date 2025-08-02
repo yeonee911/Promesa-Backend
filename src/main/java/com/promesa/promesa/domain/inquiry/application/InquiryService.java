@@ -53,5 +53,18 @@ public class InquiryService {
         String message = "성공적으로 등록되었습니다.";
         return message;
     }
+
+    /**
+     * 관리자가 문의 삭제
+     * @param inquiryId
+     * @return
+     */
+    @Transactional
+    public String deleteInquiry(Long inquiryId) {
+        inquiryRepository.deleteById(inquiryId);
+
+        String message = "성공적으로 삭제되었습니다.";
+        return message;
+    }
 }
 
