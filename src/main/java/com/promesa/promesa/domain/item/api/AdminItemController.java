@@ -11,8 +11,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,28 +20,18 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-public class ItemController {
+public class AdminItemController {
 
     private final ItemService itemService;
-    private final ItemInfoService itemInfoService;
 
-    @GetMapping("/categories/{categoryId}/items")
-    public ResponseEntity<Page<ItemPreviewResponse>> findCategoryItem(
-            @PathVariable Long categoryId,
-            @AuthenticationPrincipal CustomUserDetails user,
-            @ParameterObject Pageable pageable)
+    @PostMapping("/items")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "작품 등록")
+    public ResponseEntity<String> createItem(
+            @RequestBody @Valid AddItemRequest request
+    )
     {
-        Member member = (user != null) ? user.getMember() : null;
-        Page<ItemPreviewResponse> response = itemService.findCategoryItem(member, categoryId, pageable);
+        String response = itemService.createItem(request);
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/items/{itemId}")
-    public ItemResponse getItem(
-            @PathVariable Long itemId,
-            @AuthenticationPrincipal CustomUserDetails userDetails
-    ) {
-        Member member = (userDetails != null) ? userDetails.getMember() : null;
-        return itemInfoService.getItemResponse(itemId, member);
     }
 }
