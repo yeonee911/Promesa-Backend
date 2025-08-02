@@ -37,16 +37,13 @@ public class Exhibition extends BaseTimeEntity {
     private LocalDate endDate;
 
     @NotBlank
-    @Column(name = "thumbnail_image_key", nullable = false)
-    private String thumbnailImageKey;
-
-    @Column(name = "detailed_image_key")    // UPCOMING일 경우 아직 상세페이지 제작 가능성 염두
-    private String detailedImageKey;
-
-    @NotBlank
     @Enumerated(EnumType.STRING)
     @Column(name = "exhibition_status", nullable = false)
     private ExhibitionStatus status;
+
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
+    @OrderBy("sortOrder ASC")
+    private List<ExhibitionImage> exhibitionImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
     private List<ExhibitionItem> exhibitionItems = new ArrayList<>();
