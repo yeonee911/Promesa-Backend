@@ -1,8 +1,9 @@
 package com.promesa.promesa.domain.inquiry.api;
 
 import com.promesa.promesa.domain.inquiry.application.InquiryService;
-import com.promesa.promesa.domain.inquiry.dto.InquiryRequest;
-import com.promesa.promesa.domain.inquiry.dto.InquiryResponse;
+import com.promesa.promesa.domain.inquiry.dto.request.AddInquiryRequest;
+import com.promesa.promesa.domain.inquiry.dto.request.UpdateInquiryRequest;
+import com.promesa.promesa.domain.inquiry.dto.response.InquiryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class InquiryController {
     @PostMapping()
     @PreAuthorize("hasAnyRole('ADMIN', 'ARTIST')")
     public ResponseEntity<String> createInquiry (
-            @RequestBody @Valid InquiryRequest request
+            @RequestBody @Valid AddInquiryRequest request
     ) {
         return ResponseEntity.ok(inquiryService.createInquiry(request));
     }
@@ -38,5 +39,15 @@ public class InquiryController {
     @PreAuthorize("hasAnyRole('ADMIN', 'ARTIST')")
     public ResponseEntity<String> deleteInquiry (@PathVariable Long inquiryId) {
         return ResponseEntity.ok(inquiryService.deleteInquiry(inquiryId));
+    }
+
+    @Operation(summary = "문의 수정")
+    @PutMapping("/{inquiryId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ARTIST')")
+    public ResponseEntity<String> updateInquiry (
+            @PathVariable Long inquiryId,
+            @RequestBody @Valid UpdateInquiryRequest request
+    ) {
+        return ResponseEntity.ok(inquiryService.updateInquiry(inquiryId, request));
     }
 }

@@ -1,13 +1,9 @@
-package com.promesa.promesa.domain.inquiry.dto;
+package com.promesa.promesa.domain.inquiry.dto.request;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record InquiryRequest (
-        @NotNull
-        Long artistId,
-
+public record UpdateInquiryRequest(
         @NotBlank(message = "질문은 필수입니다.")
         String question,
 

@@ -2,12 +2,12 @@ package com.promesa.promesa.domain.inquiry.application;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
-import com.promesa.promesa.domain.category.domain.Category;
-import com.promesa.promesa.domain.category.exception.CategoryNotFoundException;
 import com.promesa.promesa.domain.inquiry.dao.InquiryRepository;
 import com.promesa.promesa.domain.inquiry.domain.Inquiry;
-import com.promesa.promesa.domain.inquiry.dto.InquiryRequest;
-import com.promesa.promesa.domain.inquiry.dto.InquiryResponse;
+import com.promesa.promesa.domain.inquiry.dto.request.AddInquiryRequest;
+import com.promesa.promesa.domain.inquiry.dto.request.UpdateInquiryRequest;
+import com.promesa.promesa.domain.inquiry.dto.response.InquiryResponse;
+import com.promesa.promesa.domain.inquiry.exception.InquiryNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class InquiryService {
      * @return
      */
     @Transactional
-    public String createInquiry(@Valid InquiryRequest request) {
+    public String createInquiry(@Valid AddInquiryRequest request) {
         Artist artist = artistRepository.findById(request.artistId())
                 .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
 
@@ -64,6 +64,24 @@ public class InquiryService {
         inquiryRepository.deleteById(inquiryId);
 
         String message = "성공적으로 삭제되었습니다.";
+        return message;
+    }
+
+    /**
+     * 관리자가 문의 등록
+     * @param inquiryId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public String updateInquiry(Long inquiryId, @Valid UpdateInquiryRequest request) {
+        Inquiry inquiry = inquiryRepository.findById(inquiryId)
+                .orElseThrow(()-> InquiryNotFoundException.EXCEPTION);
+        inquiry.updateQuestion(request.question());
+        inquiry.updateAnswer(request.answer());
+        inquiryRepository.save(inquiry);
+
+        String message = "성공적으로 수정되었습니다.";
         return message;
     }
 }

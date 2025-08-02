@@ -31,6 +31,10 @@ public class Inquiry extends BaseTimeEntity {
         this.artist = artist;
     }
 
+    public void updateQuestion(String question) {
+        this.question = question;
+    }
+
     public void updateAnswer(String answer) {
         this.answer = answer;
     }
