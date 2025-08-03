@@ -4,7 +4,6 @@ import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.order.application.OrderService;
 import com.promesa.promesa.domain.order.dto.response.OrderResponse;
 import com.promesa.promesa.domain.order.dto.request.OrderRequest;
-import com.promesa.promesa.domain.order.dto.response.OrderSummary;
 import com.promesa.promesa.domain.shippingAddress.application.ShippingAddressService;
 import com.promesa.promesa.domain.shippingAddress.dto.request.AddressRequest;
 import com.promesa.promesa.domain.shippingAddress.dto.response.AddressResponse;
@@ -56,15 +55,15 @@ public class OrderController {
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Member member = user.getMember();
-        return ResponseEntity.ok(orderService.getOrderSummaries(member));
+        return ResponseEntity.ok(orderService.getOrders(member));
     }
 
     @GetMapping("/{orderId}")
     @Operation(summary = "주문 상세 내역 조회")
-    public ResponseEntity<OrderResponse> getOrderDetail(
+    public ResponseEntity<OrderResponse> getOrderDetails(
             @PathVariable Long orderId,
             @AuthenticationPrincipal CustomUserDetails user) {
         Member member = user.getMember();
-        return ResponseEntity.ok(orderService.getOrderDetail(member, orderId));
+        return ResponseEntity.ok(orderService.getOrderDetails(member, orderId));
     }
 }
