@@ -4,22 +4,26 @@ import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.cartItem.dao.CartItemRepository;
 import com.promesa.promesa.domain.cartItem.domain.CartItem;
 import com.promesa.promesa.domain.cartItem.exception.CartItemNotFoundException;
-import com.promesa.promesa.domain.delivery.dao.DeliveryRepository;
 import com.promesa.promesa.domain.delivery.domain.Delivery;
 import com.promesa.promesa.domain.delivery.domain.DeliveryStatus;
+import com.promesa.promesa.domain.delivery.exception.DeliveryNotFoundException;
 import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.order.dao.OrderItemRepository;
 import com.promesa.promesa.domain.order.dao.OrderRepository;
 import com.promesa.promesa.domain.order.domain.Order;
 import com.promesa.promesa.domain.order.domain.OrderItem;
+import com.promesa.promesa.domain.order.domain.OrderItemStatus;
 import com.promesa.promesa.domain.order.domain.OrderStatus;
 import com.promesa.promesa.domain.order.dto.request.PaymentRequest;
+import com.promesa.promesa.domain.order.dto.response.OrderItemDetail;
 import com.promesa.promesa.domain.order.dto.response.OrderResponse;
 import com.promesa.promesa.domain.order.dto.request.OrderItemRequest;
 import com.promesa.promesa.domain.order.dto.request.OrderRequest;
 import com.promesa.promesa.domain.order.exception.InvalidOrderQuantityException;
+import com.promesa.promesa.domain.order.exception.OrderItemNotFoundException;
 import com.promesa.promesa.domain.order.exception.OrderNotFoundException;
 import com.promesa.promesa.domain.shippingAddress.dto.request.AddressRequest;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +43,7 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
     private final ItemRepository itemRepository;
     private final CartItemRepository cartRepository;
     private final S3Service s3Service;
@@ -144,7 +149,7 @@ public class OrderService {
         return OrderResponse.of(order, delivery, s3Service, bucketName);
     }
 
-    public List<OrderResponse> getOrderSummaries(Member member) {
+    public List<OrderResponse> getOrders(Member member) {
         List<Order> orders = orderRepository.findByMemberOrderByCreatedAtDesc(member);
 
         return orders.stream()
@@ -156,13 +161,47 @@ public class OrderService {
     }
 
 
-    public OrderResponse getOrderDetail(Member member, Long orderId) {
+    public OrderResponse getOrderDetails(Member member, Long orderId) {
         Order order = orderRepository.findByIdAndMember(orderId, member)
                 .orElseThrow(() -> OrderNotFoundException.EXCEPTION);
 
         Delivery delivery = order.getDelivery();
 
         return OrderResponse.of(order, delivery, s3Service, bucketName);
+    }
+
+    public List<OrderResponse> getOrders(OrderStatus orderStatus, OrderItemStatus itemStatus) {
+        List<Order> orders = orderRepository.findWithItemsByStatus(orderStatus);
+
+        return orders.stream()
+                .map(order -> {
+                    Delivery delivery = order.getDelivery();
+                    if (delivery == null) throw DeliveryNotFoundException.EXCEPTION;
+                    return OrderResponse.of(order, delivery, s3Service, bucketName);
+                })
+                .map(response -> {
+                    if (itemStatus == null) return response;
+                    List<OrderItemDetail> filtered = response.items().stream()
+                            .filter(i -> i.itemStatus() == itemStatus)
+                            .toList();
+                    return new OrderResponse(response.summary(), response.deposit(), response.delivery(), filtered);
+                })
+                .filter(response -> !response.items().isEmpty()) // itemStatus 필터가 있을 때 빈 리스트 제거
+                .toList();
+    }
+
+    @Transactional
+    public void updateOrderStatus(Long orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> OrderNotFoundException.EXCEPTION);
+        order.changeStatus(newStatus); // 도메인 메서드에서 전이 검증
+    }
+
+    @Transactional
+    public void updateOrderItemStatus(Long orderItemId, OrderItemStatus newStatus) {
+        OrderItem item = orderItemRepository.findById(orderItemId)
+                .orElseThrow(() -> OrderItemNotFoundException.EXCEPTION);
+        item.changeStatus(newStatus); // 도메인 메서드에서 전이 검증
     }
 
 }

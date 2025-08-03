@@ -81,4 +81,8 @@ public class Order extends BaseTimeEntity {
     public void setTotalQuantity(int totalQuantity) {
         this.totalQuantity = totalQuantity;
     }
+
+    public void changeStatus(OrderStatus newStatus) {
+        this.orderStatus = newStatus;
+    }
 }
