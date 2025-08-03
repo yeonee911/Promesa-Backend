@@ -4,8 +4,7 @@ import com.promesa.promesa.common.dto.ErrorReason;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.promesa.promesa.common.consts.PromesaStatic.INTERNAL_SERVER;
-import static com.promesa.promesa.common.consts.PromesaStatic.NOT_FOUND;
+import static com.promesa.promesa.common.consts.PromesaStatic.*;
 
 /**
  * 글로벌 관련 Exception Code를 모아뒀습니다.
@@ -15,8 +14,8 @@ import static com.promesa.promesa.common.consts.PromesaStatic.NOT_FOUND;
 @AllArgsConstructor
 public enum GlobalErrorCode implements BaseErrorCode {
     EXAMPLE_NOT_FOUND(NOT_FOUND, "EXAMPLE_404", "예시를 찾을 수 없습니다."),
-
-    INTERNAL_SERVER_ERROR(INTERNAL_SERVER, "GLOBAL_500", "서버 오류");
+    INTERNAL_SERVER_ERROR(INTERNAL_SERVER, "GLOBAL_500", "서버 오류"),
+    VALIDATION_EXCEPTION(BAD_REQUEST, "VALIDATION_400", "유효하지 않은 값입니다.");
 
     private Integer status;
     private String code;

@@ -128,22 +128,29 @@ public class ArtistService {
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
 
-        if (request.getArtistName() != null) {
-            // 자기 자신을 제외한 중복 체크
-            artistValidator.ensureArtistNameUnique(request.getArtistName(), artist.getId());
-            artist.setName(request.getArtistName());
+        // 1. artistName
+        if (request.getArtistName().isPresent()) { // present이면 null일 수도 있음
+            String name = request.getArtistName().get();
+            artistValidator.ensureArtistNameUnique(name, artist.getId());
+            artist.setName(name);
         }
 
-        if (request.getSubName() != null) {
-            artist.setSubname(request.getSubName());
+        // 2. subName (null 허용)
+        if (request.getSubName().isPresent()) {
+            String sub = request.getSubName().orElse(null); // null이면 null 세팅
+            artist.setSubname(sub);
         }
 
-        if (request.getDescription() != null) {
-            artist.setDescription(request.getDescription());
+        // 3. description
+        if (request.getDescription().isPresent()) {
+            String desc = request.getDescription().get();
+            artist.setDescription(desc);
         }
 
-        if (request.getInsta() != null) {
-            artist.setInsta(request.getInsta());
+        // 4. insta (null 허용)
+        if (request.getInsta().isPresent()) {
+            String insta = request.getInsta().orElse(null);
+            artist.setInsta(insta);
         }
 
         artistRepository.save(artist);

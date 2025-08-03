@@ -1,11 +1,12 @@
 package com.promesa.promesa.domain.artist.dto.request;
 
 import lombok.Getter;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 @Getter
 public class UpdateArtistInfoRequest {
-    private String artistName;
-    private String subName;
-    private String description;
-    private String insta;
+    private JsonNullable<String> artistName = JsonNullable.undefined();
+    private JsonNullable<String> subName = JsonNullable.undefined();
+    private JsonNullable<String> description = JsonNullable.undefined();
+    private JsonNullable<String> insta = JsonNullable.undefined();
 }
