@@ -153,6 +153,14 @@ public class Item extends BaseTimeEntity {
         }
     }
 
+    public void increaseStock(int quantity) {
+        this.stock += quantity;
+
+        if (this.stock > 0) {
+            this.saleStatus = SaleStatus.ON_SALE;
+        }
+    }
+
     public void addItemImage(ItemImage itemImage) {
         itemImage.setItem(this);
         if (!this.itemImages.contains(itemImage)) {

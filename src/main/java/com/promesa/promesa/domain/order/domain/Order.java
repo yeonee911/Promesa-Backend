@@ -3,6 +3,7 @@ package com.promesa.promesa.domain.order.domain;
 import com.promesa.promesa.common.domain.BaseTimeEntity;
 import com.promesa.promesa.domain.delivery.domain.Delivery;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.order.exception.InvalidOrderStatusException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -83,6 +84,9 @@ public class Order extends BaseTimeEntity {
     }
 
     public void changeStatus(OrderStatus newStatus) {
+        if (this.orderStatus == OrderStatus.PAID && newStatus == OrderStatus.CANCEL_NO_PAYMENT) {
+            throw InvalidOrderStatusException.EXCEPTION;
+        }
         this.orderStatus = newStatus;
     }
 }
