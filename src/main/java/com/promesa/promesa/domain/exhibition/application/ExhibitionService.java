@@ -188,8 +188,7 @@ public class ExhibitionService {
         Exhibition exhibition = exhibitionRepository.findById(exhibitionId)
                 .orElseThrow(() -> ExhibitionNotFoundException.EXCEPTION);
 
-        if (!exhibition.getTitle().equals(request.title()) &&
-                exhibitionRepository.existsByTitle(request.title())) {
+        if (exhibitionRepository.existsByTitleAndIdNot(request.title(), exhibitionId)) {
             throw DuplicateExhibitionTitleException.EXCEPTION;
         }
 
@@ -199,12 +198,8 @@ public class ExhibitionService {
         exhibition.setEndDate(request.endDate());
         exhibition.setStatus(decideStatus(request.startDate(), request.endDate()));
 
-        // 기획전 이미지 전체 제거
         exhibition.getExhibitionImages().clear();
-
-        // 기획전 이미지 다시 등록
         exhibitionImageService.uploadAndLinkImages(exhibition, request.imageKeys(), request.thumbnailKey(), false);
-
         replaceParticipants(exhibition, request.itemIds());
 
         return "성공적으로 수정되었습니다.";

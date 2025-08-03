@@ -13,4 +13,6 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
     List<Exhibition> findAllByStatusIn(List<ExhibitionStatus> statuses);
 
     boolean existsByTitle(@NotBlank(message = "제목은 필수입니다") String title);
+
+    boolean existsByTitleAndIdNot(@NotBlank(message = "제목은 필수입니다") String title, Long exhibitionId);
 }
