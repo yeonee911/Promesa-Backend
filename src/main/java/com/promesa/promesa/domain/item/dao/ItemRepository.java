@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
     boolean existsByProductCode(String productCode);
+
+    boolean existsByProductCodeAndIdNot(String code, Long existingItemId);
     // 기본 findById 사용
 }

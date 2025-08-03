@@ -13,4 +13,6 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
     boolean existsByMember(Member member);
 
     boolean existsByName(@NotBlank(message = "작가명은 필수입니다") String artistName);
+
+    boolean existsByNameAndIdNot(String artistName, Long artistId);
 }
