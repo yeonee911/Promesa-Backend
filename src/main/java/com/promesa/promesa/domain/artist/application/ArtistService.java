@@ -5,11 +5,13 @@ import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.dto.request.AddArtistRequest;
+import com.promesa.promesa.domain.artist.dto.request.UpdateArtistInfoRequest;
 import com.promesa.promesa.domain.artist.dto.response.ArtistNameResponse;
 import com.promesa.promesa.domain.artist.dto.response.ArtistResponse;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.artist.exception.DuplicateArtistForMemberException;
 import com.promesa.promesa.domain.artist.exception.DuplicateArtistNameException;
+import com.promesa.promesa.domain.artist.validator.ArtistValidator;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.member.domain.Role;
@@ -20,7 +22,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,7 @@ public class ArtistService {
     private final WishRepository wishRepository;
     private final S3Service s3Service;
     private final ImageService imageService;
+    private final ArtistValidator artistValidator;
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
@@ -88,9 +90,7 @@ public class ArtistService {
         if (artistRepository.existsByMember(member)) {
             throw DuplicateArtistForMemberException.EXCEPTION;
         }
-        if (artistRepository.existsByName(request.getArtistName())) {
-            throw DuplicateArtistNameException.EXCEPTION;
-        }
+        artistValidator.ensureArtistNameUnique(request.getArtistName(), null);
 
         Artist newArtist = Artist.builder()
                 .name(request.getArtistName())
@@ -115,5 +115,38 @@ public class ArtistService {
 
         String message = "성공적으로 등록되었습니다.";
         return message;
+    }
+
+    /**
+     * 작가 정보 수정
+     * @param artistId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public String updateArtistInfo(Long artistId, UpdateArtistInfoRequest request) {
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+
+        if (request.getArtistName() != null) {
+            // 자기 자신을 제외한 중복 체크
+            artistValidator.ensureArtistNameUnique(request.getArtistName(), artist.getId());
+            artist.setName(request.getArtistName());
+        }
+
+        if (request.getSubName() != null) {
+            artist.setSubname(request.getSubName());
+        }
+
+        if (request.getDescription() != null) {
+            artist.setDescription(request.getDescription());
+        }
+
+        if (request.getInsta() != null) {
+            artist.setInsta(request.getInsta());
+        }
+
+        artistRepository.save(artist);
+        return "성공적으로 수정되었습니다.";
     }
 }

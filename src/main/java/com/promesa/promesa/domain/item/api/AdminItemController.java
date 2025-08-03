@@ -41,7 +41,7 @@ public class AdminItemController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "작품 수정")
     public ResponseEntity<String> updateItem(
-            @RequestParam Long itemId,
+            @PathVariable Long itemId,
             @RequestBody @Valid UpdateItemRequest request
     )
     {

@@ -81,4 +81,20 @@ public class Artist extends BaseTimeEntity {
     public void setProfileImageKey(String targetKey) {
         this.profileImageKey = targetKey;
     }
+
+    public void setName(@NotBlank(message = "이름은 공백일 수 없습니다.") String name){
+        this.name = name;
+    }
+
+    public void setSubname(@NotBlank(message = "서브 이름은 공백일 수 없습니다.") String subname) {
+        this.subname = subname;
+    }
+
+    public void setDescription(@NotBlank(message = "작가 소개는 공백일 수 없습니다.") String description) {
+        this.description = description;
+    }
+
+    public void setInsta(@NotBlank(message = "인스타 주소는 공백일 수 없습니다.") String insta) {
+        this.insta = insta;
+    }
 }
