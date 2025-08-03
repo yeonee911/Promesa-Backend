@@ -4,6 +4,7 @@ import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
 import com.promesa.promesa.domain.item.application.ItemInfoService;
 import com.promesa.promesa.domain.item.application.ItemService;
 import com.promesa.promesa.domain.item.dto.request.AddItemRequest;
+import com.promesa.promesa.domain.item.dto.request.UpdateItemRequest;
 import com.promesa.promesa.domain.item.dto.response.ItemResponse;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
@@ -34,5 +35,16 @@ public class AdminItemController {
     {
         String response = itemService.createItem(request);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{itemId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "작품 수정")
+    public ResponseEntity<String> updateItem(
+            @RequestParam Long itemId,
+            @RequestBody @Valid UpdateItemRequest request
+    )
+    {
+        return ResponseEntity.ok(itemService.updateItem(itemId, request));
     }
 }

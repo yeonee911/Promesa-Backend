@@ -7,6 +7,7 @@ import com.promesa.promesa.domain.item.exception.InsufficientStockException;
 import com.promesa.promesa.domain.itemCategory.domain.ItemCategory;
 import com.promesa.promesa.domain.review.domain.Review;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,11 +65,12 @@ public class Item extends BaseTimeEntity {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<ExhibitionItem> exhibitionItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+
     @OrderBy("sortOrder ASC")
     private List<ItemImage> itemImages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemCategory> itemCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
@@ -167,4 +169,40 @@ public class Item extends BaseTimeEntity {
         }
     }
 
+    //== setter ==//
+    public void setSaleStatus(@NotNull(message = "판매 상태는 필수입니다") SaleStatus saleStatus) {
+        this.saleStatus = saleStatus;
+    }
+
+    public void setProductCode(@NotBlank(message = "상품 코드는 필수입니다") String productCode) {
+        this.productCode = productCode;
+    }
+
+    public void setWidth(@Min(value = 0, message = "음수가 될 수 없습니다") int width) {
+        this.width = width;
+    }
+
+    public void setHeight(@Min(value = 0, message = "음수가 될 수 없습니다") int height) {
+        this.height = height;
+    }
+
+    public void setDepth(@Min(value = 0, message = "음수가 될 수 없습니다") int depth) {
+        this.depth = depth;
+    }
+
+    public void setArtist(Artist artist) {
+        this.artist = artist;
+    }
+
+    public void setName(@NotBlank(message = "상품명은 필수입니다") String itemName) {
+        this.name = itemName;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
 }
