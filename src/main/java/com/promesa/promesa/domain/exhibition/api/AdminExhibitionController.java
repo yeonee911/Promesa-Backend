@@ -3,6 +3,7 @@ package com.promesa.promesa.domain.exhibition.api;
 import com.promesa.promesa.domain.exhibition.application.ExhibitionService;
 import com.promesa.promesa.domain.exhibition.domain.ExhibitionStatus;
 import com.promesa.promesa.domain.exhibition.dto.request.AddExhibitionRequest;
+import com.promesa.promesa.domain.exhibition.dto.request.UpdateExhibitionRequest;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionDetailResponse;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummary;
 import com.promesa.promesa.domain.exhibition.dto.response.ExhibitionSummaryResponse;
@@ -32,5 +33,16 @@ public class AdminExhibitionController {
     )
     {
         return ResponseEntity.ok(exhibitionService.createExhibition(request));
+    }
+
+    @PutMapping("/{exhibitionId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "기획전 수정")
+    public ResponseEntity<String> updateExhibition(
+            @PathVariable Long exhibitionId,
+            @RequestBody @Valid UpdateExhibitionRequest request
+    )
+    {
+        return ResponseEntity.ok(exhibitionService.updateExhibition(exhibitionId, request));
     }
 }

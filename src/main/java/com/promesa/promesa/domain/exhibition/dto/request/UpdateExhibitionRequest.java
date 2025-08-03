@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-public record AddExhibitionRequest(
+public record UpdateExhibitionRequest(
         @NotBlank(message = "제목은 필수입니다")
         String title,
 
