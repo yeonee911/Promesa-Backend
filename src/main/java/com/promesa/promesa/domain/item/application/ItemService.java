@@ -130,7 +130,7 @@ public class ItemService {
         Long itemId = newItem.getId();
 
         // 아이템 이미지 생성
-        itemImageService.uploadAndLinkImages(newItem, request.getImageKeys(), request.getThumbnailKey());
+        itemImageService.uploadAndLinkImages(newItem, request.getImageKeys(), request.getThumbnailKey(), true);
 
         // 아이템-카테고리 생성
         itemCategoryService.changeCategory(newItem, category);
@@ -171,7 +171,7 @@ public class ItemService {
             item.setArtist(artist);
         }
 
-
+        // 카테고리 변경
         Long currentCategoryId = item.getItemCategories().get(0).getCategory().getId(); // 현재 카테고리
         if (!request.getCategoryId().equals(currentCategoryId)) {
             Category newCategory = categoryRepository.findById(request.getCategoryId())
@@ -181,7 +181,7 @@ public class ItemService {
 
         // 이미지 전체 변경
         item.getItemImages().clear();
-        itemImageService.uploadAndLinkImages(item, request.getImageKeys(), request.getThumbnailKey());
+        itemImageService.uploadAndLinkImages(item, request.getImageKeys(), request.getThumbnailKey(), false);
 
         return "성공적으로 수정되었습니다.";
     }

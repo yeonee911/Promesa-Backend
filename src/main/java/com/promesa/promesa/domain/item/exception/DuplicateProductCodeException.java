@@ -6,6 +6,6 @@ public class DuplicateProductCodeException extends PromesaCodeException {
     public static final PromesaCodeException EXCEPTION = new DuplicateProductCodeException();
 
     private DuplicateProductCodeException() {
-        super(ItemErrorCode.INSUFFICIENT_STOCK);
+        super(ItemErrorCode.DUPLICATE_PRODUCT_CODE);
     }
 }

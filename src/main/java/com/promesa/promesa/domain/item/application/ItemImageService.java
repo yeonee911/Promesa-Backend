@@ -15,9 +15,12 @@ public class ItemImageService {
 
     private final ImageService imageService;
 
-    public void uploadAndLinkImages(Item item, List<ItemImageRequest> reqs, String thumbnailKey) {
+    public void uploadAndLinkImages(Item item, List<ItemImageRequest> reqs, String thumbnailKey, boolean needTransfer) {
         for (var req : reqs) {
-            String targetKey = imageService.transferImage(req.key(), item.getId());
+            String targetKey = needTransfer
+                    ? imageService.transferImage(req.key(), item.getId())
+                    : req.key();
+
             ItemImage newItemImg = ItemImage.builder()
                     .imageKey(targetKey)
                     .isThumbnail(req.key().equals(thumbnailKey))

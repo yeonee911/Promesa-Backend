@@ -4,6 +4,7 @@ import com.promesa.promesa.domain.item.dao.ItemRepository;
 import com.promesa.promesa.domain.item.domain.Item;
 import com.promesa.promesa.domain.item.domain.SaleStatus;
 import com.promesa.promesa.domain.item.exception.DuplicateProductCodeException;
+import com.promesa.promesa.domain.item.exception.InvalidSaleStatusChangeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,7 @@ public class ItemValidator {
     public void validateSaleStatusChange(SaleStatus newStatus, Item item) {
         if (newStatus == SaleStatus.SOLD_OUT ||
                 (newStatus == SaleStatus.ON_SALE && item.getSaleStatus() == SaleStatus.SOLD_OUT)) {
-            throw new IllegalStateException("품절 상태 변경은 재고 수량 조절로만 가능합니다");
+            throw InvalidSaleStatusChangeException.EXCEPTION;
         }
     }
 }
