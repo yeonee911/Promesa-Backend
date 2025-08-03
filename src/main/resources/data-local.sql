@@ -720,8 +720,8 @@ VALUES
     (1, 'PAID',  CURRENT_TIMESTAMP, '국민은행 123456-78-901234', '김회원', DATEADD('DAY', 1, CURRENT_TIMESTAMP), 120000, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     (2, 'PAID',  CURRENT_TIMESTAMP, '국민은행 123456-78-901234', '원회원', DATEADD('DAY', 1, CURRENT_TIMESTAMP), 120000, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     (2, 'PAID',  CURRENT_TIMESTAMP, '국민은행 123456-78-901234', '원회원', DATEADD('DAY', 1, CURRENT_TIMESTAMP), 120000, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (2, 'PAID',  CURRENT_TIMESTAMP, '국민은행 123456-78-901234', '원회원', DATEADD('DAY', 1, CURRENT_TIMESTAMP), 120000, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
+    (2, 'PAID',  CURRENT_TIMESTAMP, '국민은행 123456-78-901234', '원회원', DATEADD('DAY', 1, CURRENT_TIMESTAMP), 120000, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (1, 'WAITING_FOR_PAYMENT', CURRENT_TIMESTAMP, '신한은행 222222-22-222222', '김회원', DATEADD('DAY', 1, CURRENT_TIMESTAMP), 120000, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 -- 14. ORDER_ITEM
 INSERT INTO order_item (
     item_id,
@@ -737,7 +737,9 @@ INSERT INTO order_item (
       (1,3,1,70000,5),
       (2,3,1,50000,6),
       (1,4,1,70000,7),
-      (2,4,1,50000,8);
+      (2,4,1,50000,8),
+      (1, 5, 1, 70000, 9),
+      (2, 5, 1, 50000, 10);
 
 -- 15. DELIVERY: expected/start/completed 날짜도 모두 DATEADD로 변경
 INSERT INTO delivery
@@ -815,7 +817,23 @@ VALUES
         DATE '2025-07-22',
         DATEADD('DAY', 2, DATE '2025-07-22'),
         3000
+    ),
+    -- 주문 5: READY
+    (
+        5,
+        'cj대한통운',
+        '프로메사',
+        '010-1234-5678',
+        '12345',
+        '서울특별시 종로구 세종대로',
+        '103호',
+        'READY',
+        DATEADD('DAY', 3, CURRENT_TIMESTAMP),
+        NULL,
+        NULL,
+        3000
     );
+
 -- 16. REVIEW
 INSERT INTO review (
     review_id,

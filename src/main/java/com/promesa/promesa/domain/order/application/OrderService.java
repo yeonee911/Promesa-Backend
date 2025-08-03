@@ -194,14 +194,29 @@ public class OrderService {
     public void updateOrderStatus(Long orderId, OrderStatus newStatus) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> OrderNotFoundException.EXCEPTION);
-        order.changeStatus(newStatus); // 도메인 메서드에서 전이 검증
+
+        order.changeStatus(newStatus);
+
+        // 재고 복구
+        if (newStatus == OrderStatus.CANCEL_NO_PAYMENT) {
+            for (OrderItem orderItem : order.getOrderItems()) {
+                Item item = orderItem.getItem();
+                item.increaseStock(orderItem.getQuantity());
+            }
+        }
     }
 
     @Transactional
     public void updateOrderItemStatus(Long orderItemId, OrderItemStatus newStatus) {
         OrderItem item = orderItemRepository.findById(orderItemId)
                 .orElseThrow(() -> OrderItemNotFoundException.EXCEPTION);
-        item.changeStatus(newStatus); // 도메인 메서드에서 전이 검증
-    }
 
+        item.changeStatus(newStatus);
+
+        // 재고 복구
+        if (newStatus == OrderItemStatus.CANCELLED || newStatus == OrderItemStatus.RETURNED) {
+            Item product = item.getItem();
+            product.increaseStock(item.getQuantity());
+        }
+    }
 }
