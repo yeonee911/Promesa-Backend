@@ -23,6 +23,7 @@ import com.promesa.promesa.domain.order.dto.response.OrderResponse;
 import com.promesa.promesa.domain.order.dto.request.OrderItemRequest;
 import com.promesa.promesa.domain.order.dto.request.OrderRequest;
 import com.promesa.promesa.domain.order.exception.InvalidOrderQuantityException;
+import com.promesa.promesa.domain.order.exception.InvalidOrderStatusException;
 import com.promesa.promesa.domain.order.exception.OrderItemNotFoundException;
 import com.promesa.promesa.domain.order.exception.OrderNotFoundException;
 import com.promesa.promesa.domain.shippingAddress.dto.request.AddressRequest;
@@ -219,4 +220,24 @@ public class OrderService {
             product.increaseStock(item.getQuantity());
         }
     }
+
+    @Transactional
+    public void cancelOrder(Member member, Long orderId) {
+        Order order = orderRepository.findByIdAndMember(orderId, member)
+                .orElseThrow(() -> OrderNotFoundException.EXCEPTION);
+
+        // 입금 전에만 사용자가 직접 취소할 수 있음
+        if (order.getOrderStatus() != OrderStatus.WAITING_FOR_PAYMENT) {
+            throw InvalidOrderStatusException.EXCEPTION;
+        }
+
+        order.changeStatus(OrderStatus.CANCEL);
+
+        // 재고 복구
+        for (OrderItem orderItem : order.getOrderItems()) {
+            Item item = orderItem.getItem();
+            item.increaseStock(orderItem.getQuantity());
+        }
+    }
+
 }

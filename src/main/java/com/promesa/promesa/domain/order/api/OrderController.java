@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,4 +67,16 @@ public class OrderController {
         Member member = user.getMember();
         return ResponseEntity.ok(orderService.getOrderDetails(member, orderId));
     }
+
+    @PatchMapping("/{orderId}/cancel")
+    @Operation(summary = "주문 취소")
+    public ResponseEntity<String> cancelOrder(
+            @PathVariable Long orderId,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        Member member = user.getMember();
+        orderService.cancelOrder(member, orderId);
+        return ResponseEntity.ok("주문이 취소되었습니다.");
+    }
+
 }
