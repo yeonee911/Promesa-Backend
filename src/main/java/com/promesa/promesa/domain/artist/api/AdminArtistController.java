@@ -2,6 +2,7 @@ package com.promesa.promesa.domain.artist.api;
 
 import com.promesa.promesa.domain.artist.application.ArtistService;
 import com.promesa.promesa.domain.artist.dto.request.AddArtistRequest;
+import com.promesa.promesa.domain.artist.dto.request.UpdateArtistImageRequest;
 import com.promesa.promesa.domain.artist.dto.request.UpdateArtistInfoRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -34,5 +35,16 @@ public class AdminArtistController {
     )
     {
         return ResponseEntity.ok(artistService.updateArtistInfo(artistId, request));
+    }
+
+    @PatchMapping("/artistId/profile-image")
+    @Operation(summary = "작가 프로필 이미지 변경")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ARTIST')")
+    public ResponseEntity<String> updateArtistProfile(
+            @PathVariable Long artistId,
+            @RequestBody @Valid UpdateArtistImageRequest request
+    )
+    {
+        return ResponseEntity.ok(artistService.updateArtistImage(artistId, request));
     }
 }

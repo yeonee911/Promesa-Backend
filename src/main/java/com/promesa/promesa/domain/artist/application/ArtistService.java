@@ -5,6 +5,7 @@ import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.dto.request.AddArtistRequest;
+import com.promesa.promesa.domain.artist.dto.request.UpdateArtistImageRequest;
 import com.promesa.promesa.domain.artist.dto.request.UpdateArtistInfoRequest;
 import com.promesa.promesa.domain.artist.dto.response.ArtistNameResponse;
 import com.promesa.promesa.domain.artist.dto.response.ArtistResponse;
@@ -154,6 +155,24 @@ public class ArtistService {
         }
 
         artistRepository.save(artist);
+        return "성공적으로 수정되었습니다.";
+    }
+
+    /**
+     * 작가 프로필 이미지 수정
+     * @param artistId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public String updateArtistImage(Long artistId, @Valid UpdateArtistImageRequest request) {
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+        String oldKey = artist.getProfileImageKey();
+        artist.setProfileImageKey(request.getProfileImageKey());    // 새 프로필 등록
+        if (oldKey != null && !oldKey.equals(request.getProfileImageKey())) {
+            s3Service.deleteObject(bucketName, oldKey);
+        }
         return "성공적으로 수정되었습니다.";
     }
 }
