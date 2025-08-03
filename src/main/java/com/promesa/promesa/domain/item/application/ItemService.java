@@ -11,14 +11,19 @@ import com.promesa.promesa.domain.item.domain.ItemImage;
 import com.promesa.promesa.domain.item.domain.SaleStatus;
 import com.promesa.promesa.domain.item.dto.request.AddItemRequest;
 import com.promesa.promesa.domain.item.dto.request.ItemImageRequest;
+import com.promesa.promesa.domain.item.dto.request.UpdateItemRequest;
 import com.promesa.promesa.domain.item.exception.DuplicateProductCodeException;
+import com.promesa.promesa.domain.item.exception.ItemNotFoundException;
 import com.promesa.promesa.domain.item.query.ItemQueryRepository;
 import com.promesa.promesa.domain.category.dao.CategoryRepository;
 import com.promesa.promesa.domain.category.domain.Category;
 import com.promesa.promesa.domain.category.exception.CategoryNotFoundException;
 import com.promesa.promesa.domain.home.dto.response.ItemPreviewResponse;
+import com.promesa.promesa.domain.item.validator.ItemValidator;
 import com.promesa.promesa.domain.itemCategory.domain.ItemCategory;
+import com.promesa.promesa.domain.itemCategory.service.ItemCategoryService;
 import com.promesa.promesa.domain.member.domain.Member;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +43,9 @@ public class ItemService {
     private final ArtistRepository artistRepository;
     private final ItemRepository itemRepository;
     private final ImageService imageService;
+    private final ItemValidator itemValidator;
+    private final ItemImageService itemImageService;
+    private final ItemCategoryService itemCategoryService;
 
     @Value("${aws.s3.bucket}")  // application.yml 에 정의 필요
     private String bucketName;
@@ -99,14 +107,9 @@ public class ItemService {
     public String createItem(AddItemRequest request) {
         Artist artist = artistRepository.findById(request.getArtistId())
                 .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
-
-        // productCode 중복인지
-        if (itemRepository.existsByProductCode(request.getProductCode())) {
-            throw DuplicateProductCodeException.EXCEPTION;
-        }
-
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> CategoryNotFoundException.EXCEPTION);
+        itemValidator.ensureProductCodeUnique(request.getProductCode(), null);
 
         Item newItem = Item.builder()  // 작품 객체 생성
                 .name(request.getItemName())
@@ -127,29 +130,59 @@ public class ItemService {
         Long itemId = newItem.getId();
 
         // 아이템 이미지 생성
-        for (ItemImageRequest itemImageRequest : request.getImageKeys()) {
-            int sortOrder = itemImageRequest.sortOrder();
-            boolean isThumbnail = itemImageRequest.key().equals(request.getThumbnailKey());
-
-            String targetKey = imageService.transferImage(itemImageRequest.key(), itemId);
-
-            ItemImage newItemImage = ItemImage.builder()
-                    .imageKey(targetKey)
-                    .isThumbnail(isThumbnail)
-                    .sortOrder(sortOrder)
-                    .item(newItem)
-                    .build();
-            newItem.addItemImage(newItemImage);
-        }
+        itemImageService.uploadAndLinkImages(newItem, request.getImageKeys(), request.getThumbnailKey());
 
         // 아이템-카테고리 생성
-        ItemCategory newItemCategory = ItemCategory.builder()
-                .category(category)
-                .item(newItem)
-                .build();
-        newItem.addCategory(newItemCategory);
+        itemCategoryService.changeCategory(newItem, category);
 
         String message = "성공적으로 등록되었습니다.";
         return message;
+    }
+
+    /**
+     * 작품 수정
+     * @param request
+     * @return
+     */
+    @Transactional
+    public String updateItem(Long itemId, @Valid UpdateItemRequest request) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> ItemNotFoundException.EXCEPTION);
+
+        itemValidator.validateSaleStatusChange(request.getSaleStatus(), item);
+
+        // productCode 중복 검증(자기 자신 제외)
+        itemValidator.ensureProductCodeUnique(request.getProductCode(), itemId);
+
+        // 기본 속성 업데이트
+        item.setName(request.getItemName());
+        item.setPrice(request.getPrice());
+        item.setStock(request.getStock());
+        item.setSaleStatus(request.getSaleStatus());
+        item.setProductCode(request.getProductCode());
+        item.setWidth(request.getWidth());
+        item.setHeight(request.getHeight());
+        item.setDepth(request.getDepth());
+
+        // 작가 변경
+        if (!item.getArtist().getId().equals(request.getArtistId())) {    // 기존 작가랑 다르면
+            Artist artist = artistRepository.findById(request.getArtistId())
+                    .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+            item.setArtist(artist);
+        }
+
+
+        Long currentCategoryId = item.getItemCategories().get(0).getCategory().getId(); // 현재 카테고리
+        if (!request.getCategoryId().equals(currentCategoryId)) {
+            Category newCategory = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> CategoryNotFoundException.EXCEPTION);
+            itemCategoryService.changeCategory(item, newCategory);
+        }
+
+        // 이미지 전체 변경
+        item.getItemImages().clear();
+        itemImageService.uploadAndLinkImages(item, request.getImageKeys(), request.getThumbnailKey());
+
+        return "성공적으로 수정되었습니다.";
     }
 }
