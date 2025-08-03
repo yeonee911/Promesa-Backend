@@ -8,6 +8,7 @@ import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.exhibition.domain.*;
 import com.promesa.promesa.domain.exhibition.dto.request.AddExhibitionRequest;
 import com.promesa.promesa.domain.exhibition.dto.request.ExhibitionImageRequest;
+import com.promesa.promesa.domain.exhibition.dto.request.UpdateExhibitionRequest;
 import com.promesa.promesa.domain.exhibition.dto.response.*;
 import com.promesa.promesa.domain.exhibition.exception.DuplicateExhibitionTitleException;
 import com.promesa.promesa.domain.exhibition.exception.InvalidExhibitionDateException;
@@ -42,6 +43,7 @@ public class ExhibitionService {
     private final ArtistRepository artistRepository;
     private final ImageService imageService;
     private final ItemRepository itemRepository;
+    private final ExhibitionImageService exhibitionImageService;
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
@@ -166,67 +168,46 @@ public class ExhibitionService {
         exhibitionRepository.save(newExhibition);
         Long exhibitionId = newExhibition.getId();
 
-        // 썸네일 등록
-        String thumbnailKey = imageService.transferImage(request.thumbnailKey(), exhibitionId);
-        ExhibitionImage thumbnail = ExhibitionImage.builder()
-                .imageKey(thumbnailKey)
-                .sortOrder(1)   // 썸네일은 1장이라 순서 상관없음
-                .isThumbnail(true)
-                .build();
-        newExhibition.addExhibitionImage(thumbnail);
-
-        // 상세 이미지 등록
-        for (ExhibitionImageRequest exhibitionImageRequest : request.detailImageKeys()) {
-            int sortOrder = exhibitionImageRequest.sortOrder();
-            String targetKey = imageService.transferImage(exhibitionImageRequest.key(), exhibitionId);
-            ExhibitionImage newExhibitionImage = ExhibitionImage.builder()
-                    .imageKey(targetKey)
-                    .isThumbnail(false)
-                    .sortOrder(sortOrder)
-                    .build();
-            newExhibition.addExhibitionImage(newExhibitionImage);
-        }
-
-        // 작품 목록 조회
-        List<Item> items = itemRepository.findAllById(request.itemIds());
-        if (items.size() != request.itemIds().size()) {
-            throw ItemNotFoundException.EXCEPTION;
-        }
-
-        // 작가 목록 조회
-        Set<Long> artistIds = items.stream()
-                .map(item -> item.getArtist().getId())
-                .collect(Collectors.toSet());
-        List<Artist> artists = artistRepository.findAllById(artistIds);
-        if (artists.size() != artistIds.size()) {
-            throw ArtistNotFoundException.EXCEPTION;
-        }
-        Map<Long, Artist> artistMap = artists.stream()
-                .collect(Collectors.toMap(Artist::getId, Function.identity()));
-
-        Set<Long> addedArtistIds = new HashSet<>();
-        for (Item item : items) {
-            // ExhibitionItem
-            ExhibitionItem exhibitionItem = ExhibitionItem.builder()
-                    .exhibition(newExhibition)
-                    .item(item)
-                    .build();
-            newExhibition.addExhibitionItem(exhibitionItem);
-
-            // ExhibitionArtist (중복 방지)
-            Long artistId = item.getArtist().getId();
-            if (addedArtistIds.add(artistId)) {
-                Artist artist = artistMap.get(artistId);
-                ExhibitionArtist exhibitionArtist = ExhibitionArtist.builder()
-                        .exhibition(newExhibition)
-                        .artist(artist)
-                        .build();
-                newExhibition.addExhibitionArtist(exhibitionArtist);
-            }
-        }
+        // 이미지 등록
+        exhibitionImageService.uploadAndLinkImages(newExhibition, request.imageKeys(), request.thumbnailKey(), true);
+        // 작품 및 작가 등록
+        replaceParticipants(newExhibition, request.itemIds());
 
         String message = "성공적으로 등록되었습니다.";
         return message;
+    }
+
+    /**
+     * 기획전 수정
+     * @param exhibitionId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public String updateExhibition(Long exhibitionId, @Valid UpdateExhibitionRequest request) {
+        Exhibition exhibition = exhibitionRepository.findById(exhibitionId)
+                .orElseThrow(() -> ExhibitionNotFoundException.EXCEPTION);
+
+        if (!exhibition.getTitle().equals(request.title()) &&
+                exhibitionRepository.existsByTitle(request.title())) {
+            throw DuplicateExhibitionTitleException.EXCEPTION;
+        }
+
+        exhibition.setTitle(request.title());
+        exhibition.setDescription(request.description());
+        exhibition.setStartDate(request.startDate());
+        exhibition.setEndDate(request.endDate());
+        exhibition.setStatus(decideStatus(request.startDate(), request.endDate()));
+
+        // 기획전 이미지 전체 제거
+        exhibition.getExhibitionImages().clear();
+
+        // 기획전 이미지 다시 등록
+        exhibitionImageService.uploadAndLinkImages(exhibition, request.imageKeys(), request.thumbnailKey(), false);
+
+        replaceParticipants(exhibition, request.itemIds());
+
+        return "성공적으로 수정되었습니다.";
     }
 
     public ExhibitionStatus decideStatus(LocalDate startDate, LocalDate endDate) {
@@ -258,5 +239,42 @@ public class ExhibitionService {
             }
         }
         return status;
+    }
+
+    private void replaceParticipants(Exhibition exhibition, List<Long> itemIds) {
+        exhibition.getExhibitionItems().clear();
+        exhibition.getExhibitionArtists().clear();
+
+        List<Item> items = itemRepository.findAllById(itemIds);
+        if (items.size() != itemIds.size()) {
+            throw ItemNotFoundException.EXCEPTION;
+        }
+
+        Set<Long> artistIds = items.stream()
+                .map(item -> item.getArtist().getId())
+                .collect(Collectors.toSet());
+        List<Artist> artists = artistRepository.findAllById(artistIds);
+        if (artists.size() != artistIds.size()) {
+            throw ArtistNotFoundException.EXCEPTION;
+        }
+
+        Map<Long, Artist> artistMap = artists.stream()
+                .collect(Collectors.toMap(Artist::getId, Function.identity()));
+
+        Set<Long> addedArtistIds = new HashSet<>();
+        for (Item item : items) {
+            exhibition.addExhibitionItem(ExhibitionItem.builder()
+                    .exhibition(exhibition)
+                    .item(item)
+                    .build());
+
+            Long artistId = item.getArtist().getId();
+            if (addedArtistIds.add(artistId)) {
+                exhibition.addExhibitionArtist(ExhibitionArtist.builder()
+                        .exhibition(exhibition)
+                        .artist(artistMap.get(artistId))
+                        .build());
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.promesa.promesa.domain.exhibition.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
+import com.promesa.promesa.common.exception.ValidationException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -43,14 +44,14 @@ public class Exhibition extends BaseTimeEntity {
     @Column(name = "exhibition_status", nullable = false)
     private ExhibitionStatus status;
 
-    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("sortOrder ASC")
     private List<ExhibitionImage> exhibitionImages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExhibitionItem> exhibitionItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExhibitionArtist> exhibitionArtists = new ArrayList<>();
 
     public void setStatus(ExhibitionStatus status) {
@@ -94,5 +95,30 @@ public class Exhibition extends BaseTimeEntity {
     public void addExhibitionArtist(ExhibitionArtist exhibitionArtist) {
         exhibitionArtist.setExhibition(this);
         this.exhibitionArtists.add(exhibitionArtist);
+    }
+
+    public void setTitle(String title) {
+        if (title == null || title.isBlank()) {
+            throw ValidationException.EXCEPTION;
+        }
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        if (description == null || description.isBlank()) {
+            throw ValidationException.EXCEPTION;
+        }
+        this.description = description;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        if (startDate == null) {
+            throw ValidationException.EXCEPTION;
+        }
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 }
