@@ -1,6 +1,7 @@
 package com.promesa.promesa.domain.artist.domain;
 
 import com.promesa.promesa.common.domain.BaseTimeEntity;
+import com.promesa.promesa.common.exception.ValidationException;
 import com.promesa.promesa.domain.exhibition.domain.ExhibitionArtist;
 import com.promesa.promesa.domain.member.domain.Member;
 import jakarta.persistence.*;
@@ -80,5 +81,33 @@ public class Artist extends BaseTimeEntity {
 
     public void setProfileImageKey(String targetKey) {
         this.profileImageKey = targetKey;
+    }
+
+    public void setName(String name){
+        if (name == null || name.isBlank()) {
+            throw ValidationException.EXCEPTION;
+        }
+        this.name = name;
+    }
+
+    public void setSubname(String subname) {
+        if (subname != null && subname.isBlank()) { // null 값 허용
+            throw ValidationException.EXCEPTION;
+        }
+        this.subname = subname;
+    }
+
+    public void setDescription(String description) {
+        if (description == null || description.isBlank()) {
+            throw ValidationException.EXCEPTION;
+        }
+        this.description = description;
+    }
+
+    public void setInsta(String insta) {
+        if (insta != null && insta.isBlank()) { // null 값 허용
+            throw ValidationException.EXCEPTION;
+        }
+        this.insta = insta;
     }
 }

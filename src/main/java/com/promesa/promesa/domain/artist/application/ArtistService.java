@@ -5,11 +5,14 @@ import com.promesa.promesa.common.application.S3Service;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.dto.request.AddArtistRequest;
+import com.promesa.promesa.domain.artist.dto.request.UpdateArtistImageRequest;
+import com.promesa.promesa.domain.artist.dto.request.UpdateArtistInfoRequest;
 import com.promesa.promesa.domain.artist.dto.response.ArtistNameResponse;
 import com.promesa.promesa.domain.artist.dto.response.ArtistResponse;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.artist.exception.DuplicateArtistForMemberException;
 import com.promesa.promesa.domain.artist.exception.DuplicateArtistNameException;
+import com.promesa.promesa.domain.artist.validator.ArtistValidator;
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
 import com.promesa.promesa.domain.member.domain.Role;
@@ -20,7 +23,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,7 @@ public class ArtistService {
     private final WishRepository wishRepository;
     private final S3Service s3Service;
     private final ImageService imageService;
+    private final ArtistValidator artistValidator;
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
@@ -88,9 +91,7 @@ public class ArtistService {
         if (artistRepository.existsByMember(member)) {
             throw DuplicateArtistForMemberException.EXCEPTION;
         }
-        if (artistRepository.existsByName(request.getArtistName())) {
-            throw DuplicateArtistNameException.EXCEPTION;
-        }
+        artistValidator.ensureArtistNameUnique(request.getArtistName(), null);
 
         Artist newArtist = Artist.builder()
                 .name(request.getArtistName())
@@ -115,5 +116,63 @@ public class ArtistService {
 
         String message = "성공적으로 등록되었습니다.";
         return message;
+    }
+
+    /**
+     * 작가 정보 수정
+     * @param artistId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public String updateArtistInfo(Long artistId, UpdateArtistInfoRequest request) {
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+
+        // 1. artistName
+        if (request.getArtistName().isPresent()) { // present이면 null일 수도 있음
+            String name = request.getArtistName().get();
+            artistValidator.ensureArtistNameUnique(name, artist.getId());
+            artist.setName(name);
+        }
+
+        // 2. subName (null 허용)
+        if (request.getSubName().isPresent()) {
+            String sub = request.getSubName().orElse(null); // null이면 null 세팅
+            artist.setSubname(sub);
+        }
+
+        // 3. description
+        if (request.getDescription().isPresent()) {
+            String desc = request.getDescription().get();
+            artist.setDescription(desc);
+        }
+
+        // 4. insta (null 허용)
+        if (request.getInsta().isPresent()) {
+            String insta = request.getInsta().orElse(null);
+            artist.setInsta(insta);
+        }
+
+        artistRepository.save(artist);
+        return "성공적으로 수정되었습니다.";
+    }
+
+    /**
+     * 작가 프로필 이미지 수정
+     * @param artistId
+     * @param request
+     * @return
+     */
+    @Transactional
+    public String updateArtistImage(Long artistId, @Valid UpdateArtistImageRequest request) {
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+        String oldKey = artist.getProfileImageKey();
+        artist.setProfileImageKey(request.getProfileImageKey());    // 새 프로필 등록
+        if (oldKey != null && !oldKey.equals(request.getProfileImageKey())) {
+            s3Service.deleteObject(bucketName, oldKey);
+        }
+        return "성공적으로 수정되었습니다.";
     }
 }
