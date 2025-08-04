@@ -8,6 +8,7 @@ import com.promesa.promesa.domain.wish.domain.TargetType;
 import com.promesa.promesa.domain.wish.dto.WishResponse;
 import com.promesa.promesa.domain.wish.dto.WishToggleResponse;
 import com.promesa.promesa.security.jwt.CustomUserDetails;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +30,7 @@ public class WishController {
     private final WishService wishService;
 
     @PostMapping
+    @Operation(summary = "위시리스트/북마크 추가")
     public ResponseEntity<WishToggleResponse> addWish(
             @RequestParam TargetType targetType,
             @RequestParam Long targetId,
@@ -40,6 +42,7 @@ public class WishController {
     }
 
     @DeleteMapping
+    @Operation(summary = "위시리스트/북마크 삭제")
     public ResponseEntity<WishToggleResponse> deleteWish(
             @RequestParam TargetType targetType,
             @RequestParam Long targetId,
@@ -51,6 +54,7 @@ public class WishController {
     }
 
     @GetMapping("/list")
+    @Operation(summary = "내 위시리스트/북마크 목록 조회")
     public ResponseEntity<List<WishResponse>> getWishList(
             @RequestParam TargetType targetType,
             @AuthenticationPrincipal CustomUserDetails user
@@ -60,7 +64,9 @@ public class WishController {
         return ResponseEntity.ok(wishes);
     }
 
+/*
     @GetMapping("/item/{itemId}")
+    @Operation(summary = "작품 위시리스트 여부 조회")
     public ResponseEntity<ItemWish> getItemWish(
             @PathVariable Long itemId,
             @AuthenticationPrincipal CustomUserDetails user) {
@@ -69,11 +75,14 @@ public class WishController {
     }
 
     @GetMapping("/artist/{artistId}")
+    @Operation(summary = "작가 북마크 여부 조회")
     public ResponseEntity<ArtistWish> getArtistWish(
             @PathVariable Long artistId,
             @AuthenticationPrincipal CustomUserDetails user) {
         Member member = (user != null) ? user.getMember() : null;
         return ResponseEntity.ok(wishService.getArtistWish(artistId, member));
+
     }
+ */
 }
 

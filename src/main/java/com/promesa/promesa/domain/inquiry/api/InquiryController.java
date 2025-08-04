@@ -21,6 +21,7 @@ public class InquiryController {
     private final InquiryService inquiryService;
 
     @GetMapping
+    @Operation(summary = "문의 목록 조회")
     public ResponseEntity<List<InquiryResponse>> getInquiriesByArtist(@RequestParam Long artistId) {
         return ResponseEntity.ok(inquiryService.getInquiriesByArtist(artistId));
     }

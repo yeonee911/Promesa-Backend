@@ -26,6 +26,7 @@ public class ItemController {
     private final ItemInfoService itemInfoService;
 
     @GetMapping("/categories/{categoryId}/items")
+    @Operation(summary = "카테고리별 작품 목록")
     public ResponseEntity<Page<ItemPreviewResponse>> findCategoryItem(
             @PathVariable Long categoryId,
             @AuthenticationPrincipal CustomUserDetails user,
@@ -37,6 +38,7 @@ public class ItemController {
     }
 
     @GetMapping("/items/{itemId}")
+    @Operation(summary = "작품 상세 조회")
     public ItemResponse getItem(
             @PathVariable Long itemId,
             @AuthenticationPrincipal CustomUserDetails userDetails
