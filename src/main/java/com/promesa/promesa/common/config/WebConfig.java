@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "http://13.209.202.120:8081",
                         "https://promesa.co.kr",
                         "http://localhost:8080")
-                .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
