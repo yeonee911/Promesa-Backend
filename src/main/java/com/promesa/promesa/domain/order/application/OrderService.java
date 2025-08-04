@@ -78,7 +78,7 @@ public class OrderService {
 
             orderItems = request.items().stream()
                     .map(req -> {
-                        Item item = itemRepository.findById(req.itemId())
+                        Item item = itemRepository.findByIdForUpdate(req.itemId())
                                 .orElseThrow(() -> ItemNotFoundException.EXCEPTION);
                         item.decreaseStock(req.quantity()); // 재고 감소
                         return OrderItem.of(order, item, req.quantity(), item.getPrice());
@@ -106,7 +106,8 @@ public class OrderService {
 
             orderItems = cartItems.stream()
                     .map(cartItem -> {
-                        Item item = cartItem.getItem();
+                        Item item = itemRepository.findByIdForUpdate(cartItem.getItem().getId())
+                                .orElseThrow(() -> ItemNotFoundException.EXCEPTION);
                         item.decreaseStock(cartItem.getQuantity()); // 재고 감소
                         return OrderItem.of(order, item, cartItem.getQuantity(), item.getPrice());
                     }).toList();

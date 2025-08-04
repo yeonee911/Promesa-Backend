@@ -1,6 +1,7 @@
 package com.promesa.promesa.security.logout;
 
 import com.promesa.promesa.common.dto.SuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ public class LogoutController {
     private final LogoutService logoutService;
 
     @PostMapping("/logout")
+    @Operation(summary = "로그아웃")
     public ResponseEntity<SuccessResponse<String>> logout(HttpServletRequest request, HttpServletResponse response) {
         return ResponseEntity.ok(logoutService.logout(request, response));
     }
