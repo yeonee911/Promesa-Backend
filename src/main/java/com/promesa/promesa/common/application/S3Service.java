@@ -41,6 +41,9 @@ public class S3Service {
      * @param keyName   객체 키
      * @return  유효한 presigned URL
      */
+    private static final String CLOUDFRONT_HOST =
+            "https://d2e23qj94u656x.cloudfront.net"; // 배포 도메인
+
     public String createPresignedGetUrl(String bucketName, String keyName) {
         try {
 
@@ -55,11 +58,10 @@ public class S3Service {
                     .build();
 
             PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
+            String url = presignedRequest.url().toString();
 
-            log.info("Presigned URL: [{}]", presignedRequest.url().toString());
-            log.info("HTTP method: [{}]", presignedRequest.httpRequest().method());
-
-            return presignedRequest.url().toExternalForm();
+            return url.replace("https://" + bucketName + ".s3.ap-northeast-2.amazonaws.com",
+                    CLOUDFRONT_HOST);
 
         }catch (Exception e){
             log.error("Presigned URL 생성 실패: {}/{}", bucketName, keyName, e);
