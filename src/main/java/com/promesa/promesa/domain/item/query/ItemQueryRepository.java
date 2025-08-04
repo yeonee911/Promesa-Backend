@@ -223,7 +223,7 @@
         public List<ItemPreviewResponse> searchByItemName(String keyword, Member member) {
             Expression<Boolean> isWished = isWishedExpression(member);
 
-            return queryFactory
+            JPAQuery<ItemPreviewResponse> query = queryFactory
                     .select(Projections.fields(ItemPreviewResponse.class,
                             item.id.as("itemId"),
                             item.saleStatus.as("saleStatus"),
@@ -240,8 +240,16 @@
                     .where(
                             Expressions.stringTemplate("REPLACE({0}, ' ', '')", item.name)
                                     .containsIgnoreCase(keyword)
-                    )
+                    );
 
-                    .fetch();
+            if (member != null) {
+                query.leftJoin(wish).on(
+                        wish.member.id.eq(member.getId())
+                                .and(wish.targetType.eq(TargetType.ITEM))
+                                .and(wish.targetId.eq(item.id))
+                );
+            }
+
+            return query.fetch();
         }
     }
