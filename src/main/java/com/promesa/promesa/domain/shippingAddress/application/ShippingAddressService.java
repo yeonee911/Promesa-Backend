@@ -2,6 +2,7 @@ package com.promesa.promesa.domain.shippingAddress.application;
 
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.member.exception.MemberNotFoundException;
 import com.promesa.promesa.domain.shippingAddress.dao.ShippingAddressRepository;
 import com.promesa.promesa.domain.shippingAddress.domain.ShippingAddress;
 import com.promesa.promesa.domain.shippingAddress.dto.request.AddressRequest;
@@ -10,12 +11,13 @@ import com.promesa.promesa.domain.shippingAddress.exception.ShippingAddressAlrea
 import com.promesa.promesa.domain.shippingAddress.exception.ShippingAddressNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class ShippingAddressService {
 
     private final ShippingAddressRepository shippingAddressRepository;
@@ -26,11 +28,13 @@ public class ShippingAddressService {
      * @param member
      * @return
      */
+    @Transactional(readOnly = true)
     public AddressResponse getShippingAddress(Member member) {
-        if (member.getShippingAddress() == null) {
+        Member persistentMember = getPersistentMember(member);
+        if (persistentMember.getShippingAddress() == null) {
             return null;
         }
-        ShippingAddress address = member.getShippingAddress();
+        ShippingAddress address = persistentMember.getShippingAddress();
         return AddressResponse.from(address);
     }
 
@@ -42,7 +46,8 @@ public class ShippingAddressService {
      */
     @Transactional
     public AddressResponse addShippingAddress(@Valid AddressRequest request, Member member) {
-        if (member.getShippingAddress() != null)    // 기본 배송지는 하나만 등록 가능
+        Member persistentMember = getPersistentMember(member);
+        if (persistentMember.getShippingAddress() != null)    // 기본 배송지는 하나만 등록 가능
             throw ShippingAddressAlreadyExistsException.EXCEPTION;
 
         ShippingAddress address = ShippingAddress.builder()
@@ -53,8 +58,8 @@ public class ShippingAddressService {
                 .recipientPhone(request.getRecipientPhone())
                 .build();
         ShippingAddress savedAddress = shippingAddressRepository.save(address);
-        member.updateShippingAddress(savedAddress);
-        memberRepository.save(member);
+        persistentMember.updateShippingAddress(savedAddress);
+        memberRepository.save(persistentMember);
         return AddressResponse.from(savedAddress);
     }
 
@@ -64,9 +69,11 @@ public class ShippingAddressService {
      */
     @Transactional
     public void deleteShippingAddress(Member member) {
-        ShippingAddress address = member.getShippingAddress();
-        member.updateShippingAddress(null);
-        memberRepository.save(member);
+        Member persistentMember = getPersistentMember(member);
+
+        ShippingAddress address = persistentMember.getShippingAddress();
+        persistentMember.updateShippingAddress(null);
+        memberRepository.save(persistentMember);
         shippingAddressRepository.delete(address);
     }
 
@@ -77,7 +84,9 @@ public class ShippingAddressService {
      */
     @Transactional
     public AddressResponse updateShippingAddress(@Valid AddressRequest request, Member member) {
-        ShippingAddress current = member.getShippingAddress();
+        Member persistentMember = getPersistentMember(member);
+
+        ShippingAddress current = persistentMember.getShippingAddress();
         if (current == null) {
             throw ShippingAddressNotFoundException.EXCEPTION;
         }
@@ -85,6 +94,7 @@ public class ShippingAddressService {
         ShippingAddress address = shippingAddressRepository.findById(current.getId())
                 .orElseThrow(() -> ShippingAddressNotFoundException.EXCEPTION);
 
+        log.info("Before update: {}", address.getAddressDetails());
         address.update(
                 request.getRecipientName(),
                 request.getZipCode(),
@@ -92,6 +102,8 @@ public class ShippingAddressService {
                 request.getAddressDetails(),
                 request.getRecipientPhone()
         );
+        log.info("After update: {}", address.getAddressDetails());
+        shippingAddressRepository.save(address);
 
         return AddressResponse.from(address);
     }
@@ -104,10 +116,16 @@ public class ShippingAddressService {
      */
     @Transactional
     public AddressResponse addOrUpdateShippingAddress(@Valid AddressRequest request, Member member) {
-        AddressResponse response;
-        if (member.getShippingAddress() != null) response = updateShippingAddress(request, member);
-        else response = addShippingAddress(request, member);
+        Member persistentMember = getPersistentMember(member);
 
-        return response;
+        if (persistentMember.getShippingAddress() != null)
+            return updateShippingAddress(request, persistentMember);
+        else
+            return addShippingAddress(request, persistentMember);
+    }
+
+    private Member getPersistentMember(Member member) {
+        return memberRepository.findById(member.getId())
+                .orElseThrow(() -> MemberNotFoundException.EXCEPTION);
     }
 }
