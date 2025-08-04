@@ -10,7 +10,8 @@ import static com.promesa.promesa.common.consts.PromesaStatic.*;
 @Getter
 @AllArgsConstructor
 public enum InquiryErrorCode implements BaseErrorCode {
-    INQUIRY_NOT_FOUND(NOT_FOUND, "Inquiry_404", "해당 문의를 찾을 수 없습니다.");
+    INQUIRY_NOT_FOUND(NOT_FOUND, "Inquiry_404", "해당 문의를 찾을 수 없습니다."),
+    FORBIDDEN_INQUIRY_ACCESS(FORBIDDEN, "INQUIRY_403", "해당 문의에 대한 권한이 없습니다.");
 
     private final Integer status;
     private final String code;

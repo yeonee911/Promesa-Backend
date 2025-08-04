@@ -2,6 +2,7 @@ package com.promesa.promesa.domain.artist.application;
 
 import com.promesa.promesa.common.application.ImageService;
 import com.promesa.promesa.common.application.S3Service;
+import com.promesa.promesa.common.validator.PermissionValidator;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.dto.request.AddArtistRequest;
@@ -125,9 +126,11 @@ public class ArtistService {
      * @return
      */
     @Transactional
-    public String updateArtistInfo(Long artistId, UpdateArtistInfoRequest request) {
+    public String updateArtistInfo(Long artistId, UpdateArtistInfoRequest request, Member member) {
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+
+        PermissionValidator.validateCanModifyArtist(artist, member);
 
         // 1. artistName
         if (request.getArtistName().isPresent()) { // present이면 null일 수도 있음
@@ -165,9 +168,11 @@ public class ArtistService {
      * @return
      */
     @Transactional
-    public String updateArtistImage(Long artistId, @Valid UpdateArtistImageRequest request) {
+    public String updateArtistImage(Long artistId, @Valid UpdateArtistImageRequest request, Member member) {
         Artist artist = artistRepository.findById(artistId)
                 .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+        PermissionValidator.validateCanModifyArtist(artist, member);
+
         String oldKey = artist.getProfileImageKey();
         artist.setProfileImageKey(request.getProfileImageKey());    // 새 프로필 등록
         if (oldKey != null && !oldKey.equals(request.getProfileImageKey())) {
