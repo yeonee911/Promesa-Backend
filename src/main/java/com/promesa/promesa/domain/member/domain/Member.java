@@ -118,4 +118,8 @@ public class Member extends BaseTimeEntity {
     public Set<Role> getRoles() {
         return Collections.unmodifiableSet(roles);
     }
+
+    public boolean hasRole(Role role) {
+        return this.roles != null && this.roles.contains(role);
+    }
 }
