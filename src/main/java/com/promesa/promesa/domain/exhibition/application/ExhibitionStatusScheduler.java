@@ -21,7 +21,7 @@ public class ExhibitionStatusScheduler {
     private final ExhibitionRepository exhibitionRepository;
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * *")   // 매일 오전 12시
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")   // 매일 오전 12시
     public void updateExhibitionStatus() {
         List<Exhibition> exhibitions = exhibitionRepository.findAllByStatusIn(List.of(UPCOMING, ONGOING));
         LocalDate today = LocalDate.now();

@@ -7,6 +7,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.util.TimeZone;
+
 @EnableScheduling
 @EnableJpaAuditing
 @SpringBootApplication
@@ -14,6 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class PromesaApplication {
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
 		SpringApplication.run(PromesaApplication.class, args);
 	}
 

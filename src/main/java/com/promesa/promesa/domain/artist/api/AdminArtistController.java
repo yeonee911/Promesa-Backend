@@ -4,11 +4,14 @@ import com.promesa.promesa.domain.artist.application.ArtistService;
 import com.promesa.promesa.domain.artist.dto.request.AddArtistRequest;
 import com.promesa.promesa.domain.artist.dto.request.UpdateArtistImageRequest;
 import com.promesa.promesa.domain.artist.dto.request.UpdateArtistInfoRequest;
+import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.security.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,10 +34,12 @@ public class AdminArtistController {
     @PreAuthorize("hasAnyRole('ADMIN', 'ARTIST')")
     public ResponseEntity<String> updateArtistInfo(
             @PathVariable Long artistId,
-            @RequestBody @Valid UpdateArtistInfoRequest request
+            @RequestBody @Valid UpdateArtistInfoRequest request,
+            @AuthenticationPrincipal CustomUserDetails user
     )
     {
-        return ResponseEntity.ok(artistService.updateArtistInfo(artistId, request));
+        Member member = (user != null) ? user.getMember() : null;
+        return ResponseEntity.ok(artistService.updateArtistInfo(artistId, request, member));
     }
 
     @PatchMapping("/artistId/profile-image")
@@ -42,9 +47,11 @@ public class AdminArtistController {
     @PreAuthorize("hasAnyRole('ADMIN', 'ARTIST')")
     public ResponseEntity<String> updateArtistProfile(
             @PathVariable Long artistId,
-            @RequestBody @Valid UpdateArtistImageRequest request
+            @RequestBody @Valid UpdateArtistImageRequest request,
+            @AuthenticationPrincipal CustomUserDetails user
     )
     {
-        return ResponseEntity.ok(artistService.updateArtistImage(artistId, request));
+        Member member = (user != null) ? user.getMember() : null;
+        return ResponseEntity.ok(artistService.updateArtistImage(artistId, request, member));
     }
 }

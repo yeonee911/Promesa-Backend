@@ -1,4 +1,5 @@
 package com.promesa.promesa.domain.inquiry.application;
+import com.promesa.promesa.common.validator.PermissionValidator;
 import com.promesa.promesa.domain.artist.dao.ArtistRepository;
 import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
@@ -8,6 +9,7 @@ import com.promesa.promesa.domain.inquiry.dto.request.AddInquiryRequest;
 import com.promesa.promesa.domain.inquiry.dto.request.UpdateInquiryRequest;
 import com.promesa.promesa.domain.inquiry.dto.response.InquiryResponse;
 import com.promesa.promesa.domain.inquiry.exception.InquiryNotFoundException;
+import com.promesa.promesa.domain.member.domain.Member;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,9 +41,10 @@ public class InquiryService {
      * @return
      */
     @Transactional
-    public String createInquiry(@Valid AddInquiryRequest request) {
+    public String createInquiry(@Valid AddInquiryRequest request, Member member) {
         Artist artist = artistRepository.findById(request.artistId())
                 .orElseThrow(() -> ArtistNotFoundException.EXCEPTION);
+        PermissionValidator.validateCanModifyArtist(artist, member);
 
         Inquiry newInquiry = Inquiry.builder()
                 .artist(artist)
@@ -60,7 +63,12 @@ public class InquiryService {
      * @return
      */
     @Transactional
-    public String deleteInquiry(Long inquiryId) {
+    public String deleteInquiry(Long inquiryId, Member member) {
+        Inquiry inquiry = inquiryRepository.findById(inquiryId)
+                .orElseThrow(() -> InquiryNotFoundException.EXCEPTION);
+
+        PermissionValidator.validateCanModifyInquiry(inquiry, member);
+
         inquiryRepository.deleteById(inquiryId);
 
         String message = "성공적으로 삭제되었습니다.";
@@ -74,9 +82,11 @@ public class InquiryService {
      * @return
      */
     @Transactional
-    public String updateInquiry(Long inquiryId, @Valid UpdateInquiryRequest request) {
+    public String updateInquiry(Long inquiryId, @Valid UpdateInquiryRequest request, Member member) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
                 .orElseThrow(()-> InquiryNotFoundException.EXCEPTION);
+        PermissionValidator.validateCanModifyInquiry(inquiry, member);
+
         inquiry.updateQuestion(request.question());
         inquiry.updateAnswer(request.answer());
         inquiryRepository.save(inquiry);
