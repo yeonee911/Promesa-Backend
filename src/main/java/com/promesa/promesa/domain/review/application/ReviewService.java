@@ -87,10 +87,12 @@ public class ReviewService {
         Review review = Review.builder()
                 .content(request.getContent())
                 .rating(request.getRating())
-                .item(item)
                 .member(member)
                 .orderItem(orderItem)
                 .build();
+
+        // 상품 평점 업데이트 및 상품의 리뷰 개수 추가
+        item.addReview(review, request.getRating());
 
         // DB에 저장
         Review savedReview = reviewRepository.save(review);
@@ -106,9 +108,6 @@ public class ReviewService {
             review.setReviewImages(images);
         }
 
-        // 상품 평점 업데이트 및 상품의 리뷰 개수 추가
-        item.addReview(request.getRating());
-
         return ReviewResponse.from(savedReview, extractImageKeys(savedReview));
     }
 
@@ -118,7 +117,7 @@ public class ReviewService {
      * @param reviewId
      */
     @Transactional
-    public void deleteReview(Long itemId, Long reviewId, Member member) {
+    public String deleteReview(Long itemId, Long reviewId, Member member) {
         if (member == null) {
             throw ReviewUnauthorizedException.EXCEPTION;
         }
@@ -132,6 +131,8 @@ public class ReviewService {
 
         item.removeReview(target.getRating());  // 평점 삭제
         reviewRepository.delete(target);
+
+        return "성공적으로 삭제되었습니다.";
     }
 
     /**
@@ -157,7 +158,7 @@ public class ReviewService {
         if (request.getRating() != null) {
             item.removeReview(target.getRating());
             target.setRating(request.getRating());
-            item.addReview(target.getRating());
+            item.addReview(target, target.getRating());
         }
 
         if (request.getImageKeys() != null) {
