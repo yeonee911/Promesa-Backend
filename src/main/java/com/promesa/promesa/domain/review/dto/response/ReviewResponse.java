@@ -1,7 +1,6 @@
 package com.promesa.promesa.domain.review.dto.response;
 
 import com.promesa.promesa.domain.review.domain.Review;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,25 +9,24 @@ import java.util.List;
 
 @Getter
 @Builder
-@AllArgsConstructor
 public class ReviewResponse {
-    private final Long reviewId;
-    private final String content;
-    private final Long itemId;
-    private final Long orderItemId;
-    private final Long reviewerId;
-    private final String reviewerName;
-    private final int rating;
+    private Long reviewId;
+    private String content;
+    private Long reviewItemId;
+    private Long reviewOrderItemId;
+    private Long reviewerId;
+    private String reviewerName;
+    private int rating;
     private List<ReviewImageResponse> reviewImages;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public static ReviewResponse from(Review review, List<ReviewImageResponse> reviewImageResponse) {
         return ReviewResponse.builder()
                 .reviewId(review.getId())
                 .content(review.getContent())
-                .itemId(review.getItem().getId())
-                .orderItemId(review.getOrderItem().getId())
+                .reviewItemId(review.getItem().getId())
+                .reviewOrderItemId(review.getOrderItem().getId())
                 .reviewerId(review.getMember().getId())
                 .reviewerName(review.getMember().getName())
                 .rating(review.getRating())
@@ -42,8 +40,8 @@ public class ReviewResponse {
         return ReviewResponse.builder()
                 .reviewId(dto.getReviewId())
                 .content(dto.getContent())
-                .itemId(dto.getItemId())
-                .orderItemId(dto.getOrderItemId())
+                .reviewItemId(dto.getReviewItemId())
+                .reviewOrderItemId(dto.getReviewOrderItemId())
                 .reviewerId(dto.getReviewerId())
                 .reviewerName(dto.getReviewerName())
                 .rating(dto.getRating())
@@ -51,6 +49,22 @@ public class ReviewResponse {
                 .createdAt(dto.getCreatedAt())
                 .updatedAt(dto.getUpdatedAt())
                 .build();
+    }
+
+
+    public ReviewResponse(Long reviewId, String content, Long reviewItemId, Long reviewOrderItemId, Long reviewerId,
+                          String reviewerName, int rating, List<ReviewImageResponse> reviewImages,
+                          LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.reviewId = reviewId;
+        this.content = content;
+        this.reviewItemId = reviewItemId;
+        this.reviewOrderItemId = reviewOrderItemId;
+        this.reviewerId = reviewerId;
+        this.reviewerName = reviewerName;
+        this.rating = rating;
+        this.reviewImages = reviewImages;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public void setReviewImages(List<ReviewImageResponse> images) {

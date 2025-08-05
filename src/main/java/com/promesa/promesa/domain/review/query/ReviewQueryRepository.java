@@ -4,9 +4,7 @@ import com.promesa.promesa.domain.delivery.domain.Delivery;
 import com.promesa.promesa.domain.delivery.domain.DeliveryStatus;
 import com.promesa.promesa.domain.order.domain.OrderStatus;
 import com.promesa.promesa.domain.order.dto.response.OrderItemSummary;
-import com.promesa.promesa.domain.review.dto.response.ReviewDetailResponse;
-import com.promesa.promesa.domain.review.dto.response.ReviewQueryDto;
-import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
+import com.promesa.promesa.domain.review.dto.response.*;
 import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -100,15 +98,12 @@ public class ReviewQueryRepository {
      * @param memberId
      * @return
      */
-    public List<ReviewDetailResponse> findMyReviews(Long memberId) {
+    public List<ReviewDetailQueryDto> findMyReviews(Long memberId) {
         List<Long> reviewIds = queryFactory
                 .select(review.id)
                 .from(review)
                 .where(review.member.id.eq(memberId))
-                .orderBy(
-                        review.createdAt.desc(),    // 리뷰 최신순
-                        review.id.desc()
-                )
+                .orderBy(review.createdAt.desc(), review.id.desc())
                 .fetch();
 
         if (reviewIds.isEmpty()) {
@@ -117,10 +112,10 @@ public class ReviewQueryRepository {
 
         Map<Long, Integer> idOrderMap = new HashMap<>();
         for (int i = 0; i < reviewIds.size(); i++) {
-            idOrderMap.put(reviewIds.get(i), i);    // 리뷰 아이디, 정렬된 순서
+            idOrderMap.put(reviewIds.get(i), i);
         }
 
-        List<ReviewDetailResponse> results = queryFactory
+        List<ReviewDetailQueryDto> results = queryFactory
                 .from(review)
                 .join(review.orderItem, orderItem)
                 .join(orderItem.order, order)
@@ -133,8 +128,7 @@ public class ReviewQueryRepository {
                 .transform(
                         groupBy(review.id).list(
                                 Projections.constructor(
-                                        ReviewDetailResponse.class,
-                                        // 첫 번째 인자: OrderItemSummary
+                                        ReviewDetailQueryDto.class,
                                         Projections.fields(OrderItemSummary.class,
                                                 orderItem.order.id.as("orderId"),
                                                 orderItem.id.as("orderItemId"),
@@ -146,26 +140,23 @@ public class ReviewQueryRepository {
                                                 orderItem.order.orderStatus.as("orderStatus"),
                                                 orderItem.quantity.as("quantity")
                                         ),
-                                        // 두 번째 인자: ReviewResponse
-                                        Projections.constructor(ReviewResponse.class,
-                                                review.id,
-                                                review.content,
-                                                review.item.id,
-                                                review.orderItem.id,
-                                                review.member.id,
-                                                review.member.name,
-                                                review.rating,
-                                                list(reviewImage.key), // reviewImages
-                                                review.createdAt,
-                                                review.updatedAt
+                                        Projections.fields(ReviewQueryDto.class,
+                                                review.id.as("reviewId"),
+                                                review.content.as("content"),
+                                                review.item.id.as("reviewItemId"),
+                                                review.orderItem.id.as("reviewOrderItemId"),
+                                                review.member.id.as("reviewerId"),
+                                                review.member.name.as("reviewerName"),
+                                                review.rating.as("rating"),
+                                                list(reviewImage.key).as("reviewImages"),
+                                                review.createdAt.as("createdAt"),
+                                                review.updatedAt.as("updatedAt")
                                         )
                                 )
                         )
                 );
 
-        // groupBy는 정렬을 무시하므로 원래 순서로 정렬 복원
-        results.sort(Comparator.comparingInt(r -> idOrderMap.get(r.getReviewResponse().getReviewId())));
-
+        results.sort(Comparator.comparingInt(r -> idOrderMap.get(r.getReview().getReviewId())));
         return results;
     }
 

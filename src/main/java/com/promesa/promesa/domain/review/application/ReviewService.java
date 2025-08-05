@@ -17,10 +17,7 @@ import com.promesa.promesa.domain.review.domain.Review;
 import com.promesa.promesa.domain.review.domain.ReviewImage;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
 import com.promesa.promesa.domain.review.dto.request.UpdateReviewRequest;
-import com.promesa.promesa.domain.review.dto.response.ReviewDetailResponse;
-import com.promesa.promesa.domain.review.dto.response.ReviewImageResponse;
-import com.promesa.promesa.domain.review.dto.response.ReviewQueryDto;
-import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
+import com.promesa.promesa.domain.review.dto.response.*;
 import com.promesa.promesa.domain.review.exception.*;
 import com.promesa.promesa.domain.review.query.ReviewQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -234,25 +231,27 @@ public class ReviewService {
      * @return
      */
     public List<ReviewDetailResponse> getMyReviews(Member member) {
-        List<ReviewDetailResponse> results = reviewQueryRepository.findMyReviews(member.getId());
-        results.forEach(r -> {
-            String itemThumbnailKey = r.getOrderItemSummary().getItemThumbnail();
-            if (itemThumbnailKey != null) {
-                String itemThumbnailUrl = s3Service.createPresignedGetUrl(bucketName, itemThumbnailKey);
-                r.getOrderItemSummary().setItemThumbnail(itemThumbnailUrl);
-            }
+        List<ReviewDetailQueryDto> rawResults = reviewQueryRepository.findMyReviews(member.getId());
 
-            List<ReviewImageResponse> images = r.getReviewResponse().getReviewImages().stream()
-                    .map(img -> ReviewImageResponse.builder()
-                            .key(img.getKey())
-                            .url(s3Service.createPresignedGetUrl(bucketName, img.getKey()))
-                            .build())
-                    .toList();
-            r.getReviewResponse().setReviewImages(images);
+        return rawResults.stream()
+                .map(r -> {
+                    OrderItemSummary summary = r.getOrderItemSummary();
+                    String thumbnailKey = summary.getItemThumbnail();
+                    if (thumbnailKey != null) {
+                        summary.setItemThumbnail(s3Service.createPresignedGetUrl(bucketName, thumbnailKey));
+                    }
 
-        });
+                    List<ReviewImageResponse> images = r.getReview().getReviewImages().stream()
+                            .map(key -> ReviewImageResponse.builder()
+                                    .key(key)
+                                    .url(s3Service.createPresignedGetUrl(bucketName, key))
+                                    .build())
+                            .toList();
 
-        return results;
+                    ReviewResponse reviewResponse = ReviewResponse.from(r.getReview(), images);
+
+                    return ReviewDetailResponse.of(summary, reviewResponse);
+                }).toList();
     }
 
     /**
