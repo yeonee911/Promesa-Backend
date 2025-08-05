@@ -18,6 +18,7 @@ import com.promesa.promesa.domain.review.domain.ReviewImage;
 import com.promesa.promesa.domain.review.dto.request.AddReviewRequest;
 import com.promesa.promesa.domain.review.dto.request.UpdateReviewRequest;
 import com.promesa.promesa.domain.review.dto.response.ReviewDetailResponse;
+import com.promesa.promesa.domain.review.dto.response.ReviewImageResponse;
 import com.promesa.promesa.domain.review.dto.response.ReviewQueryDto;
 import com.promesa.promesa.domain.review.dto.response.ReviewResponse;
 import com.promesa.promesa.domain.review.exception.*;
@@ -108,7 +109,7 @@ public class ReviewService {
             review.setReviewImages(images);
         }
 
-        return ReviewResponse.from(savedReview, extractImageKeys(savedReview));
+        return ReviewResponse.from(savedReview, extractImageResponses(savedReview));
     }
 
     /**
@@ -170,7 +171,7 @@ public class ReviewService {
             target.setReviewImages(images);
         }
 
-        return ReviewResponse.from(target, extractImageKeys(target));
+        return ReviewResponse.from(target, extractImageResponses(target));
     }
 
     /**
@@ -182,11 +183,14 @@ public class ReviewService {
         Page<ReviewQueryDto> results = reviewQueryRepository.findAllReviews(itemId, pageable);
         List<ReviewResponse> responseList = results.getContent().stream()
                 .map(dto -> {
-                    List<String> presignedUrls = dto.getReviewImages().stream()
-                            .map(key -> s3Service.createPresignedGetUrl(bucketName, key))
+                    List<ReviewImageResponse> imageResponses = dto.getReviewImages().stream()
+                            .map(key -> ReviewImageResponse.builder()
+                                    .key(key)
+                                    .url(s3Service.createPresignedGetUrl(bucketName, key))
+                                    .build())
                             .toList();
 
-                    return ReviewResponse.from(dto, presignedUrls);
+                    return ReviewResponse.from(dto, imageResponses);
                 })
                 .toList();
 
@@ -212,11 +216,15 @@ public class ReviewService {
         return target;
     }
 
-    private List<String> extractImageKeys(Review review) {
+    private List<ReviewImageResponse> extractImageResponses(Review review) {
         return Optional.ofNullable(review.getReviewImages())
                 .orElse(List.of())
                 .stream()
                 .map(ReviewImage::getKey)
+                .map(key -> ReviewImageResponse.builder()
+                        .key(key)
+                        .url(s3Service.createPresignedGetUrl(bucketName, key))
+                        .build())
                 .toList();
     }
 
@@ -234,10 +242,14 @@ public class ReviewService {
                 r.getOrderItemSummary().setItemThumbnail(itemThumbnailUrl);
             }
 
-            List<String> presignedUrls = r.getReviewResponse().getReviewImages().stream()
-                    .map(key -> s3Service.createPresignedGetUrl(bucketName, key))
+            List<ReviewImageResponse> images = r.getReviewResponse().getReviewImages().stream()
+                    .map(img -> ReviewImageResponse.builder()
+                            .key(img.getKey())
+                            .url(s3Service.createPresignedGetUrl(bucketName, img.getKey()))
+                            .build())
                     .toList();
-            r.getReviewResponse().setReviewImages(presignedUrls);
+            r.getReviewResponse().setReviewImages(images);
+
         });
 
         return results;

@@ -19,11 +19,11 @@ public class ReviewResponse {
     private final Long reviewerId;
     private final String reviewerName;
     private final int rating;
-    private List<String> reviewImages;
+    private List<ReviewImageResponse> reviewImages;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public static ReviewResponse from(Review review, List<String> imageKeys) {
+    public static ReviewResponse from(Review review, List<ReviewImageResponse> reviewImageResponse) {
         return ReviewResponse.builder()
                 .reviewId(review.getId())
                 .content(review.getContent())
@@ -32,13 +32,13 @@ public class ReviewResponse {
                 .reviewerId(review.getMember().getId())
                 .reviewerName(review.getMember().getName())
                 .rating(review.getRating())
-                .reviewImages(imageKeys)
+                .reviewImages(reviewImageResponse)
                 .createdAt(review.getCreatedAt())
                 .updatedAt(review.getUpdatedAt())
                 .build();
     }
 
-    public static ReviewResponse from(ReviewQueryDto dto, List<String> imageKeys) {
+    public static ReviewResponse from(ReviewQueryDto dto, List<ReviewImageResponse> reviewImageResponse) {
         return ReviewResponse.builder()
                 .reviewId(dto.getReviewId())
                 .content(dto.getContent())
@@ -47,13 +47,13 @@ public class ReviewResponse {
                 .reviewerId(dto.getReviewerId())
                 .reviewerName(dto.getReviewerName())
                 .rating(dto.getRating())
-                .reviewImages(imageKeys)
+                .reviewImages(reviewImageResponse)
                 .createdAt(dto.getCreatedAt())
                 .updatedAt(dto.getUpdatedAt())
                 .build();
     }
 
-    public void setReviewImages(List<String> imageUrls) {
-        reviewImages = imageUrls;
+    public void setReviewImages(List<ReviewImageResponse> images) {
+        this.reviewImages = images;
     }
 }
