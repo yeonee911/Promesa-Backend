@@ -4,6 +4,7 @@ import com.promesa.promesa.domain.order.domain.OrderItem;
 import com.promesa.promesa.domain.order.domain.OrderItemStatus;
 
 public record OrderItemDetail(
+        Long orderItemId,
         Long itemId,
         String itemName,
         String orderItemThumbnail,
@@ -13,6 +14,7 @@ public record OrderItemDetail(
 ) {
     public static OrderItemDetail from(OrderItem item, String orderThumbnail) {
         return new OrderItemDetail(
+                item.getId(),
                 item.getItem().getId(),
                 item.getItem().getName(),
                 orderThumbnail,
