@@ -111,10 +111,13 @@ public class Item extends BaseTimeEntity {
         this.totalRating -= rating;
     }
 
-    public void addReview(int newRating) {
+    public void addReview(Review review, int newRating) {
         increaseReviewCount();
         increaseTotalRating(newRating);
         updateAverageRating();
+
+        reviews.add(review);
+        review.setItem(this);
     }
 
     public void removeReview(int rating) {

@@ -69,8 +69,7 @@ public class ReviewController {
     )
     {
         Member member = (user != null) ? user.getMember() : null;
-        reviewService.deleteReview(itemId, reviewId, member);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(reviewService.deleteReview(itemId, reviewId, member));
     }
 
     @PatchMapping("/items/{itemId}/reviews/{reviewId}")
