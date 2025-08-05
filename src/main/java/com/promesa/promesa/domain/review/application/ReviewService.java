@@ -156,9 +156,8 @@ public class ReviewService {
         }
 
         if (request.getRating() != null) {
-            item.removeReview(target.getRating());
+            item.updateReviewRating(target.getRating(), request.getRating());
             target.setRating(request.getRating());
-            item.addReview(target, target.getRating());
         }
 
         if (request.getImageKeys() != null) {

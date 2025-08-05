@@ -126,6 +126,12 @@ public class Item extends BaseTimeEntity {
         updateAverageRating();
     }
 
+    public void updateReviewRating(int oldRating, int newRating) {
+        decreaseTotalRating(oldRating);
+        increaseTotalRating(newRating);
+        updateAverageRating();
+    }
+
     public void updateAverageRating() {
         if (this.reviewCount == 0) {
             this.averageRating = 0.0;
