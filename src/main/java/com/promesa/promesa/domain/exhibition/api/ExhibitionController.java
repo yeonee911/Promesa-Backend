@@ -33,12 +33,14 @@ public class ExhibitionController {
         return ResponseEntity.ok(response);
     }
 
+    /*
     @GetMapping("/ongoing")
     @Operation(summary = "진행 중인 전시 목록 조회")
     public ResponseEntity<List<ExhibitionSummary>> getOngoingExhibition() {
         List<ExhibitionSummary> response = exhibitionService.getOngoingExhibitions();
         return ResponseEntity.ok(response);
     }
+     */
 
     @GetMapping
     @Operation(summary = "전시 상태 별 전시 목록 조회")

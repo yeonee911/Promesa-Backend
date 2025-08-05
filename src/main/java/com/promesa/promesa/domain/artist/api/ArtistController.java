@@ -67,9 +67,11 @@ public class ArtistController {
         return ResponseEntity.ok(artistService.getAllArtists(member));
     }
 
+    /*
     @GetMapping("/names")
     @Operation(summary = "전체 작가 이름 리스트 조회 (인덱스 탐색용)")
     public ResponseEntity<List<ArtistNameResponse>> getArtistNames() {
         return ResponseEntity.ok(artistService.getArtistNames());
     }
+     */
 }
