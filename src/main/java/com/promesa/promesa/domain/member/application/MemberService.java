@@ -2,6 +2,7 @@ package com.promesa.promesa.domain.member.application;
 
 import com.promesa.promesa.domain.member.dao.MemberRepository;
 import com.promesa.promesa.domain.member.domain.Member;
+import com.promesa.promesa.domain.member.domain.Role;
 import com.promesa.promesa.domain.member.dto.request.MemberUpdateRequest;
 import com.promesa.promesa.domain.member.dto.response.MemberResponse;
 import com.promesa.promesa.domain.member.exception.MemberNotFoundException;
@@ -9,6 +10,8 @@ import com.promesa.promesa.domain.shippingAddress.application.ShippingAddressSer
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,5 +39,12 @@ public class MemberService {
     private Member getPersistentMember(Member member) {
         return memberRepository.findById(member.getId())
                 .orElseThrow(() -> MemberNotFoundException.EXCEPTION);
+    }
+
+    public List<MemberResponse> getAllUser() {
+        List<Member> members = memberRepository.findAllExcludingAdminAndArtist(Role.ROLE_ADMIN, Role.ROLE_ARTIST);
+        return members.stream()
+                .map(MemberResponse::from)
+                .toList();
     }
 }
