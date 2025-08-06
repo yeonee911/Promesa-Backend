@@ -42,7 +42,7 @@ public class AdminArtistController {
         return ResponseEntity.ok(artistService.updateArtistInfo(artistId, request, member));
     }
 
-    @PatchMapping("/artistId/profile-image")
+    @PatchMapping("/{artistId}/profile-image")
     @Operation(summary = "작가 프로필 이미지 변경")
     @PreAuthorize("hasAnyRole('ADMIN', 'ARTIST')")
     public ResponseEntity<String> updateArtistProfile(
