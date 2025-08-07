@@ -12,6 +12,7 @@ public record ExhibitionSummary(
         Long id,
         ExhibitionStatus status,
         String title,
+        String subTitle,
         String description,
         List<String> artistNames,    // 참여한 작가 목록
         LocalDate startDate,
@@ -26,6 +27,7 @@ public record ExhibitionSummary(
                 exhibition.getId(),
                 exhibition.getStatus(),
                 exhibition.getTitle(),
+                exhibition.getSubTitle(),
                 exhibition.getDescription(),
                 artistNames,
                 exhibition.getStartDate(),

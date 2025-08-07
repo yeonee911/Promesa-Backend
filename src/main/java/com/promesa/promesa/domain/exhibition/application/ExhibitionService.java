@@ -84,22 +84,6 @@ public class ExhibitionService {
     }
 
     /**
-     * 현재 진행 중인 기획전 조회 : 이미지는 presignedUrl로 반환
-     * @return
-     */
-    public List<ExhibitionSummary> getOngoingExhibitions() {
-        List<Exhibition> ongoing = exhibitionRepository.findAllByStatus(ExhibitionStatus.ONGOING);
-
-        return ongoing.stream()
-                .map(exhibition -> {
-                    String imageUrl = s3Service.createPresignedGetUrl(bucketName, exhibition.getThumbnailImageKey());
-                    List<String> artistNames = exhibitionQueryRepository.findArtistNames(exhibition.getId());
-                    return ExhibitionSummary.of(exhibition, artistNames, imageUrl);
-                })
-                .toList();
-    }
-
-    /**
      * 작가가 참여한 기획전을 조회
      * @param artistId
      * @return
@@ -160,6 +144,7 @@ public class ExhibitionService {
 
         Exhibition  newExhibition = Exhibition.builder()
                 .title(request.title())
+                .subTitle(request.subTitle())
                 .description(request.description())
                 .startDate(startDate)
                 .endDate(endDate)
@@ -193,6 +178,7 @@ public class ExhibitionService {
         }
 
         exhibition.setTitle(request.title());
+        exhibition.setSubTitle(request.subTitle());
         exhibition.setDescription(request.description());
         exhibition.setStartDate(request.startDate());
         exhibition.setEndDate(request.endDate());
