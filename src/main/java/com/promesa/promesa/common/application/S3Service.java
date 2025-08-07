@@ -98,7 +98,10 @@ public class S3Service {
                             PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
                             log.info("Presigned URL 생성: {}", presignedRequest.url());
 
-                            return new PresignedUrlResponse(key, presignedRequest.url().toExternalForm());
+                            String s3Url = presignedRequest.url().toExternalForm();
+                            String cloudfrontUrl = s3Url.replace("https://" + bucketName + ".s3.ap-northeast-2.amazonaws.com", CLOUDFRONT_HOST);
+                            return new PresignedUrlResponse(key, cloudfrontUrl);
+
                         } catch (Exception e) {
                             log.error("Presigned URL 생성 실패", e);
                             throw InternalServerError.EXCEPTION;
