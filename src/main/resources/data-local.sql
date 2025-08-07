@@ -148,7 +148,7 @@ INSERT INTO item (
     depth,
     artist_id
 ) VALUES
-      (1,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '빈티지 블랙 높은잔 세트', 15000, 'ON_SALE', 11, 1,  3.5, 1,  3.5, 'PRD001', 10, 20, 30, 2),
+      (1,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '빈티지 블랙 높은잔 세트', 15000, 'STOPPED', 11, 1,  3.5, 1,  3.5, 'PRD001', 10, 20, 30, 2),
       (2,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 2',               20000, 'ON_SALE', 12, 2,  4.0, 2,  8.0, 'PRD002', 10, 20, 30, 3),
       (3,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 3',               25000, 'ON_SALE', 13, 0,  3.0, 0,  0.0, 'PRD003', 10, 20, 30, 4),
       (4,  CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '작품 4',               30000, 'ON_SALE', 14, 1, NULL, 1,  0.0, 'PRD004', 10, 20, 30, 5),

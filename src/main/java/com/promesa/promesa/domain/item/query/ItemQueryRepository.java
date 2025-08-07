@@ -5,6 +5,7 @@
     import com.promesa.promesa.domain.item.domain.Item;
     import com.promesa.promesa.domain.item.domain.QItem;
     import com.promesa.promesa.domain.item.domain.QItemImage;
+    import com.promesa.promesa.domain.item.domain.SaleStatus;
     import com.promesa.promesa.domain.member.domain.Member;
     import com.promesa.promesa.domain.wish.domain.TargetType;
     import com.querydsl.core.types.*;
@@ -79,6 +80,7 @@
         public Page<ItemPreviewResponse> findCategoryItem(Member member, Long categoryId, Pageable pageable) {
             Expression<Boolean> isWished = isWishedExpression(member);
             BooleanExpression categoryCondition = (categoryId != 0) ? itemCategory.category.id.eq(categoryId) : null;
+            BooleanExpression saleStatusCondition = item.saleStatus.ne(SaleStatus.STOPPED);
 
             JPAQuery<ItemPreviewResponse> query = queryFactory
                     .select(Projections.fields(ItemPreviewResponse.class,
@@ -96,11 +98,12 @@
                         .join(itemCategory.item, item)
                         .join(item.artist, artist)
                         .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue())
-                        .where(itemCategory.category.id.eq(categoryId));
+                        .where(categoryCondition, saleStatusCondition);
             } else {
                 query.from(item)
                         .join(item.artist, artist)
-                        .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue());
+                        .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue())
+                        .where(saleStatusCondition);
             }
 
             if (!pageable.getSort().isEmpty()) {
@@ -128,11 +131,12 @@
                         .select(item.count())
                         .from(itemCategory)
                         .join(itemCategory.item, item)
-                        .where(itemCategory.category.id.eq(categoryId));
+                        .where(categoryCondition, saleStatusCondition);
             } else {
                 countQuery = queryFactory
                         .select(item.count())
-                        .from(item);
+                        .from(item)
+                        .where(saleStatusCondition);
             }
 
             return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
@@ -154,6 +158,7 @@
             Expression<Boolean> isWished = isWishedExpression(member);
             BooleanExpression categoryCondition = (categoryId != 0) ? itemCategory.category.id.eq(categoryId) : null;
             BooleanExpression artistCondition = artist.id.eq(artistId);
+            BooleanExpression saleStatusCondition = item.saleStatus.ne(SaleStatus.STOPPED);
 
             JPAQuery<ItemPreviewResponse> query = queryFactory
                     .select(Projections.fields(ItemPreviewResponse.class,
@@ -170,7 +175,7 @@
                     .join(itemCategory.item, item)
                     .join(item.artist, artist)
                     .leftJoin(item.itemImages, itemImage).on(itemImage.isThumbnail.isTrue())
-                    .where(artistCondition, categoryCondition);
+                    .where(artistCondition, categoryCondition, saleStatusCondition);
 
             if (!pageable.getSort().isEmpty()) {
                 List<OrderSpecifier<?>> specifiers = new ArrayList<>(List.of(createOrderSpecifiers(pageable.getSort())));
