@@ -509,7 +509,7 @@ INSERT INTO exhibition (
     updated_at,
     description,
     title,
-    sub_title,
+    subtitle,
     exhibition_status,
     start_date,
     end_date

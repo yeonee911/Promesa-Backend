@@ -7,7 +7,6 @@ import com.promesa.promesa.domain.artist.domain.Artist;
 import com.promesa.promesa.domain.artist.exception.ArtistNotFoundException;
 import com.promesa.promesa.domain.exhibition.domain.*;
 import com.promesa.promesa.domain.exhibition.dto.request.AddExhibitionRequest;
-import com.promesa.promesa.domain.exhibition.dto.request.ExhibitionImageRequest;
 import com.promesa.promesa.domain.exhibition.dto.request.UpdateExhibitionRequest;
 import com.promesa.promesa.domain.exhibition.dto.response.*;
 import com.promesa.promesa.domain.exhibition.exception.DuplicateExhibitionTitleException;
@@ -144,7 +143,7 @@ public class ExhibitionService {
 
         Exhibition  newExhibition = Exhibition.builder()
                 .title(request.title())
-                .subTitle(request.subTitle())
+                .subtitle(request.subTitle())
                 .description(request.description())
                 .startDate(startDate)
                 .endDate(endDate)
@@ -178,7 +177,7 @@ public class ExhibitionService {
         }
 
         exhibition.setTitle(request.title());
-        exhibition.setSubTitle(request.subTitle());
+        exhibition.setSubtitle(request.subTitle());
         exhibition.setDescription(request.description());
         exhibition.setStartDate(request.startDate());
         exhibition.setEndDate(request.endDate());
