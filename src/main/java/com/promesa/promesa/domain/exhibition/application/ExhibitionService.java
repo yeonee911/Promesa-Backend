@@ -66,7 +66,7 @@ public class ExhibitionService {
         List<ExhibitionImageResponse> detailedImageUrls = exhibition.getDetailImages().stream()
                 .map(img -> {
                     String url = s3Service.createPresignedGetUrl(bucketName, img.getImageKey());
-                    return new ExhibitionImageResponse(url, img.getSortOrder());
+                    return new ExhibitionImageResponse(url, img.getImageKey(), img.getSortOrder());
                 })
                 .toList();
 

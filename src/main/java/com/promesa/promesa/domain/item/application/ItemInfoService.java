@@ -81,6 +81,7 @@ public class ItemInfoService {
                 .sorted(Comparator.comparing(ItemImage::getSortOrder))
                 .map(img -> new ItemImageResponse(
                         s3Service.createPresignedGetUrl(bucketName, img.getImageKey()),
+                        img.getImageKey(),
                         img.getSortOrder()
                 ))
                 .toList();

@@ -6,6 +6,7 @@ public record ArtistProfile(
         Long artistId,
         String name,
         String subname,
+        String profileImageKey,
         String profileImageUrl,
         String bio,
         String instagramUrl
@@ -15,6 +16,7 @@ public record ArtistProfile(
                 artist.getId(),
                 artist.getName(),
                 artist.getSubname(),
+                artist.getProfileImageKey(),
                 presignedUrl,
                 artist.getDescription(),
                 "https://www.instagram.com/" + artist.getInsta()
